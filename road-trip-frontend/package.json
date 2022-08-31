@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "dotenv": "^16.0.2",
     "env-cmd": "^10.1.0",
     "next": "12.2.5",
