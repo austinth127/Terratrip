@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux';
-import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
+import { combineReducers } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
+import thunk from "redux-thunk";
 
 const reducers = combineReducers({
     // Add your reducers here
@@ -11,6 +11,6 @@ export const buildStore = (initialState) => {
         preloadedState: initialState,
         reducer: reducers,
         middleware: [thunk],
-        devTools: process.env.NODE_ENV !== 'production'
+        devTools: process.env.NODE_ENV !== "production",
     });
 };
