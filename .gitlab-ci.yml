@@ -5,8 +5,6 @@ build-job:
 # road-trip-frontend folders and builds a docker image based on the
 # docker files it finds there. This assumes there is a file named
 # "Dockerfile" in each directory.
-    - whoami
-    - hostname
     - cd road-trip-api
     - docker build -t road-trip-api .
     - cd ..
