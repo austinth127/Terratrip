@@ -1,5 +1,8 @@
 FROM openjdk:16 AS build
 
+# Install xargs
+RUN microdnf install findutils
+
 # Possible to execute the mave bom build here? Would need to dowload maven...
 
 WORKDIR /build
