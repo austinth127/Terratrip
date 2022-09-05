@@ -27,7 +27,6 @@ deploy-prod:
     - docker container stop road-trip-api || true
     - docker rm road-trip-frontend || true
     - docker rm road-trip-api || true
-    - docker compose up -d
     - docker run -dp 8080:8080 --name road-trip-api road-trip-api
     - docker run -dp 3000:3000 --name road-trip-frontend road-trip-frontend
 # it is important you prune your docker repository after all containers
