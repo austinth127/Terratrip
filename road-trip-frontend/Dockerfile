@@ -2,8 +2,8 @@ FROM node:16 AS build
 WORKDIR /build
 COPY . .
 
-RUN yarn install
-RUN yarn run build
+RUN npm install
+RUN npm run build
 
 FROM node:16
 WORKDIR /app
