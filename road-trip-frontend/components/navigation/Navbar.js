@@ -81,8 +81,8 @@ const Navbar = ({ ...props }) => {
                         )
                     )}
                     <li className="flex flex-col gap-2 text-sm font-light py-3 text-white">
-                        <NavButton>Log In</NavButton>
-                        <NavButton>Sign Up</NavButton>
+                        <NavButton href={"/auth/signin"}>Log In</NavButton>
+                        <NavButton href={"/auth/signup"}>Sign Up</NavButton>
                     </li>
                 </ul>
             </nav>

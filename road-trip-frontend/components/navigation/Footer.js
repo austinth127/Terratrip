@@ -33,7 +33,9 @@ const Footer = ({ ...props }) => {
             </div>
             <div className="flex flex-row justify-center">
                 <div className="relative w-48 h-9 m-4">
-                    <Image src="/logos/BU_Horz_White.png" layout="fill" />
+                    <a href="https://www.ecs.baylor.edu/">
+                        <Image src="/logos/BU_Horz_White.png" layout="fill" />
+                    </a>
                 </div>
             </div>
         </footer>
