@@ -1,11 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import NavButton from "./NavButton";
 import NavItem from "./NavItem";
 
 // These are all of the routes in the nav bar
 const tabs = [
     { name: "Home", href: "/" },
-    { name: "Other Route 1", href: "/" },
-    { name: "Other Route 2", href: "/" },
+    {
+        section: "Trips",
+        tabs: [
+            { name: "Create a Trip", href: "/trips/create" },
+            { name: "My Trips", href: "/trips/edit" },
+        ],
+    },
+    {
+        section: "Playlists",
+        tabs: [
+            { name: "Create a Playlist", href: "/playlists/create" },
+            { name: "My Playlists", href: "/playlists/edit" },
+        ],
+    },
+    {
+        section: "Stops",
+        tabs: [
+            { name: "Popular Stops", href: "" },
+            { name: "Favorites", href: "" },
+            { name: "Nature", href: "" },
+            { name: "Music", href: "" },
+            { name: "City", href: "" },
+            { name: "Food", href: "" },
+        ],
+    },
 ];
 
 /**
@@ -19,13 +43,11 @@ const Navbar = ({ ...props }) => {
 
     return (
         <div
-            className={`absolute top-0 left-0 w-fit h-full overflow-x-clip text-gray-50 ${props.className}`}
+            className={`fixed top-0 left-0 w-fit h-screen overflow-x-clip text-gray-50 ${props.className}`}
         >
             <nav
-                className={`relative bg-opacity-50 sm:w-64 ease-in-out z-50 h-full duration-200 ${
-                    navOpen
-                        ? `bg-slate-900`
-                        : `sm:-translate-x-[13rem] bg-slate-900`
+                className={`relative bg-opacity-5 sm:w-64 ease-in-out z-50 h-full duration-200 bg-white ${
+                    navOpen ? `` : `sm:-translate-x-[13rem]`
                 }`}
             >
                 <div className="absolute top-4 right-4 overflow-x-clip">
@@ -39,11 +61,29 @@ const Navbar = ({ ...props }) => {
                     </button>
                 </div>
                 <ul className={`flex flex-col p-8 ${navOpen ? `` : `hidden`}`}>
-                    {tabs.map((tab, index) => (
-                        <NavItem key={index} href={tab.href}>
-                            {tab.name}
-                        </NavItem>
-                    ))}
+                    {tabs.map((tab, index) =>
+                        tab.section ? (
+                            <div
+                                key={tab.section}
+                                className="my-3 text-gray-300 text-sm"
+                            >
+                                <h2 className="uppercase">{tab.section}</h2>
+                                {tab.tabs.map((tab, index) => (
+                                    <NavItem key={index} href={tab.href}>
+                                        {tab.name}
+                                    </NavItem>
+                                ))}
+                            </div>
+                        ) : (
+                            <NavItem key={index} href={tab.href}>
+                                {tab.name}
+                            </NavItem>
+                        )
+                    )}
+                    <li className="flex flex-col gap-2 text-sm font-light py-3 text-white">
+                        <NavButton>Log In</NavButton>
+                        <NavButton>Sign Up</NavButton>
+                    </li>
                 </ul>
             </nav>
         </div>
