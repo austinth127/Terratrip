@@ -5,7 +5,11 @@ module.exports = {
         "./components/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            backgroundImage: {
+                "mountain-sun": "url('/photos/pexels-sagui-andrea.jpg')",
+            },
+        },
     },
     plugins: [],
 };

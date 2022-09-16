@@ -4,6 +4,6 @@
 
 @layer components {
     .grad-txt-rs-yllw:hover {
-        @apply text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-rose-400;
+        @apply text-transparent bg-clip-text bg-gradient-to-br from-green-600 to-cyan-600;
     }
 }

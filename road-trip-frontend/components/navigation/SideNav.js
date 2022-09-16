@@ -1,36 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavButton from "./NavButton";
 import NavItem from "./NavItem";
-
-// These are all of the routes in the nav bar
-const tabs = [
-    { name: "Home", href: "/" },
-    {
-        section: "Trips",
-        tabs: [
-            { name: "Create a Trip", href: "/trips/create" },
-            { name: "My Trips", href: "/trips/edit" },
-        ],
-    },
-    {
-        section: "Playlists",
-        tabs: [
-            { name: "Create a Playlist", href: "/playlists/create" },
-            { name: "My Playlists", href: "/playlists/edit" },
-        ],
-    },
-    {
-        section: "Stops",
-        tabs: [
-            { name: "Popular Stops", href: "" },
-            { name: "Favorites", href: "" },
-            { name: "Nature", href: "" },
-            { name: "Music", href: "" },
-            { name: "City", href: "" },
-            { name: "Food", href: "" },
-        ],
-    },
-];
+import { tabs } from "../../utils/tabs";
 
 /**
  * A navbar to be displayed on the left side of the screen, pops out
@@ -43,17 +14,19 @@ const Navbar = ({ ...props }) => {
 
     return (
         <div
-            className={`fixed top-0 left-0 w-fit h-screen overflow-x-clip text-gray-50 ${props.className}`}
+            className={`fixed top-0 left-0 w-fit h-screen overflow-x-clip z-50 text-white ease-in-out duration-200 ${
+                props.className
+            } ${navOpen ? `` : `sm:-translate-x-[13rem]`}`}
         >
             <nav
-                className={`relative bg-opacity-5 sm:w-64 ease-in-out z-50 h-full duration-200 bg-white ${
-                    navOpen ? `` : `sm:-translate-x-[13rem]`
+                className={`relative isolate sm:w-64 h-full bg-white shadow-lg ${
+                    navOpen ? `bg-opacity-75` : ` bg-opacity-10`
                 }`}
             >
                 <div className="absolute top-4 right-4 overflow-x-clip">
                     <button
                         className={`transform duration-200 ease-in-out ${
-                            navOpen ? `rotate-90` : ``
+                            navOpen ? `text-slate-900 rotate-90` : ``
                         }`}
                         onClick={() => setNavOpen(!navOpen)}
                     >
@@ -65,7 +38,7 @@ const Navbar = ({ ...props }) => {
                         tab.section ? (
                             <div
                                 key={tab.section}
-                                className="my-3 text-gray-300 text-sm"
+                                className="my-3 text-slate-800 text-sm"
                             >
                                 <h2 className="uppercase">{tab.section}</h2>
                                 {tab.tabs.map((tab, index) => (
@@ -80,10 +53,14 @@ const Navbar = ({ ...props }) => {
                             </NavItem>
                         )
                     )}
-                    <li className="flex flex-col gap-2 text-sm font-light py-3 text-white">
-                        <NavButton href={"/auth/signin"}>Log In</NavButton>
-                        <NavButton href={"/auth/signup"}>Sign Up</NavButton>
-                    </li>
+                    <div className="mt-4">
+                        <NavItem href="/auth/signin" key="log in">
+                            Log In
+                        </NavItem>
+                        <NavItem href="/auth/signup" key="sign up">
+                            Sign Up
+                        </NavItem>
+                    </div>
                 </ul>
             </nav>
         </div>

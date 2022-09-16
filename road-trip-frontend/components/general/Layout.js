@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../../components/navigation/Navbar";
+import SideNav from "../../components/navigation/SideNav";
 import Footer from "../../components/navigation/Footer";
 import { useRouter } from "next/router";
 
@@ -31,9 +31,11 @@ const Layout = ({ children, ...props }) => {
                 className="h-fit text-gray-50 overflow-x-clip bg-slate-900"
                 // style={gradientBackground}
             >
-                <Navbar />
-                <main className="min-h-screen">{children}</main>
-                <Footer></Footer>
+                <SideNav />
+                <main className="relative min-h-screen">
+                    {children}
+                    <Footer></Footer>
+                </main>
             </div>
         </>
     );

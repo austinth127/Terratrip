@@ -11,7 +11,7 @@ const NavItem = ({ ...props }) => {
         <li className={`my-1 text-sm font-semibold w-full`}>
             <Link href={props.href ? props.href : "/"}>
                 <a className="flex flex-col items-start w-full">
-                    <span className="text-white grad-txt-rs-yllw font-hubballi w-fit">
+                    <span className="text-slate-800 grad-txt-rs-yllw font-hubballi w-fit">
                         {props.children}
                     </span>
                 </a>
