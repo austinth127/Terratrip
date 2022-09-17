@@ -14,8 +14,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RestController
 public class UserEndpoint {
-    @Autowired
-    private UserService userService;
+    private UserService userService = new UserService();
 
     @GetMapping("/user/{id}")
     public User findUserById(@PathVariable Long id) {
@@ -27,4 +26,6 @@ public class UserEndpoint {
     public User saveUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
+
+
 }

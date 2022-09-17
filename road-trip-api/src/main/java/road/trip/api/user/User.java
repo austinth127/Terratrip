@@ -7,12 +7,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = User.TABLE_NAME)
 public class User {
+
     public static final String TABLE_NAME = "USER";
 
     @Id
