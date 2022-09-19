@@ -20,13 +20,11 @@ export const tabs = [
     {
         section: "Stops",
         tabs: [
-            { name: "Favorites", href: "" },
-            { name: "High Adventure", href: "" },
-            { name: "National Parks", href: "" },
-            { name: "Camping", href: "" },
-            { name: "RV's", href: "" },
-            { name: "Cabins", href: "" },
-            { name: "Hotels", href: "" },
+            { name: "Favorites", href: "/stops/favorites" },
+            { name: "High Adventure", href: "/stops/high-adventure" },
+            { name: "Medium Impact", href: "/stops/medium-impact" },
+            { name: "Low Impact", href: "/stops/low-impact" },
+            { name: "Lodging", href: "/stops/lodging" },
         ],
     },
 ];

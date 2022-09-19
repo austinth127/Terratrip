@@ -19,8 +19,8 @@ const Navbar = ({ ...props }) => {
             } ${navOpen ? `` : `sm:-translate-x-[13rem]`}`}
         >
             <nav
-                className={`relative isolate sm:w-64 h-full bg-white shadow-lg ${
-                    navOpen ? `bg-opacity-75` : ` bg-opacity-10`
+                className={`relative isolate sm:w-64 h-full bg-white shadow-lg duration-200 ease-in-out ${
+                    navOpen ? `bg-opacity-95` : ` bg-opacity-10`
                 }`}
             >
                 <div className="absolute top-4 right-4 overflow-x-clip">
