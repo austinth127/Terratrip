@@ -3,18 +3,6 @@ import SideNav from "../../components/navigation/SideNav";
 import Footer from "../../components/navigation/Footer";
 import { useRouter } from "next/router";
 
-const gradientBackground = {
-    backgroundColor: `#27006A`,
-    backgroundImage: `radial-gradient(at 69% 76%, #e76f51 , transparent 57%), 
-                      radial-gradient(at 35% 78%, #f4a261 0, transparent 82%), 
-                      radial-gradient(at 2% 94%, #6A148C, transparent 69%), 
-                      radial-gradient(at 92% 46%, rgba(255,66,85, .5) 0, transparent 88%), 
-                      radial-gradient(at 13% 86%, rgb(245,245,244) 0, transparent 78%), 
-                      radial-gradient(at 85% 4%, #390099 0, transparent 100%), 
-                      radial-gradient(at 10% 30%, rgba(255,66,85) 0, transparent 39%)`,
-    backgroundSize: "cover",
-};
-
 /**
  * This is a layout for all pages, included in _app.js. Nextjs will auto-route
  * pages from appjs and this layout will wrap them so that they include anything in this
@@ -27,15 +15,23 @@ const Layout = ({ children, ...props }) => {
     const { asPath } = useRouter();
     return (
         <>
-            <div
-                className="h-fit text-gray-50 overflow-x-clip bg-slate-900"
-                // style={gradientBackground}
-            >
-                <SideNav />
-                <main className="relative min-h-screen">
-                    {children}
-                    <Footer></Footer>
-                </main>
+            {/* Background */}
+            <div className="w-full h-fit absolute bg-cover bg-mountain-sun bg-fixed bg-no-repeat">
+                {/* Dimmer */}
+                {/* Credit to photographer */}
+                <a
+                    href="https://www.pexels.com/photo/snow-covered-mountain-during-sunrise-618833/"
+                    className="isolate z-50 w-fit h-fit absolute bottom-4 right-4 text-gray-50 font-light"
+                >
+                    Picture by Sagui Andrea
+                </a>
+                <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-20">
+                    <SideNav />
+                    <main className="relative min-h-screen">
+                        {children}
+                        <Footer></Footer>
+                    </main>
+                </div>
             </div>
         </>
     );

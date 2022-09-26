@@ -13,7 +13,7 @@ const logos = [
     },
     {
         icon: <i className="fa-brands fa-xl fa-spotify"></i>,
-        href: "",
+        href: "https://developer.spotify.com/documentation/web-api/",
     },
     {
         icon: <i className="fa-solid fa-xl fa-map"></i>,
@@ -32,11 +32,16 @@ const Footer = ({ ...props }) => {
                 ))}
             </div>
             <div className="flex flex-row justify-center">
-                <div className="relative w-48 h-9 m-4">
-                    <a href="https://www.ecs.baylor.edu/">
-                        <Image src="/logos/BU_Horz_White.png" layout="fill" />
-                    </a>
-                </div>
+                <a
+                    href="https://www.ecs.baylor.edu/"
+                    className="relative w-48 h-9 m-4"
+                >
+                    <Image
+                        src="/logos/BU_Horz_White.png"
+                        layout="fill"
+                        priority={false}
+                    />
+                </a>
             </div>
         </footer>
     );
