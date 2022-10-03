@@ -27,7 +27,7 @@ const Layout = ({ children, ...props }) => {
                 </a>
                 <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-20">
                     <Navbar />
-                    <main className="relative min-h-screen">
+                    <main className="relative min-h-screen lg:ml-16">
                         {children}
                         {/* Footer Padding */}
                         <div className="p-24 w-full invisible"></div>
