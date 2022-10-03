@@ -42,7 +42,9 @@ export default function Home({ ...props }) {
                 </div>
                 {/* Trip start box */}
                 <div className="isolate mt-12 gap-8 p-2 pt-4 rounded-lg bg-gray-200 shadow-lg drop-shadow-lg text-slate-800">
-                    <h4 className="px-4 font-semibold">Begin your journey.</h4>
+                    <h4 className="px-4 font-semibold">
+                        Start your journey. :D
+                    </h4>
                     <div className="flex flex-row">
                         <div className="py-4 px-2 sm:px-4">
                             <label className="px-1 font-light">Start</label>
