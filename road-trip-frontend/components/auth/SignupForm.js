@@ -65,7 +65,7 @@ const SignUpForm = () => {
                             value={state.name}
                         />
                     </li>
-                    <li className="flex flex-row justify-between gap-4">
+                    <li className="flex flex-row justify-between gap-4 items-center">
                         <label className="px-1 font-light w-32 items-center">
                             Username
                         </label>
@@ -78,7 +78,7 @@ const SignUpForm = () => {
                             value={state.username}
                         />
                     </li>
-                    <li className="flex flex-row justify-between gap-4">
+                    <li className="flex flex-row justify-between gap-4 mb-6 items-center">
                         <label className="px-1 font-light w-32 items-center">
                             Email
                         </label>
@@ -91,7 +91,7 @@ const SignUpForm = () => {
                             value={state.email}
                         />
                     </li>
-                    <li className="flex flex-row justify-between gap-4">
+                    <li className="flex flex-row justify-between gap-4 items-center">
                         <label className="px-1 font-light w-32 items-center">
                             Password
                         </label>
@@ -104,7 +104,7 @@ const SignUpForm = () => {
                             value={state.password}
                         />
                     </li>
-                    <li className="flex flex-row justify-between gap-4">
+                    <li className="flex flex-row justify-between gap-4 items-center">
                         <label className="px-1 font-light w-32 items-center">
                             Confirm Password
                         </label>

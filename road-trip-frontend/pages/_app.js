@@ -32,10 +32,6 @@ function MyApp({ Component, pageProps }) {
                     name="description"
                     content="A web app to identify, detect, and educate about antipatterns."
                 />
-                <link
-                    href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"
-                    rel="stylesheet"
-                />
             </Head>
             {/* This Handles importing any and all fontawesome icons.*/}
             <Script
