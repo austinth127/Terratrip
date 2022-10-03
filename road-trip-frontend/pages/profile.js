@@ -12,9 +12,9 @@ const Profile = () => {
     console.log(user);
 
     return (
-        <div>
+        <div className="w-full h-full px-8">
             <div className="flex flex-col gap-y-4">
-                <div></div>
+                <div className="bg-white w-full"></div>
             </div>
         </div>
     );
