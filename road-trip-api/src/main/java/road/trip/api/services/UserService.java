@@ -11,7 +11,7 @@ import road.trip.persistence.daos.UserRepository;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserService {
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
     public Optional<User> findUser(Long userId) {
         return userRepository.findById(userId);
