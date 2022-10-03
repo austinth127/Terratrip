@@ -55,6 +55,8 @@ bootJar {
 }
 
 dependencies {
+    runtimeOnly 'mysql:mysql-connector-java'
+
     implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
 
     implementation group: 'com.gitlab.bessemer', name: 'cornerstone', version: '1.0.5'

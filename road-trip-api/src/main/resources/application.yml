@@ -5,6 +5,7 @@ spring:
     url: jdbc:mysql://104.198.65.166:3306/test_schema
     username: root
     password: )Be1].z#~#Udx+`B
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
