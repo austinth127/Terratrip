@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import road.trip.api.models.request.RegisterUserRequest;
 import road.trip.persistence.models.User;
 import road.trip.persistence.daos.UserRepository;
 
@@ -13,11 +14,12 @@ import road.trip.persistence.daos.UserRepository;
 public class UserService {
     final UserRepository userRepository;
 
-    public Optional<User> findUser(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<User> getProfile(Long userId) {
+        return userRepository.findByUserfrontId(userId);
     }
 
-    public User saveUser(User user) {
+    public User registerUser(RegisterUserRequest request) {
+        User user = User.builder().username(request.getUsername()).userfrontId(request.getUserId()).name(request.getName()).emailAddress(request.getEmail()).build();
         return userRepository.save(user);
     }
 }

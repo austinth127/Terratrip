@@ -1,15 +1,36 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Userfront from "@userfront/core";
+import axios from "axios";
 Userfront.init("wbmrp64n");
 
 const Profile = () => {
     // Get the id from the dynamic route segment
-    const { query } = useRouter();
-    const id = query.id;
-    const user = Userfront.user;
-    console.log(user);
+    const router = useRouter();
+    const id = Userfront.user.userId;
+    const [user, setUser] = useState();
+
+    useEffect(() => {
+        /** @TODO better error handling */
+        const getData = async () => {
+            const res = await axios.get(`http://localhost:8080/profile/${id}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
+                },
+            });
+            console.log(res.data);
+            setUser(res.data);
+        };
+
+        getData();
+    }, [id]);
+
+    if (!user) {
+        return <></>;
+    }
 
     return (
         <div className="w-full h-screen px-4 pt-24 text-gray-900 text-lg">
@@ -20,7 +41,8 @@ const Profile = () => {
                     {user.username}
                 </p>
                 <p className="text-center font-light text-base">
-                    <label className="font-normal">Email:</label> {user.email}
+                    <label className="font-normal">Email:</label>{" "}
+                    {user.emailAddress}
                 </p>
                 {/** @TODO Add trips and playlist to response data */}
                 <p className="mt-12 text-left font-light text-base">

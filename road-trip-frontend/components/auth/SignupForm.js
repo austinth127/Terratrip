@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button } from "../../components/general/Buttons";
 import TextInput from "../../components/general/TextInput";
 import Alert from "./Alert";
-import Userfront from "@userfront/core";
+import Userfront, { user } from "@userfront/core";
+import axios from "axios";
 
 const SignUpForm = () => {
     const [state, setState] = useState({
@@ -37,13 +38,39 @@ const SignUpForm = () => {
             password: state.password,
             name: state.name,
             username: state.username,
-        }).catch((error) => {
-            // Format message
-            let msg = error.message;
-            msg = msg.replace('"email"', "Email field");
-            msg = msg.replace('"password"', "Password field");
-            setAlert(msg);
-        });
+            redirect: false,
+        })
+            .catch((error) => {
+                // Format message
+                let msg = error.message;
+                msg = msg.replace('"email"', "Email field");
+                msg = msg.replace('"password"', "Password field");
+                setAlert(msg);
+            })
+            .then(() => {
+                const { username, userId, email, name } = Userfront.user;
+                console.log(Userfront.user);
+                if (userId) {
+                    /**@TODO need to setup axios properly so url is defined once in env */
+                    axios.post(
+                        "http://localhost:8080/register",
+                        {
+                            username,
+                            userId,
+                            name,
+                            email,
+                        },
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Access-Control-Allow-Origin": "*",
+                                "Access-Control-Allow-Methods":
+                                    "GET,PUT,POST,DELETE",
+                            },
+                        }
+                    );
+                }
+            });
     };
 
     return (

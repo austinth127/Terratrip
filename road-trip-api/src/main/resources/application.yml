@@ -1,11 +1,9 @@
 server:
   port : 8080
 spring:
-  datasource:
-    url: jdbc:mysql://104.198.65.166:3306/test_schema
-    username: root
-    password: )Be1].z#~#Udx+`B
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database: mysql

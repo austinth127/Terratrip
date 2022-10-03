@@ -1,36 +1,42 @@
 package road.trip.persistence.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-import lombok.Data;
+import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
+@AllArgsConstructor
 @Table(name = User.TABLE_NAME)
+@NoArgsConstructor
+@Builder
 public class User {
 
     public static final String TABLE_NAME = "USER";
 
     @Id
-    @GeneratedValue(generator = TABLE_NAME + "_GENERATOR")
-    @SequenceGenerator(
-            name = TABLE_NAME + "_GENERATOR",
-            sequenceName = TABLE_NAME + "_SEQUENCE"
-    )
-    @Column(name = "USER_ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "EMAIL_ADDRESS")
+    Long userfrontId;
     String emailAddress;
+    String name;
+    String username;
 
-    @Column(name = "PASSWORD")
-    String password;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
 
-    @Column(name = "USER_TYPE")
-    String userType;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
