@@ -3,6 +3,7 @@ import NavButton from "./NavButton";
 import NavItem from "./NavItem";
 import { tabs } from "../../utils/tabs";
 import { useRouter } from "next/router";
+import AuthRoutes from "./AuthRoutes";
 
 /**
  * A navbar to be displayed on the left side of the screen, pops out
@@ -59,6 +60,7 @@ const Navbar = ({ ...props }) => {
                             About
                         </NavItem>
                     </div>
+                    <AuthRoutes />
                     {tabs.map((tab, index) => (
                         <div
                             key={tab.section}
@@ -72,14 +74,6 @@ const Navbar = ({ ...props }) => {
                             ))}
                         </div>
                     ))}
-                    <div className="lg:mt-4">
-                        <NavItem href="/auth/signin" key="log in">
-                            Log In
-                        </NavItem>
-                        <NavItem href="/auth/signup" key="sign up">
-                            Sign Up
-                        </NavItem>
-                    </div>
                 </ul>
             </nav>
         </div>
