@@ -24,8 +24,8 @@ const SignUpForm = () => {
                             type="text"
                             // id="emailInput"
                             name="name"
-                            placeholder="Username"
-                            autoComplete="username"
+                            placeholder="Name"
+                            autoComplete="name"
                             onChange={(e) => handleFormChange(e)}
                             value={state.name}
                         />
@@ -39,7 +39,7 @@ const SignUpForm = () => {
                             // id="passwordInput"
                             name="username"
                             placeholder="Username"
-                            autoComplete="Username"
+                            autoComplete="username"
                             onChange={(e) => handleFormChange(e)}
                             value={state.username}
                         />
@@ -53,7 +53,7 @@ const SignUpForm = () => {
                             type = "email"
                             // id = "nameInput"
                             placeholder="Email"
-                            // autoComplete="current-name"
+                            autoComplete="email"
                             onChange={(e)=>handleFormChange(e)}
                             value={state.email}
                         />
@@ -66,8 +66,8 @@ const SignUpForm = () => {
                             type = "password"
                             name = "password"
                             // id = "nameInput"
-                            placeholder="password"
-                            // autoComplete="current-name"
+                            placeholder="Password"
+                            autoComplete="current-password"
                             onChange={(e)=>handleFormChange(e)}
                             value={state.password}
                         />
@@ -80,7 +80,7 @@ const SignUpForm = () => {
                             type = "password"
                             name = "confirmPassword"
                             // id = "nameInput"
-                            placeholder="password"
+                            placeholder="Confirm Password"
                             // autoComplete="current-name"
                             onChange={(e)=>handleFormChange(e)}
                             value={state.confirmPassword}
@@ -95,7 +95,14 @@ const SignUpForm = () => {
                         </a>
                     </li>
                     <li className="flex flex-row justify-center mt-8">
-                        <Button onClick={() => {}}>Sign In</Button>
+                        <Button onClick={() => {
+                            const { password, confirmPassword } = state;
+                                if (password !== confirmPassword) {
+                                    alert("Passwords don't match");
+                                } else {
+                                    // make API call
+                                }
+                        }}>Sign Up</Button>
                     </li>
                 </ul>
             </form>
