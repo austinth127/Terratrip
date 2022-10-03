@@ -1,7 +1,4 @@
 export const tabs = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-
     {
         section: "Trips",
         tabs: [

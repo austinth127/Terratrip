@@ -14,12 +14,12 @@ const Navbar = ({ ...props }) => {
 
     return (
         <div
-            className={`fixed top-0 left-0 w-fit h-screen overflow-x-clip z-50 text-white ease-in-out duration-200 ${
+            className={`fixed top-0 left-0 lg:w-fit w-full lg:h-screen h-fit overflow-x-clip z-50 text-white ease-in-out duration-200 ${
                 props.className
-            } ${navOpen ? `` : `sm:-translate-x-[13rem]`}`}
+            } ${navOpen ? `` : `lg:-translate-x-[13rem]`}`}
         >
             <nav
-                className={`relative isolate sm:w-64 h-full bg-white shadow-lg duration-200 ease-in-out ${
+                className={`relative isolate lg:w-64 w-full lg:h-full bg-white shadow-lg duration-200 ease-in-out ${
                     navOpen ? `bg-opacity-95` : ` bg-opacity-10`
                 }`}
             >
@@ -33,27 +33,33 @@ const Navbar = ({ ...props }) => {
                         <i className="fa-solid fa-bars fa-xl"></i>
                     </button>
                 </div>
-                <ul className={`flex flex-col p-8 ${navOpen ? `` : `hidden`}`}>
-                    {tabs.map((tab, index) =>
-                        tab.section ? (
-                            <div
-                                key={tab.section}
-                                className="my-3 text-slate-800 text-sm"
-                            >
-                                <h2 className="uppercase">{tab.section}</h2>
-                                {tab.tabs.map((tab, index) => (
-                                    <NavItem key={index} href={tab.href}>
-                                        {tab.name}
-                                    </NavItem>
-                                ))}
-                            </div>
-                        ) : (
-                            <NavItem key={index} href={tab.href}>
-                                {tab.name}
-                            </NavItem>
-                        )
-                    )}
-                    <div className="mt-4">
+                <ul
+                    className={`flex lg:flex-col sm:flex-row flex-col justify-between items-start lg:p-8 p-8 pr-16 lg:pr-0 ${
+                        navOpen ? `` : `hidden`
+                    }`}
+                >
+                    <div className="lg:mt-4 lg:my-3">
+                        <NavItem href="/" key="home">
+                            Home
+                        </NavItem>
+                        <NavItem href="/about" key="about">
+                            About
+                        </NavItem>
+                    </div>
+                    {tabs.map((tab, index) => (
+                        <div
+                            key={tab.section}
+                            className="lg:my-3 text-slate-800 text-sm sm:my-0 my-3"
+                        >
+                            <h2 className="uppercase">{tab.section}</h2>
+                            {tab.tabs.map((tab, index) => (
+                                <NavItem key={index} href={tab.href}>
+                                    {tab.name}
+                                </NavItem>
+                            ))}
+                        </div>
+                    ))}
+                    <div className="lg:mt-4">
                         <NavItem href="/auth/signin" key="log in">
                             Log In
                         </NavItem>

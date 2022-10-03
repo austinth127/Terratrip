@@ -8,7 +8,7 @@ import Link from "next/link";
  */
 const NavItem = ({ ...props }) => {
     return (
-        <li className={`my-1 text-sm font-semibold w-full`}>
+        <li className={`my-1 text-sm font-semibold lg:w-full flex-nowrap`}>
             <Link href={props.href ? props.href : "/"}>
                 <a className="flex flex-col items-start w-full">
                     <span className="text-slate-800 grad-txt-rs-yllw font-hubballi w-fit">

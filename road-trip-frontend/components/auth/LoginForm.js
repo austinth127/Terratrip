@@ -1,9 +1,24 @@
 import React, { useState } from "react";
 import { Button } from "../../components/general/Buttons";
 import TextInput from "../../components/general/TextInput";
+import Userfront from "@userfront/core";
+import Alert from "./Alert";
 
+/**
+ * A simple login form nested in "/auth/login" powered by Userfront.
+ *
+ * Form making guide: https://userfront.com/guide/build-login-form-react
+ * How to use JWT: https://userfront.com/test/dashboard/jwt/usage
+ *
+ *
+ * @returns {React.Component} The login form
+ */
 const LoginForm = () => {
-    const [state, setState] = useState({ username: "", password: "" });
+    const [state, setState] = useState({
+        emailOrUsername: "",
+        password: "",
+    });
+    const [alert, setAlert] = useState();
 
     // Automatically update state based on the name attribute of the input
     const handleFormChange = (event) => {
@@ -11,20 +26,40 @@ const LoginForm = () => {
         setState((prevState) => ({ ...prevState, [name]: event.target.value }));
     };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setAlert();
+        Userfront.login({
+            method: "password",
+            emailOrUsername: state.emailOrUsername,
+            password: state.password,
+        })
+            .catch((error) => {
+                // Format message
+                let msg = error.message;
+                msg = msg.replace('"emailOrUsername"', "Email/Username field");
+                msg = msg.replace('"password"', "Password field");
+                setAlert(msg);
+            })
+            .then(() => {
+                console.log(Userfront.tokens.accessToken);
+            });
+    };
+
     return (
         <>
-            <h2 className="text-center font-semibold mb-12">
+            <h2 className="text-center font-semibold mb-8">
                 Sign in to your account
             </h2>
-            <form id="login">
+            <Alert message={alert} />
+            <form id="login" onSubmit={handleSubmit}>
                 <ul className="p-2 flex flex-col gap-2 mb-12">
                     <li className="flex flex-row justify-between gap-4 items-center">
-                        <label className="px-1 font-light w-32">Username</label>
+                        <label className="px-1 font-light w-32">Email</label>
                         <TextInput
                             type="email"
-                            id="emailInput"
-                            name="username"
-                            placeholder="Username"
+                            name="emailOrUsername"
+                            placeholder="Email or Username"
                             autoComplete="username"
                             onChange={(e) => handleFormChange(e)}
                             value={state.username}
@@ -36,7 +71,6 @@ const LoginForm = () => {
                         </label>
                         <TextInput
                             type="password"
-                            id="passwordInput"
                             name="password"
                             placeholder="Password"
                             autoComplete="current-password"
@@ -53,7 +87,7 @@ const LoginForm = () => {
                         </a>
                     </li>
                     <li className="flex flex-row justify-center mt-8">
-                        <Button onClick={() => {}}>Sign In</Button>
+                        <Button type="submit">Sign In</Button>
                     </li>
                 </ul>
             </form>

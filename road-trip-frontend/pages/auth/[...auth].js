@@ -2,7 +2,15 @@ import { useRouter } from "next/router";
 import React from "react";
 import LoginForm from "../../components/auth/LoginForm";
 import Switch from "../../components/general/Switch";
+import Userfront from "@userfront/core";
+import { tenantKey } from "../../utils/api/userFrontSetup";
 
+Userfront.init(tenantKey);
+
+/**
+ * A wrapper for a given login page
+ * @returns {React.Component} The auth page designated by the current path
+ */
 const UserAuth = () => {
     const { asPath } = useRouter();
 
