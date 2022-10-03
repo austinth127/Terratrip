@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NavButton from "./NavButton";
 import NavItem from "./NavItem";
 import { tabs } from "../../utils/tabs";
+import { useRouter } from "next/router";
 
 /**
  * A navbar to be displayed on the left side of the screen, pops out
@@ -11,6 +12,18 @@ import { tabs } from "../../utils/tabs";
  */
 const Navbar = ({ ...props }) => {
     const [navOpen, setNavOpen] = useState();
+    const router = useRouter();
+
+    useEffect(() => {
+        const handleRouteChange = () => {
+            setNavOpen(false);
+        };
+        router.events.on("routeChangeComplete", handleRouteChange);
+
+        return () => {
+            router.events.on("routeChangeComplete", handleRouteChange);
+        };
+    }, []);
 
     return (
         <div

@@ -23,7 +23,7 @@ const logos = [
 
 const Footer = ({ ...props }) => {
     return (
-        <footer className="isolate h-32 w-full bg-transparent z-40 absolute bottom-0 left-0">
+        <footer className="isolate h-32 w-full bg-transparent z-40 absolute bottom-0 left-0 mb-8 lg:mb-0">
             <div className="flex flex-row p-4 justify-center gap-8">
                 {logos.map((logo, index) => (
                     <Link href={logo.href} key={index}>

@@ -2,9 +2,9 @@ server:
   port : 8080
 spring:
   datasource:
-    url: jdbc:postgresql://db:5432/compose-postgres
-    username: compose-postgres
-    password: compose-postgres
+    url: jdbc:mysql://104.198.65.166:3306/test_schema
+    username: root
+    password: )Be1].z#~#Udx+`B
   jpa:
     hibernate:
       ddl-auto: update

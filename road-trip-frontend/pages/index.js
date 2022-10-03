@@ -64,7 +64,6 @@ export default function Home({ ...props }) {
             {/* Second Section */}
             {/* <div className="bg-slate-800 w-full h-screen isolate rounded-md"></div> */}
             {/* Footer padding */}
-            <div className="p-24 w-full invisible"></div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import SideNav from "../../components/navigation/SideNav";
+import Navbar from "../../components/navigation/Navbar";
 import Footer from "../../components/navigation/Footer";
 import { useRouter } from "next/router";
 
@@ -26,9 +26,11 @@ const Layout = ({ children, ...props }) => {
                     Picture by Sagui Andrea
                 </a>
                 <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-20">
-                    <SideNav />
+                    <Navbar />
                     <main className="relative min-h-screen">
                         {children}
+                        {/* Footer Padding */}
+                        <div className="p-24 w-full invisible"></div>
                         <Footer></Footer>
                     </main>
                 </div>
