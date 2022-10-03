@@ -61,9 +61,6 @@ export default function Home({ ...props }) {
                     </div>
                 </div>
             </div>
-            {/* Second Section */}
-            {/* <div className="bg-slate-800 w-full h-screen isolate rounded-md"></div> */}
-            {/* Footer padding */}
         </div>
     );
 }

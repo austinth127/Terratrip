@@ -53,7 +53,7 @@ const LoginForm = () => {
             </h2>
             <Alert message={alert} />
             <form id="login" onSubmit={handleSubmit}>
-                <ul className="p-2 flex flex-col gap-2 mb-12">
+                <ul className="p-2 flex flex-col gap-2">
                     <li className="flex flex-row justify-between gap-4 items-center">
                         <label className="px-1 font-light w-32">Email</label>
                         <TextInput
@@ -86,7 +86,7 @@ const LoginForm = () => {
                             Forgot Password?
                         </a>
                     </li>
-                    <li className="flex flex-row justify-center mt-8">
+                    <li className="flex flex-row justify-center mt-12 mb-4">
                         <Button type="submit">Sign In</Button>
                     </li>
                 </ul>
