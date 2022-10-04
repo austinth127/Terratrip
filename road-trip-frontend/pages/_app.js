@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/globals.css";
 
 import Script from "next/script";
@@ -12,6 +12,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 // Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
 import Layout from "../components/general/Layout";
+import { setupAxios, setupLogger } from "../utils/axiosSetup";
 config.autoAddCss = false;
 
 /**
@@ -24,6 +25,11 @@ config.autoAddCss = false;
  * @returns {React.Component} The page to be rendered
  */
 function MyApp({ Component, pageProps }) {
+    useEffect(() => {
+        setupAxios();
+        setupLogger();
+    }, []);
+
     return (
         <>
             <Head>

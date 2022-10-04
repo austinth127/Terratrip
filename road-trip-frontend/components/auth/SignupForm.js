@@ -38,7 +38,6 @@ const SignUpForm = () => {
             password: state.password,
             name: state.name,
             username: state.username,
-            redirect: false,
         })
             .catch((error) => {
                 // Format message

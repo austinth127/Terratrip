@@ -14,13 +14,7 @@ const Profile = () => {
     useEffect(() => {
         /** @TODO better error handling */
         const getData = async () => {
-            const res = await axios.get(`http://localhost:8080/profile/${id}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
-                },
-            });
+            const res = await axios.get(`/profile/${id}`);
             console.log(res.data);
             setUser(res.data);
         };

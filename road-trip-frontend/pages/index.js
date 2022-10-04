@@ -10,22 +10,6 @@ import TextInput from "../components/general/TextInput";
  */
 export default function Home({ ...props }) {
     const [startLocation, setStartLocation] = useState("");
-    const [reverseStart, setReverseStart] = useState(startLocation);
-
-    const revStartLocation = () => {
-        // Make a request for a user with a given ID
-        axios
-            .get("http://localhost:8080/string-reverse", {
-                params: {
-                    value: startLocation,
-                },
-            })
-            .then((response) => {
-                // handle success
-                setReverseStart(response.data.reverse);
-                console.log(response.data.reverse);
-            });
-    };
 
     return (
         <div className="flex flex-col items-center">
@@ -42,9 +26,7 @@ export default function Home({ ...props }) {
                 </div>
                 {/* Trip start box */}
                 <div className="isolate mt-12 gap-8 p-2 pt-4 rounded-lg bg-gray-200 shadow-lg drop-shadow-lg text-slate-800">
-                    <h4 className="px-4 font-semibold">
-                        Start your journey. :D
-                    </h4>
+                    <h4 className="px-4 font-semibold">Begin your journey.</h4>
                     <div className="flex flex-row">
                         <div className="py-4 px-2 sm:px-4">
                             <label className="px-1 font-light">Start</label>
@@ -55,11 +37,8 @@ export default function Home({ ...props }) {
                             <TextInput />
                         </div>
                         <div className="p-4 flex items-end">
-                            <Button onClick={revStartLocation}>Submit</Button>
+                            <Button>Submit</Button>
                         </div>
-                    </div>
-                    <div className="flex justify-center">
-                        <label>{reverseStart}</label>
                     </div>
                 </div>
             </div>
