@@ -1,11 +1,11 @@
-package road.trip.api.models.request;
+package road.trip.api.requests;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-public class RegisterUserRequest {
+public class RegisterRequest {
     @NotNull
     private String username;
     @NotNull

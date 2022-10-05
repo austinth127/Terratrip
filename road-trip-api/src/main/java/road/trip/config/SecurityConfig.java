@@ -1,0 +1,37 @@
+package road.trip.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    private static final String[] PUBLIC_ROUTES = {
+        "/register",
+        "/profile/{id}"
+    };
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedMethods(List.of("POST", "GET", "PUT", "PATCH", "DELETE"));
+        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowedOrigins(List.of("*"));
+
+        http.authorizeRequests()
+            .antMatchers(PUBLIC_ROUTES).permitAll()
+            .anyRequest().authenticated()
+            .and()
+            //.addFilterBefore(authFilter, AuthFilter.class)
+            .cors().configurationSource(request -> corsConfig);
+
+        return http.build();
+    }
+
+}
