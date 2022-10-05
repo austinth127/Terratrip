@@ -12,12 +12,14 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
  * @returns {JSX.Element} Mapboxgl map
  */
 const Map = () => {
-    /** @type {React.MutableRefObject<mapboxgl.Map>} */
+    /** @type {React.MutableRefObject<JSX.Element>} */
     const mapContainer = useRef(null);
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const map = useRef(null);
-    const [lng, setLng] = useState(-97.5); // Longitude
-    const [lat, setLat] = useState(40); // Lattitude
+
+    // Longitude, Lattitude, Zoom
+    const [lng, setLng] = useState(-97.5);
+    const [lat, setLat] = useState(40);
     const [zoom, setZoom] = useState(3.4);
 
     // Initialize mapbox map
@@ -46,6 +48,7 @@ const Map = () => {
             <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono z-[1] absolute top-12 left-0 m-3 rounded-lg">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
+            {/* Map */}
             <div ref={mapContainer} className="h-[100vh]"></div>
         </div>
     );

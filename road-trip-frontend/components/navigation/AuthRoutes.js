@@ -7,6 +7,7 @@ const AuthRoutes = () => {
     const user = Userfront.user;
     const [isUser, setIsUser] = useState(null);
 
+    // Set user boolean if they do not exist
     useEffect(() => {
         if (!Userfront.user.userId) return;
         setIsUser(Userfront.user.userId != undefined);
