@@ -1,24 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
-mapboxgl.accessToken =
-    "pk.eyJ1IjoiYXVzdGludGgxMjciLCJhIjoiY2w4c3prOWo1MDJrMjNwazFhMmxpMXViaSJ9.BynXNuEZFLbDBLZtSbaFVg";
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
 const Map = () => {
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const mapContainer = useRef(null);
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const map = useRef(null);
-    const [lng, setLng] = useState(-70.9); // Longitude
-    const [lat, setLat] = useState(42.35); // Lattitude
-    const [zoom, setZoom] = useState(9);
+    const [lng, setLng] = useState(-97.5); // Longitude
+    const [lat, setLat] = useState(40); // Lattitude
+    const [zoom, setZoom] = useState(3.4);
 
     // Initialize mapbox map
     useEffect(() => {
         if (map.current) return;
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: "mapbox://styles/mapbox/streets-v11",
+            style: "mapbox://styles/mapbox/outdoors-v11",
             center: [lng, lat],
             zoom: zoom,
         });
@@ -36,6 +35,9 @@ const Map = () => {
 
     return (
         <div>
+            <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono z-[1] absolute top-0 left-0 m-3">
+                Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+            </div>
             <div ref={mapContainer} className="map-container"></div>
         </div>
     );

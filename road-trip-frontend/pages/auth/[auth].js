@@ -4,10 +4,9 @@ import LoginForm from "../../components/auth/LoginForm";
 import SignUpForm from "../../components/auth/SignupForm";
 import Switch from "../../components/general/Switch";
 import Userfront from "@userfront/core";
-import { tenantKey } from "../../utils/api/userFrontSetup";
 import ForgotPasswordForm from "../../components/auth/ForgotPassword";
 
-Userfront.init(tenantKey);
+Userfront.init("wbmrp64n");
 
 /**
  * A wrapper for a given login page
