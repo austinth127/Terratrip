@@ -17,7 +17,7 @@ public class TripService {
     //TODO: IDK if getReference is right
     public Trip getTrip(Long tripId){
         return tripRepository.getReferenceById(tripId);
-    };
+    }
 
     public void addStop(){}
 

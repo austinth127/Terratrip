@@ -20,6 +20,7 @@ const Map = () => {
     const map = useRef(null);
     const [lng, setLng] = useState(-97.141); // Longitude
     const [lat, setLat] = useState(31.55); // Lattitude
+    // Longitude, Lattitude, Zoom
     const [zoom, setZoom] = useState(3.4);
 
     // Initialize mapbox map
@@ -103,6 +104,7 @@ const Map = () => {
             });
 
         });
+        //when user clicks on the map create a red dot and display route between red dot and Waco
         map.current.on('click', (event) => {
             const coords = Object.keys(event.lngLat).map((key) => event.lngLat[key]);
             const end = {
@@ -118,6 +120,7 @@ const Map = () => {
                      }
                  ]
             };
+            //If this is first click need to create new layer.
             if (map.current.getLayer('end')){
                 map.current.getSource('end').setData(end);
             }else{
@@ -187,6 +190,7 @@ const Map = () => {
             <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono z-[1] absolute top-12 left-0 m-3 rounded-lg">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
+            {/* Map */}
             <div ref={mapContainer} className="h-[100vh]"></div>
         </div>
     );

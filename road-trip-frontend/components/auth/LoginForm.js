@@ -10,7 +10,6 @@ import Alert from "./Alert";
  * Form making guide: https://userfront.com/guide/build-login-form-react
  * How to use JWT: https://userfront.com/test/dashboard/jwt/usage
  *
- *
  * @returns {React.Component} The login form
  */
 const LoginForm = () => {
