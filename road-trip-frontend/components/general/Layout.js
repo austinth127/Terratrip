@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
  * @returns {React.Component} The page surrounded by the layout
  */
 const Layout = ({ children, ...props }) => {
-    const { asPath } = useRouter();
     return (
         <>
             {/* Background */}

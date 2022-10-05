@@ -4,6 +4,7 @@ import TextInput from "../../components/general/TextInput";
 import Alert from "./Alert";
 import Userfront, { user } from "@userfront/core";
 import axios from "axios";
+import { useRouter } from "next/dist/client/router";
 
 const SignUpForm = () => {
     const [state, setState] = useState({
@@ -15,6 +16,9 @@ const SignUpForm = () => {
     });
 
     const [alert, setAlert] = useState();
+    const [confirmation, setConfirmation] = useState();
+
+    const router = useRouter();
 
     // Automatically update state based on the name attribute of the input
     const handleFormChange = (event) => {
@@ -25,6 +29,7 @@ const SignUpForm = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert();
+        setConfirmation();
 
         const { password, confirmPassword } = state;
         if (password !== confirmPassword) {
@@ -38,6 +43,7 @@ const SignUpForm = () => {
             password: state.password,
             name: state.name,
             username: state.username,
+            redirect: false,
         })
             .catch((error) => {
                 // Format message
@@ -50,24 +56,26 @@ const SignUpForm = () => {
                 const { username, userId, email, name } = Userfront.user;
                 console.log(Userfront.user);
                 if (userId) {
-                    /**@TODO need to setup axios properly so url is defined once in env */
-                    axios.post(
-                        "http://localhost:8080/register",
-                        {
+                    axios
+                        .post("/register", {
                             username,
                             userId,
                             name,
                             email,
-                        },
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Access-Control-Allow-Origin": "*",
-                                "Access-Control-Allow-Methods":
-                                    "GET,PUT,POST,DELETE",
-                            },
-                        }
-                    );
+                        })
+                        .then(() => {
+                            setAlert();
+                            setConfirmation(
+                                "Successfully signed up. Redirecting..."
+                            );
+                            setTimeout(() => router.push("/", 500));
+                        })
+                        .catch(() => {
+                            setAlert(
+                                "Failed to access the server, try again later"
+                            );
+                            /** @TODO Handle user being in userfront but not in backend */
+                        });
                 }
             });
     };
@@ -77,7 +85,8 @@ const SignUpForm = () => {
             <h2 className="text-center font-semibold mb-8">
                 Create your account
             </h2>
-            <Alert message={alert} />
+            <Alert message={alert} className="text-red-600" />
+            <Alert message={confirmation} className="text-green-600" />
             <form id="signup" onSubmit={handleSubmit}>
                 <ul className="p-2 flex flex-col gap-2">
                     <li className="flex flex-row justify-between gap-4 items-center">

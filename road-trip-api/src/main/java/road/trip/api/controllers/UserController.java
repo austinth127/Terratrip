@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping("/user")
 public class UserController {
     final UserService userService;
 

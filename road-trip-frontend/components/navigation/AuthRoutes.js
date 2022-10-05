@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import NavItem from "./NavItem";
 
 import Userfront from "@userfront/core";
-Userfront.init("wbmrp64n");
 
 const AuthRoutes = () => {
     const user = Userfront.user;

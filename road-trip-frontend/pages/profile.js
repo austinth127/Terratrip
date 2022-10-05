@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 
 import Userfront from "@userfront/core";
 import axios from "axios";
-Userfront.init("wbmrp64n");
 
 const Profile = () => {
     // Get the id from the dynamic route segment

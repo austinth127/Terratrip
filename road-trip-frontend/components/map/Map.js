@@ -1,8 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
+/**
+ * Mapbox map
+ *
+ * @TODO add directions https://docs.mapbox.com/help/tutorials/getting-started-directions-api/
+ *
+ * @returns {JSX.Element} Mapboxgl map
+ */
 const Map = () => {
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const mapContainer = useRef(null);
@@ -34,11 +42,11 @@ const Map = () => {
     });
 
     return (
-        <div>
-            <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono z-[1] absolute top-0 left-0 m-3">
+        <div className="relative">
+            <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono z-[1] absolute top-12 left-0 m-3 rounded-lg">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
-            <div ref={mapContainer} className="map-container"></div>
+            <div ref={mapContainer} className="h-[100vh]"></div>
         </div>
     );
 };

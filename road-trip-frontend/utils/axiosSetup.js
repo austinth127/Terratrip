@@ -19,14 +19,7 @@ axios.interceptors.response.use(
     },
     function (error) {
         try {
-            Logger.error(error);
-            // Idk if this will work vvv
-            // const errorList = error.response.data.errors;
-            // if (errorList) {
-            //     errorList.forEach((err) => Logger.error(err.message));
-            // } else {
-            //     Logger.error(error);
-            // }
+            Logger.error(error.message);
         } catch (e) {
             Logger.warn("There was an issue in the axios interceptor:", e);
         }
@@ -66,9 +59,9 @@ export const setupAxios = () => {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
     axios.defaults.headers.common["Content-Type"] = "application/json";
     //axios.defaults.withCredentials = true;
-    axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-    axios.defaults.headers.common["Access-Control-Allow-Methods"] =
-        "GET,PUT,POST,DELETE";
+    // axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+    // axios.defaults.headers.common["Access-Control-Allow-Methods"] =
+    //     "GET,PUT,POST,DELETE";
 };
 
 export const setupLogger = () => {

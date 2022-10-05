@@ -1,10 +1,19 @@
 import React from "react";
 
-const Alert = ({ ...props }) => {
-    if (!props.message) return "";
+/**
+ * Object to optionally display an alert string
+ * @param {Object} props The props passed to this object
+ * @param {String} message Message to display
+ * @returns {JSX.Element} The alert message
+ */
+const Alert = ({ message, ...props }) => {
+    if (!message) return "";
     return (
-        <div id="alert" className="text-sm text-center mb-4 text-red-600">
-            {props.message}
+        <div
+            id="alert"
+            className={`text-sm text-center mb-4 ${props.className}`}
+        >
+            {message}
         </div>
     );
 };

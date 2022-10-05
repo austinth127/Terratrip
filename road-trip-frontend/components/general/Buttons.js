@@ -12,3 +12,19 @@ export const Button = ({ ...props }) => {
         </button>
     );
 };
+
+export const OutlineButton = ({ ...props }) => {
+    return (
+        <button
+            type="button"
+            className={`px-6 py-2.5 border-green-600 text-green-600 font-medium text-xs leading-tight 
+                    uppercase rounded shadow-md hover:bg-gray-100 hover:shadow-lg focus:bg-gray-100 
+                    focus:shadow-lg focus:ring-0 active:bg-gray-200 active:shadow-lg 
+                    transition duration-150 ease-in-out bg-gray-50 border
+                     ${props.className}`}
+            {...props}
+        >
+            {props.children}
+        </button>
+    );
+};

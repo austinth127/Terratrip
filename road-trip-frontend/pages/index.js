@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button } from "../components/general/Buttons";
 import TextInput from "../components/general/TextInput";
+import TextLogo from "../components/general/TextLogo";
 
 /**
  * The home page for the website
@@ -17,10 +18,8 @@ export default function Home({ ...props }) {
             <div className="flex flex-col h-screen justify-center items-center px-8">
                 {/* Title / Subtitle */}
                 <div className="isolate mb-16">
-                    <h1 className="text-6xl text-center font-bold uppercase drop-shadow-md">
-                        Terratrip
-                    </h1>
-                    <h3 className="text-center font-light text-lg text-gray-100 drop-shadow-md">
+                    <TextLogo className="text-6xl drop-shadow-md" />
+                    <h3 className="text-center font-light text-lg text-gray-100 drop-shadow-md mt-2">
                         Create your outdoor adventure.
                     </h3>
                 </div>

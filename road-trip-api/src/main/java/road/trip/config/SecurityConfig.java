@@ -13,8 +13,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private static final String[] PUBLIC_ROUTES = {
-        "/register",
-        "/profile/{id}"
+        "/user/register",
+        "/user/profile/{id}"
     };
 
     @Bean
@@ -22,6 +22,8 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedMethods(List.of("POST", "GET", "PUT", "PATCH", "DELETE"));
         corsConfig.setAllowedHeaders(List.of("*"));
+
+        // TODO: This is unsafe, change to allowing origins of localhost and the server
         corsConfig.setAllowedOrigins(List.of("*"));
 
         http.authorizeRequests()

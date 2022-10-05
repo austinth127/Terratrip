@@ -15,6 +15,10 @@ import Layout from "../components/general/Layout";
 import { setupAxios, setupLogger } from "../utils/axiosSetup";
 config.autoAddCss = false;
 
+import Userfront from "@userfront/core";
+import MapLayout from "../components/map/MapLayout";
+Userfront.init("wbmrp64n");
+
 /**
  * This will be rendered automatically by next js as the root of the react app.
  * https://nextjs.org/docs/basic-features/pages
@@ -44,9 +48,15 @@ function MyApp({ Component, pageProps }) {
                 src="https://kit.fontawesome.com/1b232c1fd4.js"
                 crossorigin="anonymous"
             ></Script>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
+            {Component.usesMapLayout ? (
+                <MapLayout>
+                    <Component {...pageProps} />
+                </MapLayout>
+            ) : (
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            )}
         </>
     );
 }

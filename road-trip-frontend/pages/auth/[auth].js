@@ -6,8 +6,6 @@ import Switch from "../../components/general/Switch";
 import Userfront from "@userfront/core";
 import ForgotPasswordForm from "../../components/auth/ForgotPassword";
 
-Userfront.init("wbmrp64n");
-
 /**
  * A wrapper for a given login page
  * @returns {React.Component} The auth page designated by the current path
