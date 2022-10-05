@@ -4,7 +4,9 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date; //TODO: should I import the sql date instead?
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -16,9 +18,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 public class Trip {
-
     public static final String TABLE_NAME = "TRIP";
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
@@ -26,7 +26,13 @@ public class Trip {
     int adventureLevel; //TODO: Should this be an int?
     Date startDate;
     //End Date calculated based on route duration
-    //Route route;
+    @ManyToOne()
+    Stop start, end; //TODO: gives me an error
+
+    @ManyToMany() //May need an annotation inside ()
+    List<Stop> stops = new ArrayList<>();
+    int duration; //hours
+    double distance; //miles
 
     @Override
     public boolean equals(Object o) {

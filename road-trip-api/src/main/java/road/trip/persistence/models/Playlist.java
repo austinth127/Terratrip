@@ -4,8 +4,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -13,32 +11,32 @@ import java.util.Objects;
 @ToString
 @Entity
 @AllArgsConstructor
-@Table(name = Route.TABLE_NAME)
+@Table(name = Trip.TABLE_NAME)
 @NoArgsConstructor
 @Builder
-public class Route {
-
-    public static final String TABLE_NAME = "ROUTE";
+public class Playlist {
+    public static final String TABLE_NAME = "PLAYLIST";
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
 
-    //Stop start, end; TODO: gives me an error
-    //List<Stop> stops = new ArrayList<>();
-    int duration; //hours
-    double distance; //miles
+    String name, url;
+    //Genre genre;
+    long userId, tripId;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Stop stop = (Stop) o;
-        return id != null && Objects.equals(id, stop.id);
+        Playlist playlist = (Playlist) o;
+        return id != null && Objects.equals(id, playlist.id);
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }
