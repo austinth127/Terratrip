@@ -28,7 +28,7 @@ public class SecurityConfig {
 
         http.authorizeRequests()
             .antMatchers(PUBLIC_ROUTES).permitAll()
-//            .anyRequest().authenticated()
+            .anyRequest().authenticated()
             .and()
             //.addFilterBefore(authFilter, AuthFilter.class)
             .cors().configurationSource(request -> corsConfig)
