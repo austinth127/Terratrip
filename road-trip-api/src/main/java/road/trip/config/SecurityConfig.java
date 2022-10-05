@@ -31,7 +31,9 @@ public class SecurityConfig {
             .anyRequest().authenticated()
             .and()
             //.addFilterBefore(authFilter, AuthFilter.class)
-            .cors().configurationSource(request -> corsConfig);
+            .cors().configurationSource(request -> corsConfig)
+            .and()
+            .csrf().disable();
 
         return http.build();
     }
