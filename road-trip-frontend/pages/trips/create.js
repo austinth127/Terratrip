@@ -5,5 +5,4 @@ const Create = () => {
     return <div className="bg-slate-900 bg-opacity-50 w-full h-full"></div>;
 };
 
-Create.noLayout = true;
 export default Create;
