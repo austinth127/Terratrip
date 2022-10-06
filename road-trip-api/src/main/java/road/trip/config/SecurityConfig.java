@@ -33,6 +33,8 @@ public class SecurityConfig {
             //.addFilterBefore(authFilter, AuthFilter.class)
             .cors().configurationSource(request -> corsConfig)
             .and()
+
+            // TODO: Unsafe, fix for milestone 3
             .csrf().disable();
 
         return http.build();

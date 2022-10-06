@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Button } from "../components/general/Buttons";
 import TextInput from "../components/general/TextInput";

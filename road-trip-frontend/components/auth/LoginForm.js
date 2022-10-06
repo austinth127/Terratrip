@@ -32,17 +32,13 @@ const LoginForm = () => {
             method: "password",
             emailOrUsername: state.emailOrUsername,
             password: state.password,
-        })
-            .catch((error) => {
-                // Format message
-                let msg = error.message;
-                msg = msg.replace('"emailOrUsername"', "Email/Username field");
-                msg = msg.replace('"password"', "Password field");
-                setAlert(msg);
-            })
-            .then(() => {
-                console.log(Userfront.tokens.accessToken);
-            });
+        }).catch((error) => {
+            // Format message
+            let msg = error.message;
+            msg = msg.replace('"emailOrUsername"', "Email/Username field");
+            msg = msg.replace('"password"', "Password field");
+            setAlert(msg);
+        });
     };
 
     return (
