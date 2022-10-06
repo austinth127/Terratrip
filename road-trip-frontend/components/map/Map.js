@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { getRouteMatcher } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
@@ -32,6 +33,12 @@ const Map = () => {
             center: [lng, lat],
             zoom: zoom,
         });
+        map.current.addControl(
+            new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl:mapboxgl
+            })
+        );
         const start = [lng,lat]
         /**
          * This function makes a request to the MapBox API to find the route between Waco and the parameter end
@@ -75,7 +82,7 @@ const Map = () => {
                 });
             }
         }
-        
+
         map.current.on('load',()=>{
             getRoute(start)
             map.current.addLayer({
