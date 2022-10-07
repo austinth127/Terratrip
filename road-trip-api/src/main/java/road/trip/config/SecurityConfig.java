@@ -1,17 +1,24 @@
 package road.trip.config;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import road.trip.filters.AuthFilter;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfig {
+    private final AuthFilter authFilter;
+
     private static final String[] PUBLIC_ROUTES = {
         "/user/register",
         "/user/profile/{id}"
@@ -30,7 +37,7 @@ public class SecurityConfig {
             .antMatchers(PUBLIC_ROUTES).permitAll()
             .anyRequest().authenticated()
             .and()
-            //.addFilterBefore(authFilter, AuthFilter.class)
+            .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
             .cors().configurationSource(request -> corsConfig)
             .and()
             .csrf().disable();

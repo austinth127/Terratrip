@@ -7,3 +7,4 @@ spring:
     generate-ddl: true
     show-sql: true
     database: mysql
+tenant-id: wbmrp64n
