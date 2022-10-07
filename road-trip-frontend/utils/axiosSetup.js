@@ -1,5 +1,6 @@
 import axios from "axios";
 import Logger from "js-logger";
+import Userfront from "@userfront/core";
 
 axios.interceptors.response.use(
     function (response) {
@@ -58,10 +59,11 @@ axios.interceptors.request.use(
 export const setupAxios = () => {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
     axios.defaults.headers.common["Content-Type"] = "application/json";
-    //axios.defaults.withCredentials = true;
-    // axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-    // axios.defaults.headers.common["Access-Control-Allow-Methods"] =
-    //     "GET,PUT,POST,DELETE";
+    if (Userfront.tokens.accessToken) {
+        axios.defaults.headers.common[
+            "Authorization"
+        ] = `Bearer ${Userfront.tokens.accessToken}`;
+    }
 };
 
 export const setupLogger = () => {

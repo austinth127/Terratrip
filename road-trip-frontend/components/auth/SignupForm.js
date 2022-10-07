@@ -5,6 +5,7 @@ import Alert from "./Alert";
 import Userfront, { user } from "@userfront/core";
 import axios from "axios";
 import { useRouter } from "next/dist/client/router";
+import { setupAxios } from "../../utils/axiosSetup";
 
 const SignUpForm = () => {
     const [state, setState] = useState({
@@ -47,7 +48,6 @@ const SignUpForm = () => {
         }).then(
             (signupResponse) => {
                 const { username, userId, email, name } = Userfront.user;
-                console.log(Userfront.user);
                 if (userId) {
                     axios
                         .post("/user/register", {
@@ -61,6 +61,7 @@ const SignUpForm = () => {
                             setConfirmation(
                                 "Successfully signed up. Redirecting..."
                             );
+                            setupAxios();
                             setTimeout(() => {
                                 router.push("/");
                             }, 500);

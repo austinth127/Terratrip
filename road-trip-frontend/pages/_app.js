@@ -20,6 +20,7 @@ import { setupAxios, setupLogger } from "../utils/axiosSetup";
 
 import Userfront from "@userfront/core";
 import { Provider } from "jotai";
+import ReducedLayout from "../components/general/ReducedLayout";
 Userfront.init("wbmrp64n");
 
 /**
@@ -40,7 +41,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <>
             <Head>
-                <title>Roadtrippers</title>
+                <title>Terratrip</title>
                 <meta
                     name="description"
                     content="A web app to identify, detect, and educate about antipatterns."
@@ -56,6 +57,10 @@ function MyApp({ Component, pageProps }) {
                     <MapLayout>
                         <Component {...pageProps} />
                     </MapLayout>
+                ) : Component.usesReducedLayout ? (
+                    <ReducedLayout>
+                        <Component {...pageProps} />
+                    </ReducedLayout>
                 ) : (
                     <Layout>
                         <Component {...pageProps} />

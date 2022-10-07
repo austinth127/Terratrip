@@ -14,7 +14,6 @@ const Profile = () => {
         /** @TODO better error handling */
         const getData = async () => {
             const res = await axios.get(`/profile/${id}`);
-            console.log(res.data);
             setUser(res.data);
         };
 

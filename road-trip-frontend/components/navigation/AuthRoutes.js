@@ -25,7 +25,7 @@ const AuthRoutes = () => {
                         onClick={handleLogout}
                         key="log out"
                     >
-                        <span className="text-slate-800 my-1 text-sm font-semibold lg:w-full flex-nowrap grad-txt-rs-yllw font-hubballi w-fit">
+                        <span className="text-slate-800 text-sm font-semibold lg:w-full flex-nowrap grad-txt-rs-yllw font-hubballi w-fit">
                             Log Out
                         </span>
                     </button>

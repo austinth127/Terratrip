@@ -34,7 +34,7 @@ const Navbar = ({ ...props }) => {
         >
             <nav
                 className={`relative isolate lg:w-64 w-full lg:h-full bg-white shadow-lg duration-200 ease-in-out ${
-                    navOpen ? `bg-opacity-95` : ` bg-opacity-10`
+                    navOpen ? `bg-opacity-95` : ` bg-opacity-5`
                 }`}
             >
                 <div className="absolute top-4 right-4 overflow-x-clip">

@@ -13,18 +13,27 @@ repositories {
 }
 
 dependencies {
+    // Cool Utils
+    implementation 'org.apache.commons:commons-lang3:3.0'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    // JWT
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.25.4'
+
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.4.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // MYSQL
     runtimeOnly 'mysql:mysql-connector-java'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
 
 tasks.test {
