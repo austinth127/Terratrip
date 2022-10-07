@@ -19,7 +19,7 @@ const Layout = ({ children, ...props }) => {
             <div className="w-full h-fit absolute bg-cover bg-mountain-sun bg-fixed bg-no-repeat">
                 {/* Dimmer */}
 
-                <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-40">
+                <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-50">
                     <Navbar />
                     <main className="relative min-h-screen lg:ml-16">
                         {children}

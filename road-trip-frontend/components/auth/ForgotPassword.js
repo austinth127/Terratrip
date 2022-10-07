@@ -15,17 +15,13 @@ const ForgotPasswordForm = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert();
-        Userfront.sendResetLink(state.email)
-            .catch((error) => {
-                // Format message
-                let msg = error.message;
-                // msg = msg.replace('"emailOrUsername"', "Email/Username field");
-                // msg = msg.replace('"password"', "Password field");
-                setAlert(msg);
-            })
-            .then(() => {
-                console.log(Userfront.tokens.accessToken);
-            });
+        Userfront.sendResetLink(state.email).catch((error) => {
+            // Format message
+            let msg = error.message;
+            // msg = msg.replace('"emailOrUsername"', "Email/Username field");
+            // msg = msg.replace('"password"', "Password field");
+            setAlert(msg);
+        });
     };
     const [alert, setAlert] = useState();
 

@@ -28,3 +28,19 @@ export const OutlineButton = ({ ...props }) => {
         </button>
     );
 };
+
+export const DarkOutlineButton = ({ ...props }) => {
+    return (
+        <button
+            type="button"
+            className={`px-6 py-2.5 border-green-600 text-white font-medium text-xs leading-tight 
+                    uppercase rounded shadow-md hover:bg-gray-800 hover:shadow-lg focus:bg-gray-800 
+                    focus:shadow-lg focus:ring-0 active:bg-gray-700 active:shadow-lg 
+                    transition duration-150 ease-in-out bg-gray-900 border bg-opacity-50
+                     ${props.className}`}
+            {...props}
+        >
+            {props.children}
+        </button>
+    );
+};

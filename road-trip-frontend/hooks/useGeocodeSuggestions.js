@@ -16,7 +16,6 @@ const useGeocodeSuggestions = (initialValue) => {
     const handleChange = async (event) => {
         setValue(event.target.value);
         let length = event.target.value.length;
-        console.log(length, prevInputLength);
         if (length >= 4 && Math.abs(length - prevInputLength) >= 3) {
             try {
                 const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${event.target.value}.json?access_token=${accessToken}&autocomplete=true`;
