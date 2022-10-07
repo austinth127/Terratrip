@@ -4,22 +4,18 @@ import NavItem from "./NavItem";
 import Userfront from "@userfront/core";
 
 const AuthRoutes = () => {
-    const user = Userfront.user;
-    const [isUser, setIsUser] = useState(null);
-
-    // Set user boolean if they do not exist
-    useEffect(() => {
-        if (!Userfront.user.userId) return;
-        setIsUser(Userfront.user.userId != undefined);
-    }, [user]);
-
+    const [isSignedIn, setIsSignedIn] = useState(false);
     const handleLogout = () => {
         Userfront.logout();
     };
 
+    useEffect(() => {
+        setIsSignedIn(Userfront.user && Userfront.user.userId);
+    }, [Userfront.user]);
+
     return (
         <div className="lg:mb-4 lg:mt-2">
-            {isUser ? (
+            {isSignedIn ? (
                 <>
                     <NavItem href={`/profile`} key="profile">
                         Profile
@@ -29,7 +25,7 @@ const AuthRoutes = () => {
                         onClick={handleLogout}
                         key="log out"
                     >
-                        <span className="text-slate-800 my-1 text-sm font-semibold lg:w-full flex-nowrap grad-txt-rs-yllw font-hubballi w-fit">
+                        <span className="text-slate-800 text-sm font-semibold lg:w-full flex-nowrap grad-txt-rs-yllw font-hubballi w-fit">
                             Log Out
                         </span>
                     </button>

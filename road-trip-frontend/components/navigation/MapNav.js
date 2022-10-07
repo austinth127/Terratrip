@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, OutlineButton } from "../general/Buttons";
@@ -20,7 +21,15 @@ const MapNav = () => {
                         bg-opacity-90 bg-gray-50
                         text-slate-800"
         >
-            <TextLogo className="text-lg text-slate-800" />
+            <div className="flex flex-row gap-2 pb-1">
+                <Image
+                    width={32}
+                    height={32}
+                    layout="intrinsic"
+                    src="/logos/mountain.svg"
+                />
+                <TextLogo className="text-lg text-slate-800 pt-1" />
+            </div>
             <div className="flex flex-row justify-evenly gap-2">
                 <Button onClick={handleSave}>Save</Button>
                 <OutlineButton onClick={handleCancel}>Cancel</OutlineButton>

@@ -11,12 +11,15 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 
 // Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
-import Layout from "../components/general/Layout";
-import { setupAxios, setupLogger } from "../utils/axiosSetup";
 config.autoAddCss = false;
 
-import Userfront from "@userfront/core";
+import Layout from "../components/general/Layout";
 import MapLayout from "../components/map/MapLayout";
+
+import { setupAxios, setupLogger } from "../utils/axiosSetup";
+
+import Userfront from "@userfront/core";
+import { Provider } from "jotai";
 Userfront.init("wbmrp64n");
 
 /**
@@ -37,7 +40,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <>
             <Head>
-                <title>Roadtrippers</title>
+                <title>Terratrip</title>
                 <meta
                     name="description"
                     content="A web app to identify, detect, and educate about antipatterns."
@@ -48,15 +51,17 @@ function MyApp({ Component, pageProps }) {
                 src="https://kit.fontawesome.com/1b232c1fd4.js"
                 crossorigin="anonymous"
             ></Script>
-            {Component.usesMapLayout ? (
-                <MapLayout>
-                    <Component {...pageProps} />
-                </MapLayout>
-            ) : (
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            )}
+            <Provider>
+                {Component.usesMapLayout ? (
+                    <MapLayout>
+                        <Component {...pageProps} />
+                    </MapLayout>
+                ) : (
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                )}
+            </Provider>
         </>
     );
 }

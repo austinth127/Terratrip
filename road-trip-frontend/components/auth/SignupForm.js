@@ -44,15 +44,8 @@ const SignUpForm = () => {
             name: state.name,
             username: state.username,
             redirect: false,
-        })
-            .catch((error) => {
-                // Format message
-                let msg = error.message;
-                msg = msg.replace('"email"', "Email field");
-                msg = msg.replace('"password"', "Password field");
-                setAlert(msg);
-            })
-            .then(() => {
+        }).then(
+            (signupResponse) => {
                 const { username, userId, email, name } = Userfront.user;
                 console.log(Userfront.user);
                 if (userId) {
@@ -68,7 +61,9 @@ const SignUpForm = () => {
                             setConfirmation(
                                 "Successfully signed up. Redirecting..."
                             );
-                            setTimeout(() => router.push("/", 500));
+                            setTimeout(() => {
+                                router.push("/");
+                            }, 500);
                         })
                         .catch(() => {
                             setAlert(
@@ -77,7 +72,15 @@ const SignUpForm = () => {
                             /** @TODO Handle user being in userfront but not in backend */
                         });
                 }
-            });
+            },
+            (error) => {
+                // Format message
+                let msg = error.message;
+                msg = msg.replace('"email"', "Email field");
+                msg = msg.replace('"password"', "Password field");
+                setAlert(msg);
+            }
+        );
     };
 
     return (

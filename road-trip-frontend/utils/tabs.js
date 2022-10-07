@@ -5,6 +5,7 @@ export const tabs = [
             { name: "Create a Trip", href: "/trips/create" },
             { name: "My Trips", href: "/trips/edit" },
             { name: "Popular Trips", href: "/trips/popular" },
+            { name: "Map", href: "/trips/map" },
         ],
     },
     {
