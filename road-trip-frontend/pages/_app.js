@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <>
             <Head>
-                <title>Roadtrippers</title>
+                <title>Terratrip</title>
                 <meta
                     name="description"
                     content="A web app to identify, detect, and educate about antipatterns."

@@ -4,6 +4,7 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { getRouteMatcher } from "next/dist/shared/lib/router/utils/route-matcher";
 import axios from "axios";
+import Geocoder from "./Geocoder";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -11,10 +12,10 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
  * Mapbox map
  *
  * @TODO add directions https://docs.mapbox.com/help/tutorials/getting-started-directions-api/
- *
+ * @param {Object} props
  * @returns {JSX.Element} Mapboxgl map
  */
-const Map = () => {
+const Map = ({ ...props }) => {
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const mapContainer = useRef(null);
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
@@ -33,140 +34,134 @@ const Map = () => {
             center: [lng, lat],
             zoom: zoom,
         });
-        map.current.addControl(
-            new MapboxGeocoder({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl:mapboxgl
-            })
-        );
-        const start = [lng,lat]
+        // map.current.addControl(
+        //     new MapboxGeocoder({
+        //         accessToken: mapboxgl.accessToken,
+        //         mapboxgl: mapboxgl,
+        //     }),
+        //     "bottom-right"
+        // );
+
+        const start = [lng, lat];
         /**
          * This function makes a request to the MapBox API to find the route between Waco and the parameter end
          * @param {*} end the location to route to.
          */
         async function getRoute(end) {
-            const res = await axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`)
-            
+            const res = await axios.get(
+                `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+            );
+
             const data = res.data.routes[0];
             const route = data.geometry.coordinates;
             const geojson = {
-                type: 'Feature',
+                type: "Feature",
                 properties: {},
                 geometry: {
-                type: 'LineString',
-                coordinates: route
-                }
+                    type: "LineString",
+                    coordinates: route,
+                },
             };
             //if route layer exists, update with new route, else create the layer and add the route.
-            if (map.current.getSource('route')){
-                map.current.getSource('route').setData(geojson);
-            }
-            else{
+            if (map.current.getSource("route")) {
+                map.current.getSource("route").setData(geojson);
+            } else {
                 map.current.addLayer({
-                    id: 'route',
-                    type: 'line',
-                    source:{
-                        type: 'geojson',
-                        data: geojson
-                    
+                    id: "route",
+                    type: "line",
+                    source: {
+                        type: "geojson",
+                        data: geojson,
                     },
-                    layout:{
-                        'line-join': 'round',
-                        'line-cap': 'round'
+                    layout: {
+                        "line-join": "round",
+                        "line-cap": "round",
                     },
                     paint: {
-                        'line-color': '#3887be',
-                        'line-width': 5,
-                        'line-opacity': 0.75
-                    }
+                        "line-color": "#3887be",
+                        "line-width": 5,
+                        "line-opacity": 0.75,
+                    },
                 });
             }
         }
 
-        map.current.on('load',()=>{
-            getRoute(start)
+        map.current.on("load", () => {
+            getRoute(start);
             map.current.addLayer({
-                id: 'point',
-                type: 'circle',
+                id: "point",
+                type: "circle",
                 source: {
-                    type: 'geojson',
+                    type: "geojson",
                     data: {
-                        type: 'FeatureCollection',
+                        type: "FeatureCollection",
                         features: [
                             {
-                                type: 'Feature',
+                                type: "Feature",
                                 properties: {},
                                 geometry: {
-                                    type: 'Point',
-                                    coordinates: start
-                                }
-                            }
-                        ]
-                    }
+                                    type: "Point",
+                                    coordinates: start,
+                                },
+                            },
+                        ],
+                    },
                 },
                 paint: {
-                    'circle-radius': 10,
-                    'circle-color': '#3887be'
-                }
+                    "circle-radius": 10,
+                    "circle-color": "#3887be",
+                },
             });
-
         });
         //when user clicks on the map create a red dot and display route between red dot and Waco
-        map.current.on('click', (event) => {
-            const coords = Object.keys(event.lngLat).map((key) => event.lngLat[key]);
+        map.current.on("click", (event) => {
+            const coords = Object.keys(event.lngLat).map(
+                (key) => event.lngLat[key]
+            );
             const end = {
-                 type: 'FeatureCollection',
-                 features: [
-                     {
-                        type: 'Feature',
+                type: "FeatureCollection",
+                features: [
+                    {
+                        type: "Feature",
                         properties: {},
                         geometry: {
-                            type: 'Point',
-                            coordinates: coords
-                        }
-                     }
-                 ]
+                            type: "Point",
+                            coordinates: coords,
+                        },
+                    },
+                ],
             };
             //If this is first click need to create new layer.
-            if (map.current.getLayer('end')){
-                map.current.getSource('end').setData(end);
-            }else{
+            if (map.current.getLayer("end")) {
+                map.current.getSource("end").setData(end);
+            } else {
                 map.current.addLayer({
-                    id: 'end',
-                    type: 'circle',
+                    id: "end",
+                    type: "circle",
                     source: {
-                        type: 'geojson',
+                        type: "geojson",
                         data: {
-                            type: 'FeatureCollection',
+                            type: "FeatureCollection",
                             features: [
                                 {
-                                    type: 'Feature',
+                                    type: "Feature",
                                     properties: {},
                                     geometry: {
-                                        type: 'Point',
-                                        coordinates: coords
-                                    }
-                                }
-        
-                            ]
-
-                        }
-
+                                        type: "Point",
+                                        coordinates: coords,
+                                    },
+                                },
+                            ],
+                        },
                     },
                     paint: {
-                        'circle-radius': 10,
-                        'circle-color': '#f30'
-                    }
+                        "circle-radius": 10,
+                        "circle-color": "#f30",
+                    },
                 });
             }
             getRoute(coords);
-
-
         });
-
-
- 
-
     });
 
     // Update longitude/lattitude/zoom as the user moves around
@@ -179,9 +174,6 @@ const Map = () => {
         });
     });
 
-
-
-
     // function getRouteMatcher(){
     //     const end = [-84.518399,39.134126]
     //     axios.get(`https://api.mapbox.com/directions/v5/mapbox/cycling/${lng},${lat};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`)
@@ -190,7 +182,6 @@ const Map = () => {
     //     })
     // }
     // getRouteMatcher();
-
 
     return (
         <div className="relative">

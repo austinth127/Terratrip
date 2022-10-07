@@ -6,7 +6,7 @@ import Userfront from "@userfront/core";
 
 const ForgotPasswordForm = () => {
     const [state, setState] = useState({
-        email: ""
+        email: "",
     });
     const handleFormChange = (event) => {
         const name = event.target.name;
@@ -25,7 +25,6 @@ const ForgotPasswordForm = () => {
             })
             .then(() => {
                 console.log(Userfront.tokens.accessToken);
-                
             });
     };
     const [alert, setAlert] = useState();

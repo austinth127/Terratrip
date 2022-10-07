@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../../components/navigation/Navbar";
 import Footer from "../../components/navigation/Footer";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 /**
  * This is a layout for all pages, included in _app.js. Nextjs will auto-route
@@ -17,14 +18,8 @@ const Layout = ({ children, ...props }) => {
             {/* Background */}
             <div className="w-full h-fit absolute bg-cover bg-mountain-sun bg-fixed bg-no-repeat">
                 {/* Dimmer */}
-                {/* Credit to photographer */}
-                <a
-                    href="https://www.pexels.com/photo/snow-covered-mountain-during-sunrise-618833/"
-                    className="isolate z-50 w-fit h-fit absolute bottom-4 right-4 text-gray-50 font-light"
-                >
-                    Picture by Sagui Andrea
-                </a>
-                <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-20">
+
+                <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-30">
                     <Navbar />
                     <main className="relative min-h-screen lg:ml-16">
                         {children}

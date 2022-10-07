@@ -17,13 +17,13 @@ const logos = [
     },
     {
         icon: <i className="fa-solid fa-xl fa-map"></i>,
-        href: "",
+        href: "https://www.mapbox.com/",
     },
 ];
 
 const Footer = ({ ...props }) => {
     return (
-        <footer className="isolate h-32 w-full bg-transparent z-40 absolute bottom-0 left-0 mb-8 lg:mb-0">
+        <footer className="pb-4 isolate h-fit w-full bg-transparent z-40 absolute bottom-0 left-0 mb-8 lg:mb-0">
             <div className="flex flex-row p-4 justify-center gap-8">
                 {logos.map((logo, index) => (
                     <Link href={logo.href} key={index}>
@@ -41,6 +41,14 @@ const Footer = ({ ...props }) => {
                         layout="fill"
                         priority={false}
                     />
+                </a>
+            </div>
+            <div className="flex flex-row items-center justify-center lg:justify-end">
+                <a
+                    href="https://www.pexels.com/photo/snow-covered-mountain-during-sunrise-618833/"
+                    className="w-fit h-fit text-gray-50 font-light text-sm px-4"
+                >
+                    Picture by Sagui Andrea
                 </a>
             </div>
         </footer>
