@@ -18,7 +18,15 @@ export default function Home({ ...props }) {
             <div className="flex flex-col min-h-screen justify-center items-center px-8">
                 {/* Title / Subtitle */}
                 <div className="isolate mb-16">
-                    <TextLogo className="text-6xl drop-shadow-md self-center" />
+                    <div className="flex flex-row -ml-8">
+                        <Image
+                            width={128}
+                            height={128}
+                            layout="intrinsic"
+                            src="/logos/mountain.svg"
+                        />
+                        <TextLogo className="text-6xl drop-shadow-md self-center mt-8" />
+                    </div>
                     <h3 className="text-center font-light text-lg text-gray-100 drop-shadow-md mt-2">
                         Create your outdoor adventure.
                     </h3>
