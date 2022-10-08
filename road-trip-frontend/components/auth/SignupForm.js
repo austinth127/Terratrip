@@ -89,8 +89,11 @@ const SignUpForm = () => {
             <h2 className="text-center font-semibold mb-8">
                 Create your account
             </h2>
-            <Alert message={alert} className="text-red-600" />
-            <Alert message={confirmation} className="text-green-600" />
+            <Alert message={alert} className="text-red-600 text-center" />
+            <Alert
+                message={confirmation}
+                className="text-green-600 text-center"
+            />
             <form id="signup" onSubmit={handleSubmit}>
                 <ul className="p-2 flex flex-col gap-2">
                     <li className="flex flex-row justify-between gap-4 items-center">
