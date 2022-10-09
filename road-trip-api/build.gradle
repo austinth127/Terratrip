@@ -15,6 +15,7 @@ repositories {
 dependencies {
     // Cool Utils
     implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'org.apache.httpcomponents:httpclient'
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
