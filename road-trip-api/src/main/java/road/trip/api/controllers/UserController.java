@@ -22,9 +22,9 @@ public class UserController {
         return ResponseEntity.ok(userService.register(request));
     }
 
-    @GetMapping("/profile/{id}")
-    public ResponseEntity<User> getProfile(@PathVariable(value = "id") Long userId) {
-        return ResponseEntity.of(userService.getProfile(userId));
+    @GetMapping("")
+    public ResponseEntity<User> getUser() {
+        return ResponseEntity.ok(userService.user());
     }
 
 }

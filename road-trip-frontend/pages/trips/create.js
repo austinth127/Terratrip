@@ -17,6 +17,7 @@ import {
     startDateAtom,
 } from "../../utils/atoms";
 import Alert from "../../components/auth/Alert";
+import { useRouter } from "next/router";
 
 const levels = ["Relaxed", "Moderate", "High", "Extreme", "All"];
 
@@ -26,8 +27,11 @@ const Create = () => {
     const [startDate, setStartDate] = useAtom(startDateAtom);
     const [endDate, setEndDate] = useAtom(endDateAtom);
     const [activeLevels, setActiveLevels] = useAtom(advLevelAtom);
+    const router = useRouter();
 
     const [alert, setAlert] = useState();
+
+    console.log(start, end);
 
     const handleActivityLevel = (level) => {
         if (activeLevels.includes(level)) {
@@ -54,6 +58,7 @@ const Create = () => {
             setAlert("Start and end locations should be set below.");
             return;
         }
+        router.push("/trips/map");
     };
 
     return (

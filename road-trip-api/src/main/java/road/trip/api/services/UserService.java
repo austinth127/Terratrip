@@ -1,5 +1,6 @@
 package road.trip.api.services;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,6 @@ import road.trip.persistence.daos.UserRepository;
 public class UserService {
     final UserRepository userRepository;
 
-    public Optional<User> getProfile(Long userId) {
-        return userRepository.findByUserfrontId(userId);
-    }
-
     public User register(RegisterRequest request) {
         User user = User.builder()
             .username(request.getUsername())
@@ -31,7 +28,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public org.springframework.security.core.userdetails.User springSecurityUser() {
+    private org.springframework.security.core.userdetails.User springSecurityUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication();
         try {
@@ -45,7 +42,8 @@ public class UserService {
         if (springSecurityUser() == null) {
             return null;
         }
-        return userRepository.findByUserfrontId(Long.parseLong(user().getUsername())).orElse(null);
+        String username = Objects.requireNonNull(springSecurityUser()).getUsername();
+        return userRepository.findByUserfrontId(Long.parseLong(username)).orElse(null);
     }
 
     public Long getId() {

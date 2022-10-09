@@ -10,6 +10,7 @@ export const locAtom = atom(
 );
 export const startAtom = atom();
 export const endAtom = atom();
+export const routeAtom = atom();
 
 export const tripDateAtom = atom(
     (get) => ({ start: get(startDateAtom), end: get(endDateAtom) }),

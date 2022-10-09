@@ -12,7 +12,7 @@ const Profile = () => {
     useEffect(() => {
         /** @TODO better error handling */
         const getData = async () => {
-            const res = await axios.get(`/profile/${id}`);
+            const res = await axios.get(`/user`);
             setUser(res.data);
         };
 
