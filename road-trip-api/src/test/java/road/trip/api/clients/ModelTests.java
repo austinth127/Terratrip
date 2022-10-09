@@ -15,23 +15,6 @@ import java.util.List;
 @DisplayName("Model Tests")
 public class ModelTests {
 
-
-    @Nested
-    @DisplayName("Coordinate Tests")
-    class CoordinateTest{
-        /**
-         * Tests the basic functionality of the coordinate constructor
-         */
-        @Test
-        @DisplayName("Valid Coordinate Constructor")
-        void coordinateConstructor(){
-            Coordinate t = new Coordinate(100.1,100.2);
-            assertAll(
-                ()->assertEquals(100.1,t.getLongitude()),
-                ()->assertEquals(100.2,t.getLatitude())
-            );
-        }
-    }
     @Nested
     @DisplayName("Genre Tests")
     class GenreTests {
