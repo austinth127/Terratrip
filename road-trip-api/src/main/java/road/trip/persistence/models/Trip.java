@@ -23,16 +23,18 @@ public class Trip {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
 
-    int adventureLevel; //TODO: Should this be an int?
+    String name;
+    int adventureLevel;
+    int duration;
+    double distance;
     Date startDate;
-    //End Date calculated based on route duration
-    @ManyToOne()
-    Stop start, end; //TODO: gives me an error
 
-    @ManyToMany() //May need an annotation inside ()
-    List<Stop> stops = new ArrayList<>();
-    int duration; //hours
-    double distance; //miles
+    @ManyToMany
+    @JoinTable(
+        name = "trip_stop",
+        joinColumns = @JoinColumn(name = "trip_id"),
+        inverseJoinColumns = @JoinColumn(name = "stop_id"))
+    List<Stop> stops;
 
     @Override
     public boolean equals(Object o) {
