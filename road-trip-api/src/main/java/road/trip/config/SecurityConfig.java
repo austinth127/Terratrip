@@ -21,7 +21,9 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_ROUTES = {
         "/user/register",
-        "/user/profile/{id}"
+        "/user/profile/{id}",
+        "/create-stop",
+        "/create-trip"
     };
 
     @Bean
