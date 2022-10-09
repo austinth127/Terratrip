@@ -6,14 +6,13 @@ import axios from "axios";
 
 const Profile = () => {
     // Get the id from the dynamic route segment
-    const router = useRouter();
     const id = Userfront.user.userId;
     const [user, setUser] = useState();
 
     useEffect(() => {
         /** @TODO better error handling */
         const getData = async () => {
-            const res = await axios.get(`/profile/${id}`);
+            const res = await axios.get(`/user`);
             setUser(res.data);
         };
 

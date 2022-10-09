@@ -46,7 +46,7 @@ const LoginForm = () => {
             <h2 className="text-center font-semibold mb-8">
                 Sign in to your account
             </h2>
-            <Alert message={alert} />
+            <Alert message={alert} className="text-red-600 text-center" />
             <form id="login" onSubmit={handleSubmit}>
                 <ul className="p-2 flex flex-col gap-2">
                     <li className="flex flex-row justify-between gap-4 items-center">

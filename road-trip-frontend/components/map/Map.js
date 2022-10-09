@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { getRouteMatcher } from "next/dist/shared/lib/router/utils/route-matcher";
-import axios from "axios";
-import Geocoder from "./Geocoder";
+import { useAtom } from "jotai";
+import { endAtom, routeAtom, startAtom } from "../../utils/atoms";
+import { getPoints, getRoute } from "../../utils/map/geometryUtils";
+import { colors } from "../../utils/colors";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -12,6 +12,7 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
  * Mapbox map
  *
  * @TODO add directions https://docs.mapbox.com/help/tutorials/getting-started-directions-api/
+ * @TODO adjust lng/lat/zoom for start/end location
  * @param {Object} props
  * @returns {JSX.Element} Mapboxgl map
  */
@@ -20,10 +21,14 @@ const Map = ({ ...props }) => {
     const mapContainer = useRef(null);
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const map = useRef(null);
-    const [lng, setLng] = useState(-97.141); // Longitude
-    const [lat, setLat] = useState(31.55); // Lattitude
-    // Longitude, Lattitude, Zoom
+
+    const [lng, setLng] = useState(-97.141);
+    const [lat, setLat] = useState(31.55);
     const [zoom, setZoom] = useState(3.4);
+
+    const [start, setStart] = useAtom(startAtom);
+    const [end, setEnd] = useAtom(endAtom);
+    const [route, setRoute] = useAtom(routeAtom);
 
     // Initialize mapbox map
     useEffect(() => {
@@ -34,34 +39,12 @@ const Map = ({ ...props }) => {
             center: [lng, lat],
             zoom: zoom,
         });
-        // map.current.addControl(
-        //     new MapboxGeocoder({
-        //         accessToken: mapboxgl.accessToken,
-        //         mapboxgl: mapboxgl,
-        //     }),
-        //     "bottom-right"
-        // );
 
-        const start = [lng, lat];
-        /**
-         * This function makes a request to the MapBox API to find the route between Waco and the parameter end
-         * @param {*} end the location to route to.
-         */
-        async function getRoute(end) {
-            const res = await axios.get(
-                `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
-            );
+        async function addRoute() {
+            const [route, geojson] = await getRoute(start, end);
 
-            const data = res.data.routes[0];
-            const route = data.geometry.coordinates;
-            const geojson = {
-                type: "Feature",
-                properties: {},
-                geometry: {
-                    type: "LineString",
-                    coordinates: route,
-                },
-            };
+            setRoute(route);
+
             //if route layer exists, update with new route, else create the layer and add the route.
             if (map.current.getSource("route")) {
                 map.current.getSource("route").setData(geojson);
@@ -78,89 +61,31 @@ const Map = ({ ...props }) => {
                         "line-cap": "round",
                     },
                     paint: {
-                        "line-color": "#3887be",
+                        "line-color": colors.green600,
                         "line-width": 5,
-                        "line-opacity": 0.75,
+                        "line-opacity": 0.5,
                     },
                 });
             }
         }
 
         map.current.on("load", () => {
-            getRoute(start);
+            addRoute();
+
+            const points = getPoints(start.center, end.center);
+
             map.current.addLayer({
-                id: "point",
+                id: "routeEndpoints",
                 type: "circle",
                 source: {
                     type: "geojson",
-                    data: {
-                        type: "FeatureCollection",
-                        features: [
-                            {
-                                type: "Feature",
-                                properties: {},
-                                geometry: {
-                                    type: "Point",
-                                    coordinates: start,
-                                },
-                            },
-                        ],
-                    },
+                    data: points,
                 },
                 paint: {
                     "circle-radius": 10,
-                    "circle-color": "#3887be",
+                    "circle-color": colors.green600,
                 },
             });
-        });
-        //when user clicks on the map create a red dot and display route between red dot and Waco
-        map.current.on("click", (event) => {
-            const coords = Object.keys(event.lngLat).map(
-                (key) => event.lngLat[key]
-            );
-            const end = {
-                type: "FeatureCollection",
-                features: [
-                    {
-                        type: "Feature",
-                        properties: {},
-                        geometry: {
-                            type: "Point",
-                            coordinates: coords,
-                        },
-                    },
-                ],
-            };
-            //If this is first click need to create new layer.
-            if (map.current.getLayer("end")) {
-                map.current.getSource("end").setData(end);
-            } else {
-                map.current.addLayer({
-                    id: "end",
-                    type: "circle",
-                    source: {
-                        type: "geojson",
-                        data: {
-                            type: "FeatureCollection",
-                            features: [
-                                {
-                                    type: "Feature",
-                                    properties: {},
-                                    geometry: {
-                                        type: "Point",
-                                        coordinates: coords,
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                    paint: {
-                        "circle-radius": 10,
-                        "circle-color": "#f30",
-                    },
-                });
-            }
-            getRoute(coords);
         });
     });
 
@@ -174,18 +99,9 @@ const Map = ({ ...props }) => {
         });
     });
 
-    // function getRouteMatcher(){
-    //     const end = [-84.518399,39.134126]
-    //     axios.get(`https://api.mapbox.com/directions/v5/mapbox/cycling/${lng},${lat};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`)
-    //     .then(res=>{
-    //         console.log(res.data);
-    //     })
-    // }
-    // getRouteMatcher();
-
     return (
         <div className="relative">
-            <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono z-[1] absolute top-12 left-0 m-3 rounded-lg">
+            <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono text-xs z-[1] absolute top-12 right-0 m-3 rounded-lg">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
             {/* Map */}
@@ -195,3 +111,19 @@ const Map = ({ ...props }) => {
 };
 
 export default Map;
+
+//when user clicks on the map create a red dot and display route between red dot and Waco
+// map.current.on("click", (event) => {
+//     const coords = Object.keys(event.lngLat).map(
+//         (key) => event.lngLat[key]
+//     );
+
+//     getRoute(coords);
+// });
+
+// //If this is first click need to create new layer.
+// // if (map.current.getLayer("end")) {
+// //     map.current.getSource("end").setData(endPoint);
+// // } else {
+
+// }

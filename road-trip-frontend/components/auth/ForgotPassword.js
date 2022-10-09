@@ -30,7 +30,7 @@ const ForgotPasswordForm = () => {
             <h2 className="text-center font-semibold mb-8">
                 Forgot Your Password?
             </h2>
-            <Alert message={alert} />
+            <Alert message={alert} className="text-red-600 text-center" />
             <form id="forgot" onSubmit={handleSubmit}>
                 <div className="p-2 flex flex-col gap-2">
                     <p className="px-1 font-light">

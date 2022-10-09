@@ -1,6 +1,7 @@
 package road.trip.persistence.models;
 
 import lombok.*;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -20,11 +21,19 @@ public class Stop {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
-    String description;
-    int rating;
+    private String name;
+    private String description;
+    private int rating;
+
+    private String type;
+    private String geoType;
+    private double coordX;
+    private double coordY;
+
+    @ManyToMany(mappedBy = "stops")
+    List<Trip> trips;
 
     @Override
     public boolean equals(Object o) {
