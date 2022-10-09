@@ -6,8 +6,8 @@ public class GeoApifyClientTester {
     GeoApifyClient geoApifyClient = new GeoApifyClient();
 
     @Test
-    void testGetStopByAddress(){
+    void testGetStopByName(){
         String str = "";
-        geoApifyClient.getStopByAddress(str);
+        geoApifyClient.getStopByName(str);
     }
 }
