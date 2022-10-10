@@ -45,7 +45,7 @@ const SaveModal = () => {
             },
             startDate: dates.start,
             endDate: dates.end,
-            advLevel,
+            advLevel: advLevel != "" ? advLevel : "Extreme",
             distance: route.distance,
             duration: route.duration,
         });
