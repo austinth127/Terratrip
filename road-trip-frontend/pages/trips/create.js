@@ -30,8 +30,6 @@ const Create = () => {
 
     const [alert, setAlert] = useState();
 
-    console.log(start, end);
-
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert();

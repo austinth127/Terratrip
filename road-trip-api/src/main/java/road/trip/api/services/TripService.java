@@ -52,7 +52,7 @@ public class TripService {
         Trip trip = Trip.builder()
                 .name(request.getName())
                 .adventureLevel(request.getAdventureLevel())
-                .duration(request.getDuration())
+                .duration(request.getDriveDuration())
                 .distance(request.getDistance())
                 .startDate(request.getStartDate())
                 .build();
