@@ -16,6 +16,7 @@ test-job:
   stage: test
   script:
     - echo "This job tests stuff"
+    - whoami
 #    - cd road-trip-api
 #    - ./gradlew test
 # TODO: install java
