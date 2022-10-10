@@ -37,17 +37,16 @@ public class TripService {
         Optional<Trip> optionalTrip = tripRepository.findById(id);
         TripResponse tr = null;
 
-        if (optionalTrip.isPresent()) {
+        if(optionalTrip.isEmpty()){
+            log.error("No trip found.");
+        }
+        else if(userService.user() == optionalTrip.get().getCreator()){
             Trip t = optionalTrip.get();
-            tr = TripResponse.builder().distance(t.getDistance())
-                .duration(t.getDuration())
-                .advLevel(t.getAdventureLevel().toString())
-                .startDate(t.getStartDate())
-                .endDate(t.getEndDate())
-                .id(t.getId())
-                .start(new LocationResponse())
-                .build();
+            tr = new TripResponse(t);
+
             tr.setStops(locationService.getLocationsForTrip(t.getId()));
+        } else {
+            log.error("Trip not owned by user.");
         }
         return tr;
     }
@@ -90,7 +89,7 @@ public class TripService {
         if(t.isEmpty()){
             log.error("No trip found.");
         }
-        if(userService.user() == t.get().getCreator()){
+        else if(userService.user() == t.get().getCreator()){
             tripRepository.deleteById(id);
         } else {
             log.error("Trip not owned by user.");
