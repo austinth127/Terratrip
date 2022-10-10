@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import {
     advLevelAtom,
+    editModeAtom,
     locAtom,
     showSaveModalAtom,
     tripDateAtom,
@@ -20,6 +21,7 @@ const MapNav = ({ ...props }) => {
     const [date, setDate] = useAtom(tripDateAtom);
     const [name, setName] = useAtom(tripNameAtom);
     const [advLevel, setAdvLevel] = useAtom(advLevelAtom);
+    const [editMode, setEditMode] = useAtom(editModeAtom);
     const [tripId, setTripId] = useAtom(tripIdAtom);
 
     const handleCancel = () => {
@@ -29,6 +31,7 @@ const MapNav = ({ ...props }) => {
         setName("");
         setShowModal(false);
         setTripId(null);
+        setEditMode(false);
         router.push("/");
     };
 
