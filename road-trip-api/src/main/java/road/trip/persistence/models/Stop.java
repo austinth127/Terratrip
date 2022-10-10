@@ -19,7 +19,7 @@ public class Stop {
     public static final String TABLE_NAME = "STOP";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long stopId;
 
     @ManyToOne
@@ -27,10 +27,10 @@ public class Stop {
     Trip trip;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     Location location;
 
-    @Column
+    @Column(name = "stop_order")
     Integer order;
 
     @Override
