@@ -24,6 +24,7 @@ public class TripResponse extends ReducedTripResponse {
         start = new LocationResponse(t.getStart());
         end = new LocationResponse(t.getEnd());
         stops = t.getStops().stream().map(Stop::getLocation).collect(Collectors.toList());
+        rating = t.getRating();
     }
 
     @NonNull
@@ -44,6 +45,7 @@ public class TripResponse extends ReducedTripResponse {
     private LocationResponse start;
     @NonNull
     private LocationResponse end;
+    private Double rating;
 
     private List<Location> stops;
 }
