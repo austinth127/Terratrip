@@ -16,25 +16,24 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Client Tests")
 public class ClientTests {
 
-    //private final GeoApifyClient geoApifyClient = new GeoApifyClient(new LocationMapper());
+    private final GeoApifyClient geoApifyClient = new GeoApifyClient(new LocationMapper());
 
     @Nested
     @DisplayName("GeoApifyClient Tests")
     class GeoApifyClientTests{
         @Test
-        @DisplayName("getStopByName")
+        @DisplayName("getRecommendedStops")
         @Ignore
-        void getStopByName(){
-            String nameParam = "Walmart";
+        void getRecommendedStops(){
 
-            /**
-            List<Location> locationList = geoApifyClient.getStopByName(nameParam, 5, 35.5, -106, 27.3, -92.5);
+            List<Location> locationList = geoApifyClient.getRecommendedStops(-105.0, 38, -93, 23);
 
             assertNotNull(locationList);
+            assertNotEquals(locationList.size(), 0);
             for(Location l : locationList){
                 assertNotNull(l); //Each object is valid
             }
-             */
+
         }
 
     }

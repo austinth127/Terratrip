@@ -94,14 +94,20 @@ public class GeoApifyClient {
         }
     }
 
+    //https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect%3A10.716463143326969%2C48.755151258420966%2C10.835314015356737%2C48.680903341613316&limit=20&apiKey=a9b12a2a2ae0491cb7874bbf0fab7115
+
     //TODO: test
     public List<Location> getRecommendedStops(double lon1, double lat1, double lon2, double lat2){
         URI uri = buildUri("/v2/places", List.of(
+            new BasicNameValuePair("categories", "activity"),
             new BasicNameValuePair("filter", "rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2),
+                //new BasicNameValuePair("filter", "place:51479147520e4c58c05994dd025c378f3f40f00101f901cebc010000000000c002069203045761636f"),
             new BasicNameValuePair("limit", "20"),
             new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")));
+            System.out.println(uri.toString());
         try {
             String jsonBody = doGet(uri);
+            System.out.println(jsonBody);
             return locationMapper.getStopsFromJSON(jsonBody);
         } catch (Exception e) {
             log.error(e);
