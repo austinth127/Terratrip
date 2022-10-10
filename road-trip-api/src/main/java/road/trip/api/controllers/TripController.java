@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
+import road.trip.api.requests.TripRateRequest;
 import road.trip.api.responses.TripResponse;
 import road.trip.api.responses.ReducedTripResponse;
 import road.trip.api.services.TripService;
@@ -55,6 +56,12 @@ public class TripController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> editTrip(@PathVariable("id") long id, @RequestBody TripEditRequest request) {
         tripService.editTrip(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/rate")
+    public ResponseEntity<?> rateTrip(@PathVariable("id") long id, @RequestBody TripRateRequest request) {
+        tripService.rateTrip(id, request.getRating());
         return ResponseEntity.ok().build();
     }
 

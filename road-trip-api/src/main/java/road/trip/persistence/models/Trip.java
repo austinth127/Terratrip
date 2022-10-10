@@ -29,6 +29,8 @@ public class Trip {
     int duration;
     double distance;
 
+    Double rating;
+
     LocalDate startDate;
     LocalDate endDate;
 

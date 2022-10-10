@@ -92,6 +92,17 @@ public class TripService {
         //t.get()
     }
 
+    public void rateTrip(long id, double rating) {
+        Optional<Trip> t = tripRepository.findById(id);
+        if (t.isEmpty()) {
+            log.error("Bro this is not your trip");
+        } else {
+            Trip trip = t.get();
+            trip.setRating(rating);
+            tripRepository.save(trip);
+        }
+    }
+
     /**
      * Deletes the trip of the given id. Should only delete the trip
      * if it is owned by the user making the request.
