@@ -4,7 +4,6 @@ import TextInput from "../components/general/TextInput";
 import TextLogo from "../components/general/TextLogo";
 import Geocoder from "../components/map/Geocoder";
 import Image from "next/image";
-import axios from "axios";
 import { useAtom, useSetAtom } from "jotai";
 import { endAtom, startAtom } from "../utils/atoms";
 import { useRouter } from "next/router";

@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,9 @@ public class Trip {
     int adventureLevel;
     int duration;
     double distance;
-    LocalDateTime startDate;
+
+    LocalDate startDate;
+    LocalDate endDate;
 
     @OneToMany(mappedBy = "trip")
     List<Stop> stops;

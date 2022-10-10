@@ -4,34 +4,41 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import road.trip.api.requests.LocationRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.services.LocationService;
 import road.trip.api.services.TripService;
 import road.trip.api.services.UserService;
+import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class ServiceTests {
 
     @Autowired
-    ServiceTests(LocationService locationService, TripService tripService, UserService userService) {
+    ServiceTests(LocationService locationService, TripService tripService, UserService userService, TripRepository tripRepository) {
         this.locationService = locationService;
         this.tripService = tripService;
         this.userService = userService;
+        this.tripRepository = tripRepository;
     }
     private final LocationService locationService;
     private final TripService tripService;
     private final UserService userService;
+
+    private final TripRepository tripRepository;
     @Nested
     @DisplayName("Location Service Tests")
     class LocationServiceTests {
         @Test
         @DisplayName("Location Service: Create Location")
-        void createStop(){
+        void createStop(){ //TODO: Call createLocation
             LocationRequest request = LocationRequest.builder()
                 .name("Test Location").description("Test Location Description").rating(5)
                 .coordX(100.1).coordY(100.2).geoType("Land").build();
@@ -49,6 +56,7 @@ public class ServiceTests {
     @Nested
     @DisplayName("Trip Service Tests")
     class TripServiceTest{
+
         @Test
         @DisplayName("Trip Service: Create Trip")
         void createTrip(){
@@ -57,15 +65,19 @@ public class ServiceTests {
                 .adventureLevel(4)
                 .duration(100)
                 .distance(101)
-                .startDate(LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
+                .startDate(LocalDate.of(2022, Month.OCTOBER,9))
                 .build();
-            Trip testTrip = null;
+            ResponseEntity<Long> re = tripService.createTrip(tripRequest);
+            long id = re.getBody();
+            Optional<Trip> optTrip = tripRepository.findById(id);
             assertAll(
-                ()->assertEquals(testTrip.getName(), "Test Trip"),
-                ()->assertEquals(testTrip.getAdventureLevel(),4),
-                ()->assertEquals(testTrip.getDuration(),100),
-                ()->assertEquals(testTrip.getDuration(),101),
-                ()->assertEquals(testTrip.getStartDate(),LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
+                ()->assertEquals(re.getStatusCodeValue(), 200),
+                ()->assertNotNull(optTrip.orElse(null)),
+                ()->assertEquals(optTrip.get().getName(),"Test Trip"),
+                ()->assertEquals(optTrip.get().getAdventureLevel(),4),
+                ()->assertEquals(optTrip.get().getDuration(),100),
+                ()->assertEquals(optTrip.get().getDistance(),101),
+                ()->assertEquals(optTrip.get().getStartDate(),LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
             );
 
         }
