@@ -6,8 +6,10 @@ import road.trip.persistence.models.Stop;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StopRepository  extends JpaRepository<Stop, Long> {
-    List<Stop> findByTripId(Long tripId);
+    List<Stop> findByTrip_Id(Long tripId);
+    Optional<Stop> findByTrip_IdAndLocation_IdAndOrder(Long tripId, Long locId, int order);
 }

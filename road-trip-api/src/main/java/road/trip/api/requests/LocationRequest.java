@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class LocationRequest {
+
+    private Long id;
+
     @NotNull @JsonProperty("place_name")
     private String name;
     @NotNull @JsonProperty("center")
@@ -23,8 +26,4 @@ public class LocationRequest {
     private String description;
     private int rating;
 
-//    @NotNull
-//    private String type;
-//    @NotNull
-//    private String geoType;
 }

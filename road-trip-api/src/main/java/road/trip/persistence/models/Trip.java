@@ -26,13 +26,14 @@ public class Trip {
 
     String name;
     AdventureLevel adventureLevel;
-    int duration;
+    int driveDuration;
     double distance;
 
     LocalDate startDate;
     LocalDate endDate;
 
-    @OneToMany(mappedBy = "trip")
+    @OneToMany(mappedBy = "trip", targetEntity = Stop.class)
+    @OrderBy("stop_order ASC")
     List<Stop> stops;
 
 

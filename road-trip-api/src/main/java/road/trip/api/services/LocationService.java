@@ -44,8 +44,21 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
+    public void updateOrder(Long tripId, Long locId,  int order, int newOrder) {
+        Optional<Stop> s = stopRepository.findByTrip_IdAndLocation_IdAndOrder(tripId, locId, order);
+        if(s.isPresent()) {
+            s.get().setOrder(newOrder);
+            stopRepository.save(s.get());
+        }
+
+    }
+
+    public Optional<Location> getLocationById(Long locId) {
+        return locationRepository.findById(locId);
+    }
+
     public List<Location> getLocationsForTrip(Long tripId) {
-        List<Stop> stops = stopRepository.findByTripId(tripId).stream()
+        List<Stop> stops = stopRepository.findByTrip_Id(tripId).stream()
             .sorted(Comparator.comparingInt(Stop::getOrder)).toList();
 
         List<Location> locs = new ArrayList<>();
