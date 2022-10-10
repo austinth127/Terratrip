@@ -13,6 +13,7 @@ import road.trip.api.services.UserService;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Optional;
@@ -64,7 +65,7 @@ public class ServiceTests {
                 .adventureLevel(4)
                 .duration(100)
                 .distance(101)
-                .startDate(LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
+                .startDate(LocalDate.of(2022, Month.OCTOBER,9))
                 .build();
             ResponseEntity<Long> re = tripService.createTrip(tripRequest);
             long id = re.getBody();
