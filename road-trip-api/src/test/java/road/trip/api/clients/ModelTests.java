@@ -1,5 +1,6 @@
 package road.trip.api.clients;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ public class ModelTests {
     }
     @Nested
     @DisplayName("Playlist Tests")
+    @Ignore
     class PlaylistTests{
         /**
          * Test to validate playlist constructor.

@@ -22,6 +22,7 @@ public class Trip {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "trip_id")
     Long id;
 
     String name;
