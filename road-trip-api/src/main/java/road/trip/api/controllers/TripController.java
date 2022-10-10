@@ -49,11 +49,6 @@ public class TripController {
         return ResponseEntity.ok(tripService.createTrip(request));
     }
 
-    @PostMapping
-    public ResponseEntity<StopResponse> addStop(@RequestBody StopRequest request) {
-        return ResponseEntity.ok(tripService.addStop(request));
-    }
-
     /**
      * Modifies the trip of the given id. Should only edit the trip
      * if it is owned by the user making the request.
