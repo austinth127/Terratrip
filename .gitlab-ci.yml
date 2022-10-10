@@ -17,10 +17,10 @@ test-job:
   script:
     - echo "This job tests stuff"
     - whoami
-#    - cd road-trip-api
-#    - ./gradlew test
+    - cd road-trip-api
+    - ./gradlew test
 # TODO: install java
-#    - cd ..
+    - cd ..
     - echo "Testing complete"
 
 deploy-prod:
