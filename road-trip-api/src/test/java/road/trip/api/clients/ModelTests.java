@@ -30,13 +30,11 @@ public class ModelTests {
         @Test
         @DisplayName("Playlist Constructor")
         void playlistConstructor(){
-            Playlist t = new Playlist(1l,"Test","www.spotify.com",2l,3l);
+            Playlist t = new Playlist(1l,"Test","www.spotify.com");
             assertAll(
                 ()->assertEquals(1l,t.getId()),
                 ()->assertEquals("Test",t.getName()),
-                ()->assertEquals("www.spotify.com",t.getUrl()),
-                ()->assertEquals(2l,t.getUserId()),
-                ()->assertEquals(3l,t.getTripId())
+                ()->assertEquals("www.spotify.com",t.getUrl())
             );
         }
 
