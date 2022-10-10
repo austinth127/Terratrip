@@ -1,9 +1,11 @@
 package road.trip.persistence.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -26,6 +28,11 @@ public class User {
     String emailAddress;
     String name;
     String username;
+
+    @OneToMany(mappedBy = "creator")
+    @ToString.Exclude
+    @JsonIgnore
+    List<Trip> trips;
 
     @Override
     public boolean equals(Object o) {

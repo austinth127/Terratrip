@@ -47,7 +47,7 @@ public class ServiceTests {
             LocationRequest request = LocationRequest.builder()
                 .name("Test Location").description("Test Location Description").rating(5)
                 .coordX(100.1).coordY(100.2).geoType("Land").build();
-            Location testLocation = locationService.createStop(request);
+            Location testLocation = locationService.createLocation(request);
             assertAll(
                 ()->assertEquals(testLocation.getName(),"Test Location"),
                 ()->assertEquals(testLocation.getDescription(),"Test Location Description"),

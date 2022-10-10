@@ -29,7 +29,7 @@ export const getRoute = async (start, end) => {
         properties: {},
         geometry: {
             type: "LineString",
-            coordinates: route,
+            coordinates: data.geometry.coordinates,
         },
     };
 

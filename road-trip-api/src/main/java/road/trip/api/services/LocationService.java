@@ -11,6 +11,7 @@ import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.models.Location;
 import road.trip.persistence.models.Stop;
+import road.trip.persistence.models.Trip;
 
 import java.util.*;
 
@@ -21,7 +22,18 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final StopRepository stopRepository;
 
-    public Location createStop(LocationRequest locationRequest) {
+    public Stop createStop(Trip trip, Location location, int order){
+
+        Stop stop = Stop.builder()
+                .location(location)
+                .order(order)
+                .trip(trip)
+                .build();
+
+        return stopRepository.save(stop);
+    }
+
+    public Location createLocation(LocationRequest locationRequest) {
 
         Location location = Location.builder()
             .name(locationRequest.getName())

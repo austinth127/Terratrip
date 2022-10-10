@@ -5,14 +5,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import road.trip.api.requests.StopRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
-import road.trip.api.responses.StopResponse;
 import road.trip.api.responses.TripResponse;
-import road.trip.api.responses.TripsResponse;
+import road.trip.api.responses.ReducedTripResponse;
 import road.trip.api.services.TripService;
-import road.trip.persistence.models.Trip;
 
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class TripController {
      * Gets all the trips created by the user making the request
      */
     @GetMapping
-    public ResponseEntity<List<TripsResponse>> getTrips() {
+    public ResponseEntity<List<ReducedTripResponse>> getTrips() {
         return ResponseEntity.ok(tripService.getTrips());
     }
 
@@ -56,8 +53,9 @@ public class TripController {
      * Use this request to add/delete locations as well.
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editTrip(@PathVariable("id") String id, @RequestBody TripEditRequest request) {
-        return ResponseEntity.ok(tripService.editTrip(id, request));
+    public ResponseEntity<?> editTrip(@PathVariable("id") long id, @RequestBody TripEditRequest request) {
+        tripService.editTrip(id, request);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -65,8 +63,9 @@ public class TripController {
      * if it is owned by the user making the request.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTrip(@PathVariable("id") String id) {
-        return ResponseEntity.ok(tripService.deleteTrip(id));
+    public ResponseEntity<?> deleteTrip(@PathVariable("id") long id) {
+        tripService.deleteTrip(id);
+        return ResponseEntity.ok().build();
     }
 
 }

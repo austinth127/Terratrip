@@ -1,29 +1,35 @@
 package road.trip.api.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 import road.trip.api.requests.StopRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
+import road.trip.api.responses.LocationResponse;
 import road.trip.api.responses.StopResponse;
 import road.trip.api.responses.TripResponse;
-import road.trip.api.responses.TripsResponse;
+import road.trip.api.responses.ReducedTripResponse;
 import road.trip.persistence.daos.TripRepository;
+import road.trip.persistence.models.AdventureLevel;
+import road.trip.persistence.models.Location;
 import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TripService {
 
     private final TripRepository tripRepository;
     private final LocationService locationService;
+    private final UserService userService;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
@@ -33,10 +39,15 @@ public class TripService {
         Optional<Trip> optionalTrip = tripRepository.findById(id);
         TripResponse tr = null;
 
-        if (optionalTrip.isPresent()) {
+        if(optionalTrip.isEmpty()){
+            log.error("No trip found.");
+        }
+        else if(userService.user() == optionalTrip.get().getCreator()){
             Trip t = optionalTrip.get();
-            tr = new TripResponse(t.getId(), t.getName(), t.getStartDate(), t.getDuration(), t.getAdventureLevel());
-            tr.setStops(locationService.getLocationsForTrip(t.getId()));
+            tr = new TripResponse(t);
+
+        } else {
+            log.error("Trip not owned by user.");
         }
         return tr;
     }
@@ -49,14 +60,25 @@ public class TripService {
      * Creates a trip and returns the id of the newly created trip
      */
     public Long createTrip(TripCreateRequest request){
+        Location start = locationService.createLocation(request.getStart());
+        Location end = locationService.createLocation(request.getEnd());
+
         Trip trip = Trip.builder()
                 .name(request.getName())
-                .adventureLevel(request.getAdventureLevel())
+                .adventureLevel(AdventureLevel.valueOf(request.getAdventureLevel().toUpperCase()))
                 .duration(request.getDriveDuration())
                 .distance(request.getDistance())
                 .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .creator(userService.user())
                 .build();
-        return tripRepository.save(trip).getId();
+
+        trip = tripRepository.save(trip);
+
+        locationService.createStop(trip, start, 0);
+        locationService.createStop(trip, end, 1);
+
+        return trip.getId();
     }
 
     /**
@@ -65,26 +87,34 @@ public class TripService {
      *
      * Use this method to add/delete locations as well.
      */
-    public Object editTrip(String id, TripEditRequest request){
-        // TODO
-        return null;
+    public void editTrip(long id, TripEditRequest request){
+        Optional<Trip> t = tripRepository.findById(id);
+        //t.get()
     }
 
     /**
      * Deletes the trip of the given id. Should only delete the trip
      * if it is owned by the user making the request.
      */
-    public Object deleteTrip(String id){
-        // TODO
-        return null;
+    public void deleteTrip(Long id){
+        Optional<Trip> t = tripRepository.findById(id);
+        if(t.isEmpty()){
+            log.error("No trip found.");
+        }
+        else if(userService.user() == t.get().getCreator()){
+            tripRepository.deleteById(id);
+        } else {
+            log.error("Trip not owned by user.");
+        }
     }
 
     /**
      * Gets all the trips created by the user making the request
      */
-    public List<TripsResponse> getTrips(){
-        // TODO
-        return null;
+    public List<ReducedTripResponse> getTrips(){
+        List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
+        return trips.stream().map(ReducedTripResponse::new).collect(Collectors.toList());
+
     }
 
 }

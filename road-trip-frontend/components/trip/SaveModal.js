@@ -39,13 +39,13 @@ const SaveModal = () => {
                 place_name: location.start.place_name,
                 center: location.start.center,
             },
-            start: {
+            end: {
                 place_name: location.end.place_name,
                 center: location.end.center,
             },
             startDate: dates.start,
             endDate: dates.end,
-            advLevel,
+            advLevel: advLevel != "" ? advLevel : "Extreme",
             distance: route.distance,
             duration: route.duration,
         });
