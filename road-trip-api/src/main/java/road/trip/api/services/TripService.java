@@ -18,6 +18,7 @@ import road.trip.persistence.models.Trip;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -94,9 +95,8 @@ public class TripService {
      * Gets all the trips created by the user making the request
      */
     public List<ReducedTripResponse> getTrips(){
-        tripRepository.findByCreator_Id(userService.getId());
-
-        return null;
+        List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
+        return trips.stream().map(ReducedTripResponse::new).collect(Collectors.toList());
 
     }
 
