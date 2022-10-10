@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import road.trip.api.requests.StopRequest;
-import road.trip.api.requests.TripRequest;
+import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.services.StopService;
 import road.trip.api.services.TripService;
 import road.trip.api.services.UserService;
@@ -48,14 +48,14 @@ public class ServiceTests {
         @Test
         @DisplayName("Trip Service: Create Trip")
         void createTrip(){
-            TripRequest tripRequest = TripRequest.builder()
+            TripCreateRequest tripRequest = TripCreateRequest.builder()
                 .name("Test Trip")
                 .adventureLevel(4)
                 .duration(100)
                 .distance(101)
                 .startDate(LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
                 .build();
-            Trip testTrip = tripService.createTrip(tripRequest);
+            Trip testTrip = null;
             assertAll(
                 ()->assertEquals(testTrip.getName(), "Test Trip"),
                 ()->assertEquals(testTrip.getAdventureLevel(),4),

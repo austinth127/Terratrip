@@ -22,7 +22,7 @@ public class UserController {
         return ResponseEntity.ok(userService.register(request));
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<User> getUser() {
         return ResponseEntity.ok(userService.user());
     }

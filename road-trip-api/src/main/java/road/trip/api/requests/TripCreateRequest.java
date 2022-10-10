@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @Builder
-public class TripRequest {
+public class TripCreateRequest {
 
     @NotNull
     private String name;
