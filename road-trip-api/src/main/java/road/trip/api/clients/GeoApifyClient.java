@@ -43,11 +43,11 @@ public class GeoApifyClient {
         }
     }
 
-    private URI buildUri(String path, List<NameValuePair> nameValuePairs) {
+    private URI buildUri(String path, List<NameValuePair> queryParams) {
         try {
             return new URIBuilder(BASE_URL)
                 .setPath(path)
-                .addParameters(nameValuePairs)
+                .addParameters(queryParams)
                 .build();
         } catch (URISyntaxException e) {
             log.error(e);
@@ -55,12 +55,37 @@ public class GeoApifyClient {
         }
     }
 
-    public Stop getStopByAddress(String address){
-        URI uri = buildUri("/v2/places"); // TODO: add address as query parameter
+    //TODO: Return a list not a Stop, also test
+    public Stop getStopByName(String name){
+        URI uri = buildUri("/v2/places?name=" + name + "&limit=20");
         HttpRequest httpRequest = HttpRequest.newBuilder()
             .uri(uri)
             .GET()
             .build();
+        Request<Stop> request = new Request<>(httpRequest, Stop.class);
+
+        return request.execute().body();
+    }
+
+    //TODO: Return a list not a Stop, also test
+    public Stop getStopsByCoords(long lon, long lat, long radius){
+        URI uri = buildUri("/v2/places?filter=circle:" + lon + "," + lat + "," + radius + "&limit=20");
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(uri)
+                .GET()
+                .build();
+        Request<Stop> request = new Request<>(httpRequest, Stop.class);
+
+        return request.execute().body();
+    }
+
+    //TODO: Return a list not a Stop, also test
+    public Stop getRecommendedStops(long lon1, long lat1, long lon2, long lat2){
+        URI uri = buildUri("/v2/places?filter=rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "," + "&limit=20");
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(uri)
+                .GET()
+                .build();
         Request<Stop> request = new Request<>(httpRequest, Stop.class);
 
         return request.execute().body();
