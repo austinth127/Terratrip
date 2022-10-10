@@ -14,8 +14,10 @@ import road.trip.api.responses.ReducedTripResponse;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +46,6 @@ public class TripService {
             Trip t = optionalTrip.get();
             tr = new TripResponse(t);
 
-            tr.setStops(locationService.getLocationsForTrip(t.getId()));
         } else {
             log.error("Trip not owned by user.");
         }
@@ -59,6 +60,9 @@ public class TripService {
      * Creates a trip and returns the id of the newly created trip
      */
     public Long createTrip(TripCreateRequest request){
+        Location start = locationService.createLocation(request.getStart());
+        Location end = locationService.createLocation(request.getEnd());
+
         Trip trip = Trip.builder()
                 .name(request.getName())
                 .adventureLevel(AdventureLevel.valueOf(request.getAdventureLevel().toUpperCase()))
@@ -66,6 +70,14 @@ public class TripService {
                 .distance(request.getDistance())
                 .startDate(request.getStartDate())
                 .build();
+
+        trip = tripRepository.save(trip);
+
+        Stop startStop = locationService.createStop(trip, start, 0);
+        Stop endStop = locationService.createStop(trip, end, 1);
+
+        trip.setStops(List.of(startStop, endStop));
+
         return tripRepository.save(trip).getId();
     }
 
@@ -75,9 +87,9 @@ public class TripService {
      *
      * Use this method to add/delete locations as well.
      */
-    public Object editTrip(String id, TripEditRequest request){
-        // TODO
-        return null;
+    public void editTrip(long id, TripEditRequest request){
+        Optional<Trip> t = tripRepository.findById(id);
+        //t.get()
     }
 
     /**

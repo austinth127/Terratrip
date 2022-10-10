@@ -22,7 +22,7 @@ public class LocationController {
     @Deprecated
     @PostMapping("/create-stop")
     public ResponseEntity<Location> saveStop(@RequestBody LocationRequest locationRequest) {
-        return ResponseEntity.ok(locationService.createStop(locationRequest));
+        return ResponseEntity.ok(locationService.createLocation(locationRequest));
     }
 
     @GetMapping

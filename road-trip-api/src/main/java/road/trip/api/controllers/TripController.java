@@ -53,8 +53,9 @@ public class TripController {
      * Use this request to add/delete locations as well.
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editTrip(@PathVariable("id") String id, @RequestBody TripEditRequest request) {
-        return ResponseEntity.ok(tripService.editTrip(id, request));
+    public ResponseEntity<?> editTrip(@PathVariable("id") long id, @RequestBody TripEditRequest request) {
+        tripService.editTrip(id, request);
+        return ResponseEntity.ok().build();
     }
 
     /**
