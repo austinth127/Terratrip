@@ -6,9 +6,7 @@ import { useState } from "react";
  * @param {Object} props
  * @returns {JSX.Element} The text field
  */
-const TextInput = ({ ...props }) => {
-    const [value, setValue] = useState();
-
+export const TextInput = ({ ...props }) => {
     return (
         <input
             className="block w-full px-2 py-1.5 text-sm font-normal rounded transition ease-in-out m-0

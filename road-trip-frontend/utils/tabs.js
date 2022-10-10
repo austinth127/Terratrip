@@ -3,9 +3,8 @@ export const tabs = [
         section: "Trips",
         tabs: [
             { name: "Create a Trip", href: "/trips/create" },
-            { name: "My Trips", href: "/trips/edit" },
-            { name: "Popular Trips", href: "/trips/popular" },
-            { name: "Map", href: "/trips/map" },
+            { name: "My Trips", href: "/trips/list/user" },
+            { name: "Popular Trips", href: "/trips/list/popular" },
         ],
     },
     {

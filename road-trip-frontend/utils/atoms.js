@@ -8,9 +8,6 @@ export const locAtom = atom(
         set(endAtom, newLoc.end);
     }
 );
-export const startAtom = atom();
-export const endAtom = atom();
-export const routeAtom = atom();
 
 export const tripDateAtom = atom(
     (get) => ({ start: get(startDateAtom), end: get(endDateAtom) }),
@@ -19,6 +16,15 @@ export const tripDateAtom = atom(
         set(endDateAtom, newTrip.end);
     }
 );
+
+// Create Trip
 export const startDateAtom = atom();
 export const endDateAtom = atom();
 export const advLevelAtom = atom([]);
+
+export const startAtom = atom();
+export const endAtom = atom();
+export const routeAtom = atom();
+
+// Map
+export const showSaveModalAtom = atom(false);
