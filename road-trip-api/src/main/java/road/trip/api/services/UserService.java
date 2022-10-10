@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Extracts a Spring Security User object from the Spring Security Context
+     * (the Spring Security Context gets set by our custom AuthFilter class).
+     */
     private org.springframework.security.core.userdetails.User springSecurityUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication();
@@ -38,6 +42,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Gets the current user.
+     *
+     * @return The user that made the request.
+     */
     public User user() {
         if (springSecurityUser() == null) {
             return null;
@@ -46,6 +55,11 @@ public class UserService {
         return userRepository.findByUserfrontId(Long.parseLong(username)).orElse(null);
     }
 
+    /**
+     * Gets the id of the current user.
+     *
+     * @return The id of the user that made the request.
+     */
     public Long getId() {
         if (user() == null) {
             return null;

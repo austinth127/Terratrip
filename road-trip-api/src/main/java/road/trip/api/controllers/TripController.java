@@ -31,8 +31,7 @@ public class TripController {
      */
     @GetMapping
     public ResponseEntity<TripsResponse> getTrips() {
-        // TODO
-        return null;
+        return tripService.getTrips();
     }
 
     /**
@@ -41,8 +40,7 @@ public class TripController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<TripResponse> getTrip(@PathVariable("id") Long id) {
-        // TODO
-        return null;
+        return tripService.getTrip(id);
     }
 
     /**
@@ -50,8 +48,7 @@ public class TripController {
      */
     @PostMapping
     public ResponseEntity<Long> createTrip(@RequestBody TripCreateRequest request) {
-        // TODO
-        return null;
+        return tripService.createTrip(request);
     }
 
     /**
@@ -62,8 +59,7 @@ public class TripController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<?> editTrip(@PathVariable("id") String id, @RequestBody TripEditRequest request) {
-        // TODO
-        return null;
+        return tripService.editTrip(id, request);
     }
 
     /**
@@ -72,8 +68,7 @@ public class TripController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTrip(@PathVariable("id") String id) {
-        // TODO
-        return null;
+        return tripService.deleteTrip(id);
     }
 
 }

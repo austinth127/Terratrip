@@ -27,7 +27,6 @@ public class LocationController {
 
     @GetMapping
     public ResponseEntity<LocationsResponse> getRecommendedStops(Long tripId, Double range) {
-        // TODO
-        return null;
+        return locationService.getRecommendedStops(tripId, range);
     }
 }
