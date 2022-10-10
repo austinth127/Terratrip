@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-public class TripRequest {
+public class TripCreateRequest {
 
     @NotNull
     private String name;

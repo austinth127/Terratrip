@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.requests.StopRequest;
+import road.trip.api.responses.StopsResponse;
 import road.trip.api.services.StopService;
 import road.trip.api.services.TripService;
 import road.trip.persistence.models.Stop;
@@ -15,13 +16,20 @@ import road.trip.persistence.models.Stop;
 @RestController
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping("/stop")
 public class StopController {
 
     final StopService stopService;
 
+    @Deprecated
     @PostMapping("/create-stop")
     public ResponseEntity<Stop> saveStop(@RequestBody StopRequest stopRequest) {
         return ResponseEntity.ok(stopService.createStop(stopRequest));
     }
 
+    @GetMapping
+    public ResponseEntity<StopsResponse> getRecommendedStops(Long tripId, Double range) {
+        // TODO
+        return null;
+    }
 }

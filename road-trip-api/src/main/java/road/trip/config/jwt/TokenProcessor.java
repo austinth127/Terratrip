@@ -75,6 +75,9 @@ public class TokenProcessor {
     }
 
     private String getBearerToken(String token) {
+        if (token == null) {
+            return null;
+        }
         return token.startsWith("Bearer ") ? token.substring("Bearer ".length()) : token;
     }
 
