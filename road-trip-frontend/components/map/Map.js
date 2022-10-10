@@ -25,7 +25,7 @@ const Map = ({ ...props }) => {
     const [lng, setLng] = useState(-97.141);
     const [lat, setLat] = useState(31.55);
     const [zoom, setZoom] = useState(3.4);
-    
+
     const [start, setStart] = useAtom(startAtom);
     const [end, setEnd] = useAtom(endAtom);
     const [route, setRoute] = useAtom(routeAtom);
@@ -73,13 +73,13 @@ const Map = ({ ...props }) => {
             addRoute();
 
             const points = getPoints(start.center, end.center);
-            var popup = new mapboxgl.Popup()
-            .setText('Description')
-            .addTo(map.current);
-            marker = new mapboxgl.Marker()
-                .setLngLat(points)
-                .addTo(map.current)
-                .setPopup(popup);
+            // var popup = new mapboxgl.Popup()
+            // .setText('Description')
+            // .addTo(map.current);
+            // marker = new mapboxgl.Marker()
+            //     .setLngLat(points)
+            //     .addTo(map.current)
+            //     .setPopup(popup);
             map.current.addLayer({
                 id: "routeEndpoints",
                 type: "circle",
@@ -92,7 +92,6 @@ const Map = ({ ...props }) => {
                     "circle-color": colors.green600,
                 },
             });
-
         });
     });
 

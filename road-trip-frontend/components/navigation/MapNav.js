@@ -1,12 +1,14 @@
+import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { showSaveModalAtom } from "../../utils/atoms";
 import { Button, OutlineButton } from "../general/Buttons";
 import TextLogo from "../general/TextLogo";
 
 const MapNav = ({ ...props }) => {
     const router = useRouter();
-    const handleSave = () => {};
+    const [showModal, setShowModal] = useAtom(showSaveModalAtom);
 
     const handleCancel = () => {
         router.push("/");
@@ -31,7 +33,7 @@ const MapNav = ({ ...props }) => {
                 <TextLogo className="text-lg text-slate-800 pt-2" />
             </div>
             <div className="flex flex-row justify-evenly gap-2">
-                <Button onClick={handleSave}>Save</Button>
+                <Button onClick={() => setShowModal(!showModal)}>Save</Button>
                 <OutlineButton onClick={handleCancel}>Cancel</OutlineButton>
             </div>
         </div>
