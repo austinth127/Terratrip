@@ -62,7 +62,7 @@ public class ModelTests {
         @Test
         @DisplayName("User Constructor")
         void userConstuctor() {
-            User u = new User(1l, 2l, "test@gmail.com", "Bob", "bobusername");
+            User u = new User(1l, 2l, "test@gmail.com", "Bob", "bobusername", new ArrayList<>());
             assertAll(
                 ()->assertEquals(1l,u.getId()),
                 ()->assertEquals(2l,u.getUserfrontId()),
