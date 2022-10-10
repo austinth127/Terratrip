@@ -35,22 +35,22 @@ public class TripService {
     }
 
 
-    public ResponseEntity<TripResponse> getTrip(@PathVariable("id") Long id){
+    public ResponseEntity<TripResponse> getTrip(Long id){
         // TODO
         return null;
     }
 
 
-    public ResponseEntity<Long> createTrip(@RequestBody TripCreateRequest request){
+    public ResponseEntity<Long> createTrip(TripCreateRequest request){
         // TODO
         return null;
     }
 
-    public ResponseEntity<?> editTrip(@PathVariable("id") String id, @RequestBody TripEditRequest request){
+    public ResponseEntity<?> editTrip(String id, TripEditRequest request){
         // TODO
         return null;
     }
-    public ResponseEntity<?> deleteTrip(@PathVariable("id") String id){
+    public ResponseEntity<?> deleteTrip(String id){
         // TODO
         return null;
     }
