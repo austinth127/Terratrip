@@ -2,18 +2,15 @@ package road.trip.api.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 import road.trip.api.requests.StopRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
 import road.trip.api.responses.StopResponse;
 import road.trip.api.responses.TripResponse;
-import road.trip.api.responses.TripsResponse;
+import road.trip.api.responses.ReducedTripResponse;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
-import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
 import java.util.List;
@@ -84,7 +81,7 @@ public class TripService {
     /**
      * Gets all the trips created by the user making the request
      */
-    public List<TripsResponse> getTrips(){
+    public List<ReducedTripResponse> getTrips(){
         tripRepository.findByCreator_Id(userService.getId());
 
         return null;
