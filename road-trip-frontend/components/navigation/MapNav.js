@@ -7,6 +7,7 @@ import {
     locAtom,
     showSaveModalAtom,
     tripDateAtom,
+    tripIdAtom,
     tripNameAtom,
 } from "../../utils/atoms";
 import { Button, OutlineButton } from "../general/Buttons";
@@ -19,6 +20,7 @@ const MapNav = ({ ...props }) => {
     const [date, setDate] = useAtom(tripDateAtom);
     const [name, setName] = useAtom(tripNameAtom);
     const [advLevel, setAdvLevel] = useAtom(advLevelAtom);
+    const [tripId, setTripId] = useAtom(tripIdAtom);
 
     const handleCancel = () => {
         setAdvLevel("");
@@ -26,6 +28,7 @@ const MapNav = ({ ...props }) => {
         setDate({ start: null, end: null });
         setName("");
         setShowModal(false);
+        setTripId(null);
         router.push("/");
     };
 

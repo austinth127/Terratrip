@@ -9,22 +9,17 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class LocationRequest {
+
+    private Long id;
+
     @NotNull @JsonProperty("place_name")
     private String name;
-    @NotNull @JsonProperty("center")
-    private void unpackCenter(Double[] center) {
-        this.coordX = center[0];
-        this.coordY = center[1];
-    }
-
+    @NotNull @JsonProperty("lng")
     private double coordX;
+    @NotNull @JsonProperty("lat")
     private double coordY;
 
     private String description;
     private int rating;
 
-//    @NotNull
-//    private String type;
-//    @NotNull
-//    private String geoType;
 }

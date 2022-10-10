@@ -31,3 +31,5 @@ export const tripNameAtom = atom();
 
 // Map
 export const showSaveModalAtom = atom(false);
+export const editModeAtom = atom(false);
+export const tripIdAtom = atom(null);

@@ -2,27 +2,35 @@ import { useAtom, useAtomValue } from "jotai";
 import React, { useState } from "react";
 import {
     advLevelAtom,
+    editModeAtom,
     locAtom,
     routeAtom,
     showSaveModalAtom,
     tripDateAtom,
+    tripIdAtom,
     tripNameAtom,
 } from "../../utils/atoms";
-import useInput from "../../hooks/useInput";
 import TextInput from "../general/TextInput";
 import Alert from "../auth/Alert";
 import axios from "axios";
 import { Button } from "../general/Buttons";
+import { useRouter } from "next/router";
 
 const SaveModal = () => {
     const [show] = useAtom(showSaveModalAtom);
     const [tripName, setTripName] = useAtom(tripNameAtom);
-    const [alert, setAlert] = useState("");
 
-    const location = useAtomValue(locAtom);
-    const dates = useAtomValue(tripDateAtom);
-    const advLevel = useAtomValue(advLevelAtom);
+    const [location, setLocation] = useAtom(locAtom);
+    const [dates, setDates] = useAtom(tripDateAtom);
+    const [advLevel, setAdvLevel] = useAtom(advLevelAtom);
+    const [showModal, setShowModal] = useAtom(showSaveModalAtom);
+
+    const [editMode, setEditMode] = useAtom(editModeAtom);
+    const [tripId, setTripId] = useAtom(tripIdAtom);
+
     const route = useAtomValue(routeAtom);
+
+    const router = useRouter();
 
     console.log(location, dates, advLevel, route);
 
@@ -31,26 +39,83 @@ const SaveModal = () => {
         setAlert("");
         if (!tripName) {
             setAlert("Trip name cannot be empty");
+            return;
         }
 
-        axios.post("/trip", {
-            name: tripName,
-            start: {
-                place_name: location.start.place_name,
-                center: location.start.center,
-            },
-            end: {
-                place_name: location.end.place_name,
-                center: location.end.center,
-            },
-            startDate: dates.start,
-            endDate: dates.end,
-            advLevel: advLevel != "" ? advLevel : "Extreme",
-            distance: route.distance,
-            duration: route.duration,
-        });
-
         /**@todo redirect */
+    };
+
+    const handleSave = () => {
+        axios
+            .post("/trip", {
+                name: tripName,
+                start: {
+                    place_name: location.start.place_name,
+                    lng: location.start.center[0],
+                    lat: location.start.center[1],
+                },
+                end: {
+                    place_name: location.end.place_name,
+                    lng: location.end.center[0],
+                    lat: location.end.center[1],
+                },
+                startDate: dates.start,
+                endDate: dates.end,
+                advLevel: advLevel != "" ? advLevel : "Extreme",
+                distance: route.distance,
+                duration: route.duration,
+            })
+            .then(
+                (success) => {
+                    setAdvLevel("");
+                    setLocation({ start: null, end: null });
+                    setDates({ start: null, end: null });
+                    setTripName("");
+                    setShowModal(false);
+                    setEditMode(false);
+                    setTripId(null);
+                    router.push("/trips/list/user");
+                },
+                (fail) => {
+                    setAlert("Trip failed to save");
+                }
+            );
+    };
+
+    const handleEdit = () => {
+        axios
+            .patch(`/trip/${tripId}`, {
+                name: tripName,
+                start: {
+                    place_name: location.start.place_name,
+                    lng: location.start.center[0],
+                    lat: location.start.center[1],
+                },
+                end: {
+                    place_name: location.end.place_name,
+                    lng: location.end.center[0],
+                    lat: location.end.center[1],
+                },
+                startDate: dates.start,
+                endDate: dates.end,
+                advLevel: advLevel != "" ? advLevel : "Extreme",
+                distance: route.distance,
+                duration: route.duration,
+            })
+            .then(
+                (success) => {
+                    setAdvLevel("");
+                    setLocation({ start: null, end: null });
+                    setDates({ start: null, end: null });
+                    setTripName("");
+                    setShowModal(false);
+                    setEditMode(false);
+                    router.push("/trips/list/user");
+                },
+                (fail) => {
+                    setAlert("Trip failed to save");
+                }
+            );
     };
 
     return (

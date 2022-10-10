@@ -70,28 +70,3 @@ export default function Home({ ...props }) {
         </div>
     );
 }
-
-// This is how you can get server side data befre render
-// export async function getServerSideProps() {
-//     // Fetch data from external API
-//     const page = Math.floor(Math.random() * 10) + 1;
-
-//     try {
-//         const res = await axios.get(
-//             `https://api.pexels.com/v1/search?query=nature&per_page=1&orientation=landscape&page=${page}`,
-//             {
-//                 headers: {
-//                     Authorization:
-//                         "563492ad6f91700001000001088d0dbdcca94fb4bd0ca364d64f06b8",
-//                 },
-//             }
-//         );
-//         const photo = res.data.photos[0];
-
-//         // Pass data to the page via props
-//         return { props: { photo } };
-//     } catch (e) {
-//         console.log("Error getting server side props from api", e);
-//     }
-//     return { props: {} };
-// }

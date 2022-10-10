@@ -19,7 +19,7 @@ public class ReducedTripResponse {
         name = t.getName();
         startDate = t.getStartDate();
         endDate = t.getEndDate();
-        duration = t.getDuration();
+        duration = t.getDriveDuration();
         distance = t.getDistance();
         advLevel = t.getAdventureLevel().toString();
         start = new LocationResponse(t.getStart());

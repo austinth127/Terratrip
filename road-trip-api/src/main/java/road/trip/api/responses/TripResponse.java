@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class TripResponse extends ReducedTripResponse {
     public TripResponse(Trip t) {
         distance = t.getDistance();
-        duration = t.getDuration();
+        duration = t.getDriveDuration();
         advLevel = t.getAdventureLevel().toString();
         startDate = t.getStartDate();
         endDate = t.getEndDate();
