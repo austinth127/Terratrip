@@ -1,5 +1,6 @@
 package road.trip.persistence.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -29,6 +30,8 @@ public class User {
     String username;
 
     @OneToMany(mappedBy = "creator")
+    @ToString.Exclude
+    @JsonIgnore
     List<Trip> trips;
 
     @Override

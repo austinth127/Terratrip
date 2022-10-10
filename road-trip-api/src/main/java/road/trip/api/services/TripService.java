@@ -69,16 +69,16 @@ public class TripService {
                 .duration(request.getDriveDuration())
                 .distance(request.getDistance())
                 .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .creator(userService.user())
                 .build();
 
         trip = tripRepository.save(trip);
 
-        Stop startStop = locationService.createStop(trip, start, 0);
-        Stop endStop = locationService.createStop(trip, end, 1);
+        locationService.createStop(trip, start, 0);
+        locationService.createStop(trip, end, 1);
 
-        trip.setStops(List.of(startStop, endStop));
-
-        return tripRepository.save(trip).getId();
+        return trip.getId();
     }
 
     /**
