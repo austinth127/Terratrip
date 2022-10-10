@@ -22,9 +22,9 @@ public class ReducedTripResponse {
     @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     @NonNull
-    private int duration;
+    private double duration;
     @NotNull
-    private int distance;
+    private double distance;
     @NonNull
     private String advLevel;
     @NonNull

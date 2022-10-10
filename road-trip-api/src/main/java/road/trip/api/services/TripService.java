@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import road.trip.api.requests.StopRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
+import road.trip.api.responses.LocationResponse;
 import road.trip.api.responses.StopResponse;
 import road.trip.api.responses.TripResponse;
 import road.trip.api.responses.ReducedTripResponse;
@@ -36,7 +37,14 @@ public class TripService {
 
         if (optionalTrip.isPresent()) {
             Trip t = optionalTrip.get();
-            tr = new TripResponse(t.getId(), t.getName(), t.getStartDate(), t.getEndDate(), t.getDuration(), t.getAdventureLevel().toString());
+            tr = TripResponse.builder().distance(t.getDistance())
+                .duration(t.getDuration())
+                .advLevel(t.getAdventureLevel().toString())
+                .startDate(t.getStartDate())
+                .endDate(t.getEndDate())
+                .id(t.getId())
+                .start(new LocationResponse())
+                .build();
             tr.setStops(locationService.getLocationsForTrip(t.getId()));
         }
         return tr;

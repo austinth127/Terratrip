@@ -35,6 +35,15 @@ public class Trip {
     @OneToMany(mappedBy = "trip")
     List<Stop> stops;
 
+
+    public Location getStart() {
+        return stops.get(0).getLocation();
+    }
+
+    public Location getEnd() {
+        return stops.get(stops.size() - 1).getLocation();
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User creator;
