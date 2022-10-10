@@ -43,7 +43,7 @@ public class TripService {
     /**
      * Creates a trip and returns the id of the newly created trip
      */
-    public ResponseEntity<Long> createTrip(TripCreateRequest request){
+    public Long createTrip(TripCreateRequest request){
         Trip trip = Trip.builder()
                 .name(request.getName())
                 .adventureLevel(request.getAdventureLevel())
@@ -51,7 +51,7 @@ public class TripService {
                 .distance(request.getDistance())
                 .startDate(request.getStartDate())
                 .build();
-        return ResponseEntity.ok(tripRepository.save(trip).getId());
+        return tripRepository.save(trip).getId();
     }
 
     /**

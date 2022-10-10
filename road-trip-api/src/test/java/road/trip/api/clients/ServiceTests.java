@@ -67,17 +67,15 @@ public class ServiceTests {
                 .distance(101)
                 .startDate(LocalDate.of(2022, Month.OCTOBER,9))
                 .build();
-            ResponseEntity<Long> re = tripService.createTrip(tripRequest);
-            long id = re.getBody();
+            Long id = tripService.createTrip(tripRequest);
             Optional<Trip> optTrip = tripRepository.findById(id);
             assertAll(
-                ()->assertEquals(re.getStatusCodeValue(), 200),
                 ()->assertNotNull(optTrip.orElse(null)),
                 ()->assertEquals(optTrip.get().getName(),"Test Trip"),
                 ()->assertEquals(optTrip.get().getAdventureLevel(),4),
                 ()->assertEquals(optTrip.get().getDuration(),100),
                 ()->assertEquals(optTrip.get().getDistance(),101),
-                ()->assertEquals(optTrip.get().getStartDate(),LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
+                ()->assertEquals(optTrip.get().getStartDate(),LocalDate.of(2022, Month.OCTOBER,9))
             );
 
         }
