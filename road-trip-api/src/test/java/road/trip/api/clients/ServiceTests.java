@@ -55,7 +55,7 @@ public class ServiceTests {
                 .distance(101)
                 .startDate(LocalDateTime.of(2022, Month.OCTOBER,9,5,45))
                 .build();
-            Trip testTrip = tripService.createTrip(tripRequest);
+            Trip testTrip = null;
             assertAll(
                 ()->assertEquals(testTrip.getName(), "Test Trip"),
                 ()->assertEquals(testTrip.getAdventureLevel(),4),

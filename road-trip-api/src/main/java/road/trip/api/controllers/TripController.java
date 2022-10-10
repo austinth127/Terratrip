@@ -22,12 +22,12 @@ public class TripController {
 
     @Deprecated
     @PostMapping("/create-trip")
-    public ResponseEntity<Trip> saveStop(@RequestBody TripCreateRequest tripCreateRequest) {
-        return ResponseEntity.ok(tripService.createTrip(tripCreateRequest));
+    public ResponseEntity<Long> saveStop(@RequestBody TripCreateRequest tripCreateRequest) {
+        return tripService.createTrip(tripCreateRequest);
     }
 
     /**
-     * Gets all of the trips created by the user making the request
+     * Gets all the trips created by the user making the request
      */
     @GetMapping
     public ResponseEntity<TripsResponse> getTrips() {

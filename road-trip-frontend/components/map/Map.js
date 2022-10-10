@@ -73,13 +73,6 @@ const Map = ({ ...props }) => {
             addRoute();
 
             const points = getPoints(start.center, end.center);
-            var popup = new mapboxgl.Popup()
-            .setText('Description')
-            .addTo(map.current);
-            marker = new mapboxgl.Marker()
-                .setLngLat(points)
-                .addTo(map.current)
-                .setPopup(popup);
             map.current.addLayer({
                 id: "routeEndpoints",
                 type: "circle",
