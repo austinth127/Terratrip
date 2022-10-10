@@ -13,6 +13,7 @@ import road.trip.api.responses.TripResponse;
 import road.trip.api.responses.ReducedTripResponse;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
+import road.trip.persistence.models.Location;
 import road.trip.persistence.models.Trip;
 
 import java.util.List;
@@ -35,10 +36,7 @@ public class TripService {
         Optional<Trip> optionalTrip = tripRepository.findById(id);
         TripResponse tr = null;
 
-        if(optionalTrip.isEmpty()){
-            log.error("No trip found.");
-        }
-        else if(userService.user() == optionalTrip.get().getCreator()){
+        if (optionalTrip.isPresent()) {
             Trip t = optionalTrip.get();
             tr = TripResponse.builder().distance(t.getDistance())
                 .duration(t.getDuration())
@@ -49,8 +47,6 @@ public class TripService {
                 .start(new LocationResponse())
                 .build();
             tr.setStops(locationService.getLocationsForTrip(t.getId()));
-        } else {
-            log.error("Trip not owned by user.");
         }
         return tr;
     }
@@ -93,7 +89,7 @@ public class TripService {
         if(t.isEmpty()){
             log.error("No trip found.");
         }
-        else if(userService.user() == t.get().getCreator()){
+        if(userService.user() == t.get().getCreator()){
             tripRepository.deleteById(id);
         } else {
             log.error("Trip not owned by user.");
