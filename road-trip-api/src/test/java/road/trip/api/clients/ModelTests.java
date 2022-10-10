@@ -58,7 +58,6 @@ public class ModelTests {
     }
     @Nested
     @DisplayName("User Tests")
-
     class UserTests{
         @Test
         @DisplayName("User Constructor")
