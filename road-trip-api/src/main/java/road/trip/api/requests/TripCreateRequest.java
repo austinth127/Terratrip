@@ -1,13 +1,16 @@
 package road.trip.api.requests;
 
+import lombok.Builder;
 import lombok.Data;
 import road.trip.persistence.models.Stop;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
-public class TripRequest {
+@Builder
+public class TripCreateRequest {
 
     @NotNull
     private String name;
@@ -18,7 +21,7 @@ public class TripRequest {
     @NotNull
     private double distance;
     @NotNull
-    private Date startDate;
+    private LocalDateTime startDate;
 //
 //    @NotNull
 //    private Stop start;

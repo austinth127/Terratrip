@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date; //TODO: should I import the sql date instead?
 import java.util.List;
@@ -27,7 +28,7 @@ public class Trip {
     int adventureLevel;
     int duration;
     double distance;
-    Date startDate;
+    LocalDateTime startDate;
 
     @ManyToMany
     @JoinTable(
