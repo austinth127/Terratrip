@@ -12,6 +12,8 @@ import road.trip.api.responses.TripsResponse;
 import road.trip.api.services.TripService;
 import road.trip.persistence.models.Trip;
 
+import java.util.List;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -20,18 +22,12 @@ public class TripController {
 
     final TripService tripService;
 
-    @Deprecated
-    @PostMapping("/create-trip")
-    public ResponseEntity<Long> saveStop(@RequestBody TripCreateRequest tripCreateRequest) {
-        return tripService.createTrip(tripCreateRequest);
-    }
-
     /**
      * Gets all the trips created by the user making the request
      */
     @GetMapping
-    public ResponseEntity<TripsResponse> getTrips() {
-        return tripService.getTrips();
+    public ResponseEntity<List<TripsResponse>> getTrips() {
+        return ResponseEntity.ok(tripService.getTrips());
     }
 
     /**
@@ -40,7 +36,7 @@ public class TripController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<TripResponse> getTrip(@PathVariable("id") Long id) {
-        return tripService.getTrip(id);
+        return ResponseEntity.ok(tripService.getTrip(id));
     }
 
     /**
@@ -48,7 +44,7 @@ public class TripController {
      */
     @PostMapping
     public ResponseEntity<Long> createTrip(@RequestBody TripCreateRequest request) {
-        return tripService.createTrip(request);
+        return ResponseEntity.ok(tripService.createTrip(request));
     }
 
     /**
@@ -59,7 +55,7 @@ public class TripController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<?> editTrip(@PathVariable("id") String id, @RequestBody TripEditRequest request) {
-        return tripService.editTrip(id, request);
+        return ResponseEntity.ok(tripService.editTrip(id, request));
     }
 
     /**
@@ -68,7 +64,7 @@ public class TripController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTrip(@PathVariable("id") String id) {
-        return tripService.deleteTrip(id);
+        return ResponseEntity.ok(tripService.deleteTrip(id));
     }
 
 }
