@@ -9,6 +9,7 @@ import road.trip.persistence.models.Trip;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -22,7 +23,7 @@ public class TripResponse extends ReducedTripResponse {
         id = t.getId();
         start = new LocationResponse(t.getStart());
         end = new LocationResponse(t.getEnd());
-        stops = t.getStops();
+        stops = t.getStops().stream().map(Stop::getLocation).collect(Collectors.toList());
     }
 
     @NonNull
@@ -44,5 +45,5 @@ public class TripResponse extends ReducedTripResponse {
     @NonNull
     private LocationResponse end;
 
-    private List<Stop> stops;
+    private List<Location> stops;
 }
