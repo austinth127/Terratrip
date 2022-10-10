@@ -28,6 +28,8 @@ const SaveModal = () => {
     const [editMode, setEditMode] = useAtom(editModeAtom);
     const [tripId, setTripId] = useAtom(tripIdAtom);
 
+    const [alert, setAlert] = useState("");
+
     const route = useAtomValue(routeAtom);
 
     const router = useRouter();
@@ -42,6 +44,11 @@ const SaveModal = () => {
             return;
         }
 
+        if (editMode) {
+            handleEdit();
+        } else {
+            handleSave();
+        }
         /**@todo redirect */
     };
 
@@ -110,6 +117,7 @@ const SaveModal = () => {
                     setTripName("");
                     setShowModal(false);
                     setEditMode(false);
+                    setTripId(null);
                     router.push("/trips/list/user");
                 },
                 (fail) => {

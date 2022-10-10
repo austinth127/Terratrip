@@ -8,6 +8,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { endAtom, startAtom } from "../utils/atoms";
 import { useRouter } from "next/router";
 import Userfront from "@userfront/core";
+
 /**
  * The home page for the website
  * @param {Object} props The props passed to the object

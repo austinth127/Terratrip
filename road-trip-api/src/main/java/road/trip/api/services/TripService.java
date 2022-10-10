@@ -112,7 +112,7 @@ public class TripService {
             if (request.getEndDate() != null) {
                 t.setEndDate(request.getEndDate());
             }
-
+            
             List<LocationRequest> stops = request.getStops();
 
             for (int i = 0; i < stops.size(); i++) {

@@ -61,8 +61,7 @@ const UserTrips = () => {
     useEffect(() => {
         const getData = async () => {
             const res = await axios.get("/trip");
-            // setTrips(res.data);
-            console.log(res.data);
+            // console.log(res.data);
             setTrips(res.data);
         };
         getData();

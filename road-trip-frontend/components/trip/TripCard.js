@@ -13,9 +13,14 @@ import {
     tripNameAtom,
 } from "../../utils/atoms";
 import { useRouter } from "next/router";
+import axios from "axios";
+
+// /trip/{id}/rate post body {rating: Double}
 
 const TripCard = ({ trip }) => {
-    const [rate, setRate] = useState(0);
+    const [rating, setRating] = useState(trip.rating);
+    const [isEditRating, setIsEditRating] = useState(false);
+
     const setLoc = useSetAtom(locAtom);
     const setDate = useSetAtom(tripDateAtom);
     const setName = useSetAtom(tripNameAtom);
@@ -34,6 +39,14 @@ const TripCard = ({ trip }) => {
         router.push("/trips/map");
     };
     if (typeof window === "undefined") return;
+
+    const handleRating = () => {
+        if (rating == null) {
+            setRating(0);
+        }
+        setIsEditRating(!isEditRating);
+    };
+
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
             <h2 className="font-semibold text-lg">{trip.name}</h2>
@@ -61,15 +74,22 @@ const TripCard = ({ trip }) => {
                 </div>
             </div>
 
-            {trip.rating ? (
+            {rating != null ? (
                 <div className="absolute bottom-4 left-4">
                     <ReactStars
                         count={5}
                         size={24}
                         color2={colors.green600}
                         half
-                        value={trip.rating}
-                        edit={false}
+                        value={rating}
+                        edit={isEditRating}
+                        onChange={(newVal) => {
+                            axios.post(`/trip/${trip.id}/rate`, {
+                                rating: newVal,
+                            });
+                            setRating(rating);
+                            setIsEditRating(false);
+                        }}
                     />
                 </div>
             ) : (
@@ -79,7 +99,9 @@ const TripCard = ({ trip }) => {
             )}
             <div className="absolute bottom-4 right-4 flex flex-row gap-4">
                 {!trip.rating ? (
-                    <DarkOutlineButton>Rate</DarkOutlineButton>
+                    <DarkOutlineButton onClick={handleRating}>
+                        Rate
+                    </DarkOutlineButton>
                 ) : (
                     <></>
                 )}
