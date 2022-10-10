@@ -31,9 +31,6 @@ public class Location {
     private double coordX;
     private double coordY;
 
-    @OneToMany(mappedBy = "location")
-    List<Stop> stops;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

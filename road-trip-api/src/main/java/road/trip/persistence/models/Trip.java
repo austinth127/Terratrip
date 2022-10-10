@@ -29,7 +29,7 @@ public class Trip {
     double distance;
     LocalDateTime startDate;
 
-    @OneToMany(mappedBy ="trip")
+    @OneToMany(mappedBy = "trip")
     List<Stop> stops;
 
     @Override
