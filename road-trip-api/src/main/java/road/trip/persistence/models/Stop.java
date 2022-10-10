@@ -30,7 +30,7 @@ public class Stop {
     @JoinColumn(name = "location_id", nullable = false)
     Location location;
 
-    @Column
+    @Column(name = "stop_order")
     Integer order;
 
     @Override
