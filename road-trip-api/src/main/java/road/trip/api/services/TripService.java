@@ -45,8 +45,14 @@ public class TripService {
      * Creates a trip and returns the id of the newly created trip
      */
     public ResponseEntity<Long> createTrip(TripCreateRequest request){
-        // TODO
-        return null;
+        Trip trip = Trip.builder()
+                .name(request.getName())
+                .adventureLevel(request.getAdventureLevel())
+                .duration(request.getDuration())
+                .distance(request.getDistance())
+                .startDate(request.getStartDate())
+                .build();
+        return ResponseEntity.ok(tripRepository.save(trip).getId());
     }
 
     /**

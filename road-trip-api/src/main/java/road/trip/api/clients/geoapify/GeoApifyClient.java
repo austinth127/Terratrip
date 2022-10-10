@@ -62,12 +62,16 @@ public class GeoApifyClient {
     }
 
     //TODO: test
-    public List<Location> getStopByName(String name){
+    public List<Location> getStopByName(String name, int limit, double lon1, double lat1, double lon2, double lat2){
         URI uri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("name", name),
-            new BasicNameValuePair("limit", "20")));
+            new BasicNameValuePair("limit", "" + limit),
+            new BasicNameValuePair("filter", "rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2),
+            new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")));
+        System.out.println(uri.toString());
         try {
             String jsonBody = doGet(uri);
+            System.out.println(jsonBody);
             return locationMapper.getStopsFromJSON(jsonBody);
         } catch (Exception e) {
             log.error(e);
@@ -76,10 +80,11 @@ public class GeoApifyClient {
     }
 
     //TODO: test
-    public List<Location> getStopsByCoords(long lon, long lat, long radius){
+    public List<Location> getStopsByCoords(double lon, double lat, double radius){
         URI uri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("filter", "circle:" + lon + "," + lat + "," + radius),
-            new BasicNameValuePair("limit", "20")));
+            new BasicNameValuePair("limit", "20"),
+            new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")));
         try {
             String jsonBody = doGet(uri);
             return locationMapper.getStopsFromJSON(jsonBody);
@@ -90,10 +95,11 @@ public class GeoApifyClient {
     }
 
     //TODO: test
-    public List<Location> getRecommendedStops(long lon1, long lat1, long lon2, long lat2){
+    public List<Location> getRecommendedStops(double lon1, double lat1, double lon2, double lat2){
         URI uri = buildUri("/v2/places", List.of(
-            new BasicNameValuePair("filter", "rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + ","),
-            new BasicNameValuePair("limit", "20")));
+            new BasicNameValuePair("filter", "rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2),
+            new BasicNameValuePair("limit", "20"),
+            new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")));
         try {
             String jsonBody = doGet(uri);
             return locationMapper.getStopsFromJSON(jsonBody);
