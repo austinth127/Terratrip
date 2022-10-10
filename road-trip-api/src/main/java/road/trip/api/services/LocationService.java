@@ -39,6 +39,8 @@ public class LocationService {
             .name(locationRequest.getName())
             .description(locationRequest.getDescription())
             .rating(locationRequest.getRating())
+            .coordX(locationRequest.getCoordX())
+            .coordY(locationRequest.getCoordY())
             .build();
 
         return locationRepository.save(location);

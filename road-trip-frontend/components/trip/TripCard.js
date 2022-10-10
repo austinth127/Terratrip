@@ -3,10 +3,36 @@ import { DarkOutlineButton } from "../general/Buttons";
 import ReactStars from "react-stars";
 import { colors } from "../../utils/colors";
 import dynamic from "next/dynamic";
+import { useAtom, useSetAtom } from "jotai";
+import {
+    advLevelAtom,
+    editModeAtom,
+    locAtom,
+    tripDateAtom,
+    tripIdAtom,
+    tripNameAtom,
+} from "../../utils/atoms";
+import { useRouter } from "next/router";
 
 const TripCard = ({ trip }) => {
     const [rate, setRate] = useState(0);
+    const setLoc = useSetAtom(locAtom);
+    const setDate = useSetAtom(tripDateAtom);
+    const setName = useSetAtom(tripNameAtom);
+    const setAdvLevel = useSetAtom(advLevelAtom);
+    const setEditMode = useSetAtom(editModeAtom);
+    const setTripId = useSetAtom(tripIdAtom);
+    const router = useRouter();
 
+    const handleViewTrip = () => {
+        setLoc({ start: trip.start, end: trip.end });
+        setDate({ start: trip.startDate, end: trip.endDate });
+        setName(trip.name);
+        setAdvLevel(trip.advLevel);
+        setEditMode(true);
+        setTripId(trip.id);
+        router.push("/trips/map");
+    };
     if (typeof window === "undefined") return;
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
@@ -29,9 +55,9 @@ const TripCard = ({ trip }) => {
                 </div>
                 <div className="flex flex-row gap-2">
                     <div className=" text-green-600 font-semibold">Dates:</div>
-                    <p>{trip.dates?.start ?? "not specified"}</p>
+                    <p>{trip.startDate ?? "not specified"}</p>
                     <p className="font-semibold text-green-600">to</p>
-                    <p>{trip.dates?.end ?? "not specified"}</p>
+                    <p>{trip.endDate ?? "not specified"}</p>
                 </div>
             </div>
 
@@ -57,7 +83,9 @@ const TripCard = ({ trip }) => {
                 ) : (
                     <></>
                 )}
-                <DarkOutlineButton>View</DarkOutlineButton>
+                <DarkOutlineButton onClick={handleViewTrip}>
+                    View
+                </DarkOutlineButton>
             </div>
         </div>
     );
