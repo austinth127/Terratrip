@@ -2,7 +2,6 @@ import axios from "axios";
 import mapboxgl from "mapbox-gl";
 
 export const getPoints = (...coords) => {
-    console.log(coords);
     const points = coords.map((coord) => ({
         type: "Feature",
         properties: {},
@@ -11,8 +10,6 @@ export const getPoints = (...coords) => {
             coordinates: coord,
         },
     }));
-
-    console.log(points);
 
     return {
         type: "FeatureCollection",

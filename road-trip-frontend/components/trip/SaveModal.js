@@ -1,9 +1,16 @@
 import { useAtom, useAtomValue } from "jotai";
 import React, { useState } from "react";
-import { locAtom, showSaveModalAtom, tripDateAtom } from "../../utils/atoms";
+import {
+    advLevelAtom,
+    locAtom,
+    routeAtom,
+    showSaveModalAtom,
+    tripDateAtom,
+} from "../../utils/atoms";
 import useInput from "../../hooks/useInput";
 import TextInput from "../general/TextInput";
 import Alert from "../auth/Alert";
+import axios from "axios";
 
 const SaveModal = () => {
     const [show] = useAtom(showSaveModalAtom);
@@ -12,8 +19,9 @@ const SaveModal = () => {
 
     const location = useAtomValue(locAtom);
     const dates = useAtomValue(tripDateAtom);
+    const advLevel = useAtomValue(advLevelAtom);
 
-    console.log(location, dates);
+    console.log(location, dates, advLevel);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -21,7 +29,17 @@ const SaveModal = () => {
         if (!tripName.value) {
             setAlert("Trip name cannot be empty");
         }
+
+        axios.post("/trip", {
+            name: tripName,
+            start: location.start,
+            end: location.end,
+            startDate: dates.start,
+            endDate: dates.end,
+            advLevel,
+        });
     };
+
     return (
         <div
             className={`bg-gray-100 text-slate-800 text-sm p-4 w-1/2 h-96 ease-in-out duration-200 z-50 
@@ -41,12 +59,33 @@ const SaveModal = () => {
                     <TextInput {...tripName} />
                 </div>
                 <div className="w-full my-3 flex flex-col text-slate-700 font-light text-sm">
-                    <div className="my-1 text-slate-900 font-semibold ml-0.5">
+                    <div className="my-1 text-slate-900 font-semibold">
                         Review:
                     </div>
-                    <p>{location.start?.place_name ?? ""}</p>
-                    <p className="font-semibold text-green-600">to</p>
-                    <p>{location.end?.place_name ?? ""}</p>
+                    <div className="p-1">
+                        <p>{location.start?.place_name ?? "not specified"}</p>
+                        <p className="font-semibold text-slate-600">to</p>
+                        <p>{location.end?.place_name ?? "not specified"}</p>
+                        <div className="mt-2 text-green-600 font-semibold">
+                            Adventure Levels:
+                        </div>
+                        <p>{advLevel.join(", ")}</p>
+                        <p></p>
+                        {dates ? (
+                            <>
+                                <div className="mt-2 text-green-600 font-semibold">
+                                    Dates:
+                                </div>
+                                <p>{dates.start ?? "not specified"}</p>
+                                <p className="font-semibold text-slate-600">
+                                    to
+                                </p>
+                                <p>{dates.end ?? "not specified"}</p>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
                 </div>
             </form>
         </div>

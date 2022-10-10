@@ -20,10 +20,12 @@ export const tripDateAtom = atom(
 // Create Trip
 export const startDateAtom = atom();
 export const endDateAtom = atom();
+
 export const advLevelAtom = atom([]);
 
 export const startAtom = atom();
 export const endAtom = atom();
+
 export const routeAtom = atom();
 
 // Map
