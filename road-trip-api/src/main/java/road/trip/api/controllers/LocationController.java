@@ -27,6 +27,6 @@ public class LocationController {
 
     @GetMapping
     public ResponseEntity<LocationsResponse> getRecommendedStops(Long tripId, Double range) {
-        return locationService.getRecommendedStops(tripId, range);
+        return ResponseEntity.ok(locationService.getRecommendedStops(tripId, range));
     }
 }

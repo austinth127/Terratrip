@@ -4,41 +4,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
+import road.trip.api.responses.StopResponse;
 import road.trip.api.responses.TripResponse;
 import road.trip.api.responses.TripsResponse;
 import road.trip.persistence.daos.TripRepository;
+import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TripService {
 
-    final TripRepository tripRepository;
-    final LocationService locationService;
-
-    @Deprecated
-    public Trip createTripDeprecated(TripCreateRequest tripCreateRequest){
-        System.out.println("here");
-        Trip trip = Trip.builder()
-            .name(tripCreateRequest.getName())
-            .adventureLevel(tripCreateRequest.getAdventureLevel())
-            .duration(tripCreateRequest.getDuration())
-            .distance(tripCreateRequest.getDistance())
-            .startDate(tripCreateRequest.getStartDate())
-            .build();
-        System.out.println("there");
-        return tripRepository.save(trip);
-    }
+    private final TripRepository tripRepository;
+    private final LocationService locationService;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
      * owns that trip.
      */
-    public ResponseEntity<TripResponse> getTrip(Long id){
-        // TODO
-        return null;
+    public TripResponse getTrip(Long id){
+        Optional<Trip> optionalTrip = tripRepository.findById(id);
+        TripResponse tr = null;
+
+        if (optionalTrip.isPresent()) {
+            Trip t = optionalTrip.get();
+            tr = new TripResponse(t.getId(), t.getName(), t.getStartDate(), t.getDuration(), t.getAdventureLevel());
+            tr.setStops(locationService.getLocationsForTrip(t.getId()));
+        }
+        return tr;
     }
 
     /**
@@ -61,7 +60,7 @@ public class TripService {
      *
      * Use this method to add/delete locations as well.
      */
-    public ResponseEntity<?> editTrip(String id, TripEditRequest request){
+    public Object editTrip(String id, TripEditRequest request){
         // TODO
         return null;
     }
@@ -70,7 +69,7 @@ public class TripService {
      * Deletes the trip of the given id. Should only delete the trip
      * if it is owned by the user making the request.
      */
-    public ResponseEntity<?> deleteTrip(String id){
+    public Object deleteTrip(String id){
         // TODO
         return null;
     }
@@ -78,7 +77,7 @@ public class TripService {
     /**
      * Gets all the trips created by the user making the request
      */
-    public ResponseEntity<TripsResponse> getTrips(){
+    public List<TripsResponse> getTrips(){
         // TODO
         return null;
     }
