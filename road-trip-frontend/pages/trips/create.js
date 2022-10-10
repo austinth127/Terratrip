@@ -120,7 +120,7 @@ const Create = () => {
                             <DarkTextInput
                                 type="date"
                                 onChange={(event) =>
-                                    setStartDate(event.target.value)
+                                    setEndDate(event.target.value)
                                 }
                             />
                         </h2>
