@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import road.trip.persistence.models.Location;
@@ -50,18 +51,25 @@ public class GeoApifyClient {
         }
     }
 
-    //TODO: test
-    public List<Location> getStopByName(String name){
-        URI uri = buildUri("/v2/places?name=" + name + "&limit=20");
+    private String doGet(URI uri) throws Exception {
         HttpRequest httpRequest = HttpRequest.newBuilder()
             .uri(uri)
             .GET()
             .build();
-        try {
-            HttpResponse<String> httpResponse = client.send(httpRequest, BodyHandlers.ofString());
+        HttpResponse<String> httpResponse = client.send(httpRequest, BodyHandlers.ofString());
 
-            return locationMapper.getStopsFromJSON(httpResponse.body());
-        } catch (IOException | InterruptedException e) {
+        return httpResponse.body();
+    }
+
+    //TODO: test
+    public List<Location> getStopByName(String name){
+        URI uri = buildUri("/v2/places", List.of(
+            new BasicNameValuePair("name", name),
+            new BasicNameValuePair("limit", "20")));
+        try {
+            String jsonBody = doGet(uri);
+            return locationMapper.getStopsFromJSON(jsonBody);
+        } catch (Exception e) {
             log.error(e);
             return null;
         }
@@ -69,16 +77,13 @@ public class GeoApifyClient {
 
     //TODO: test
     public List<Location> getStopsByCoords(long lon, long lat, long radius){
-        URI uri = buildUri("/v2/places?filter=circle:" + lon + "," + lat + "," + radius + "&limit=20");
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(uri)
-                .GET()
-                .build();
+        URI uri = buildUri("/v2/places", List.of(
+            new BasicNameValuePair("filter", "circle:" + lon + "," + lat + "," + radius),
+            new BasicNameValuePair("limit", "20")));
         try {
-            HttpResponse<String> httpResponse = client.send(httpRequest, BodyHandlers.ofString());
-
-            return locationMapper.getStopsFromJSON(httpResponse.body());
-        } catch (IOException | InterruptedException e) {
+            String jsonBody = doGet(uri);
+            return locationMapper.getStopsFromJSON(jsonBody);
+        } catch (Exception e) {
             log.error(e);
             return null;
         }
@@ -86,16 +91,13 @@ public class GeoApifyClient {
 
     //TODO: test
     public List<Location> getRecommendedStops(long lon1, long lat1, long lon2, long lat2){
-        URI uri = buildUri("/v2/places?filter=rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "," + "&limit=20");
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(uri)
-                .GET()
-                .build();
+        URI uri = buildUri("/v2/places", List.of(
+            new BasicNameValuePair("filter", "rect:" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + ","),
+            new BasicNameValuePair("limit", "20")));
         try {
-            HttpResponse<String> httpResponse = client.send(httpRequest, BodyHandlers.ofString());
-
-            return locationMapper.getStopsFromJSON(httpResponse.body());
-        } catch (IOException | InterruptedException e) {
+            String jsonBody = doGet(uri);
+            return locationMapper.getStopsFromJSON(jsonBody);
+        } catch (Exception e) {
             log.error(e);
             return null;
         }
