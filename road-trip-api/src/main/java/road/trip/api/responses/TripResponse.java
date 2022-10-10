@@ -12,7 +12,6 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 public class TripResponse extends ReducedTripResponse {
     public TripResponse(Trip t) {
         distance = t.getDistance();
