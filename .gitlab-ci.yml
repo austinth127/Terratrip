@@ -16,9 +16,11 @@ test-job:
   stage: test
   script:
     - echo "This job tests stuff"
-    - cd road-trip-api
-    - ./gradlew test
-    - cd ..
+    - whoami
+#    - cd road-trip-api
+#    - ./gradlew test
+# TODO: install java
+#    - cd ..
     - echo "Testing complete"
 
 deploy-prod:
