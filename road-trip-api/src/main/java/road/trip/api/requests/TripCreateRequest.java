@@ -25,9 +25,9 @@ public class TripCreateRequest {
     @NotNull
     private double distance;
 
-    @NotNull   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @NotNull   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private LocalDate startDate;
-    @NotNull   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @NotNull   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private LocalDate endDate;
 
     @NotNull
