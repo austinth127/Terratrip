@@ -22,8 +22,12 @@ public class Stop {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
 
-    Long trip_id;
-    Long loc_id;
+    @ManyToOne
+    Trip trip;
+
+    @ManyToOne
+    Location location;
+
     int order;
 
     @Override
@@ -38,6 +42,5 @@ public class Stop {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 
 }
