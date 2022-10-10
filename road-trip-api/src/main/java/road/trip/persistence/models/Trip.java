@@ -25,7 +25,7 @@ public class Trip {
     Long id;
 
     String name;
-    int adventureLevel;
+    AdventureLevel adventureLevel;
     int duration;
     double distance;
 
