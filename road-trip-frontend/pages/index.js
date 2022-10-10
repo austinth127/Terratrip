@@ -4,10 +4,10 @@ import TextInput from "../components/general/TextInput";
 import TextLogo from "../components/general/TextLogo";
 import Geocoder from "../components/map/Geocoder";
 import Image from "next/image";
-import axios from "axios";
 import { useAtom, useSetAtom } from "jotai";
 import { endAtom, startAtom } from "../utils/atoms";
 import { useRouter } from "next/router";
+import Userfront from "@userfront/core";
 /**
  * The home page for the website
  * @param {Object} props The props passed to the object
@@ -18,6 +18,7 @@ export default function Home({ ...props }) {
     const setEnd = useSetAtom(endAtom);
     const router = useRouter();
 
+    console.log(Userfront.tokens.accessToken);
     return (
         <div className="flex flex-col items-center">
             {/* First section */}
