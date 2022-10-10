@@ -22,8 +22,9 @@ const SaveModal = () => {
     const location = useAtomValue(locAtom);
     const dates = useAtomValue(tripDateAtom);
     const advLevel = useAtomValue(advLevelAtom);
+    const routeDesc = useAtomValue(routeDescAtom);
 
-    console.log(location, dates, advLevel);
+    console.log(location, dates, advLevel, routeDesc);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -34,8 +35,14 @@ const SaveModal = () => {
 
         axios.post("/trip", {
             name: tripName,
-            start: location.start,
-            end: location.end,
+            start: {
+                place_name: location.start.place_name,
+                center: location.start.center,
+            },
+            start: {
+                place_name: location.end.place_name,
+                center: location.end.center,
+            },
             startDate: dates.start,
             endDate: dates.end,
             advLevel,

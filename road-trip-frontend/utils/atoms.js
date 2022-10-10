@@ -21,7 +21,7 @@ export const tripDateAtom = atom(
 export const startDateAtom = atom();
 export const endDateAtom = atom();
 
-export const advLevelAtom = atom([]);
+export const advLevelAtom = atom("");
 
 export const startAtom = atom();
 export const endAtom = atom();
