@@ -6,9 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import road.trip.api.clients.geoapify.GeoApifyClient;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GeoApifyClientTester {
-    GeoApifyClient geoApifyClient;
+    final GeoApifyClient geoApifyClient;
+
+    @Autowired
+    GeoApifyClientTester(GeoApifyClient geoApifyClient){
+        this.geoApifyClient = geoApifyClient;
+    }
 
     @Test
     void testGetStopByName(){

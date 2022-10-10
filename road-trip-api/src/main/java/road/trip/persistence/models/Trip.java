@@ -5,8 +5,6 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date; //TODO: should I import the sql date instead?
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +33,7 @@ public class Trip {
         name = "trip_stop",
         joinColumns = @JoinColumn(name = "trip_id"),
         inverseJoinColumns = @JoinColumn(name = "stop_id"))
-    List<Stop> stops;
+    List<Location> locations;
 
     @Override
     public boolean equals(Object o) {

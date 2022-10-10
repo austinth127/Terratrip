@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class StopRequest {
+public class LocationRequest {
     @NotNull
     private String name;
     @NotNull

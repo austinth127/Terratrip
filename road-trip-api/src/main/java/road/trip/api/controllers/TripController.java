@@ -58,7 +58,7 @@ public class TripController {
      * Modifies the trip of the given id. Should only edit the trip
      * if it is owned by the user making the request.
      *
-     * Use this request to add/delete stops as well.
+     * Use this request to add/delete locations as well.
      */
     @PatchMapping("/{id}")
     public ResponseEntity<?> editTrip(@PathVariable("id") String id, @RequestBody TripEditRequest request) {

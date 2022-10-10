@@ -1,44 +1,48 @@
 package road.trip.api.clients;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import road.trip.api.requests.StopRequest;
+import road.trip.api.requests.LocationRequest;
 import road.trip.api.requests.TripCreateRequest;
-import road.trip.api.services.StopService;
+import road.trip.api.services.LocationService;
 import road.trip.api.services.TripService;
 import road.trip.api.services.UserService;
-import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.models.*;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ServiceTests {
-    private final StopService stopService;
+
+    @Autowired
+    ServiceTests(LocationService locationService, TripService tripService, UserService userService) {
+        this.locationService = locationService;
+        this.tripService = tripService;
+        this.userService = userService;
+    }
+    private final LocationService locationService;
     private final TripService tripService;
     private final UserService userService;
     @Nested
-    @DisplayName("Stop Service Tests")
-    class StopServiceTests{
+    @DisplayName("Location Service Tests")
+    class LocationServiceTests {
         @Test
-        @DisplayName("Stop Service: Create Stop")
+        @DisplayName("Location Service: Create Location")
         void createStop(){
-            StopRequest request = StopRequest.builder()
-                .name("Test Stop").description("Test Stop Description").rating(5)
+            LocationRequest request = LocationRequest.builder()
+                .name("Test Location").description("Test Location Description").rating(5)
                 .coordX(100.1).coordY(100.2).geoType("Land").build();
-            Stop testStop = stopService.createStop(request);
+            Location testLocation = locationService.createStop(request);
             assertAll(
-                ()->assertEquals(testStop.getName(),"Test Stop"),
-                ()->assertEquals(testStop.getDescription(),"Test Stop Description"),
-                ()->assertEquals(testStop.getCoordX(),100.1),
-                ()->assertEquals(testStop.getCoordY(),100.2),
-                ()->assertEquals(testStop.getRating(),5),
-                ()->assertEquals(testStop.getGeoType(),"Land")
+                ()->assertEquals(testLocation.getName(),"Test Location"),
+                ()->assertEquals(testLocation.getDescription(),"Test Location Description"),
+                ()->assertEquals(testLocation.getCoordX(),100.1),
+                ()->assertEquals(testLocation.getCoordY(),100.2),
+                ()->assertEquals(testLocation.getRating(),5),
+                ()->assertEquals(testLocation.getGeoType(),"Land")
             );
         }
     }

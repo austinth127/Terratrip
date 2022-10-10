@@ -18,7 +18,7 @@ import road.trip.persistence.models.Trip;
 public class TripService {
 
     final TripRepository tripRepository;
-    final StopService stopService;
+    final LocationService locationService;
 
     @Deprecated
     public Trip createTripDeprecated(TripCreateRequest tripCreateRequest){

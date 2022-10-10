@@ -1,4 +1,4 @@
 package road.trip.api.responses;
 
-public class StopsResponse {
+public class LocationsResponse {
 }

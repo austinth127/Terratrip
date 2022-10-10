@@ -46,11 +46,11 @@ public class ModelTests {
 
     }
     @Nested
-    @DisplayName("Stop Tests")
-    class StopTests{
-        // Trip(Long id, String name, int adventureLevel, int duration, double distance, Date startDate, List<Stop> stops)
+    @DisplayName("Location Tests")
+    class LocationTests {
+        // Trip(Long id, String name, int adventureLevel, int duration, double distance, Date startDate, List<Location> locations)
         @Test
-        @DisplayName("Stop Constructor")
+        @DisplayName("Location Constructor")
         void stopConstructor(){
 
         }

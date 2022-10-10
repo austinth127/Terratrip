@@ -1,7 +1,6 @@
 package road.trip.persistence.models;
 
 import lombok.*;
-import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -13,10 +12,10 @@ import java.util.Objects;
 @ToString
 @Entity
 @AllArgsConstructor
-@Table(name = Stop.TABLE_NAME)
+@Table(name = Location.TABLE_NAME)
 @NoArgsConstructor
 @Builder
-public class Stop {
+public class Location {
     public static final String TABLE_NAME = "STOP";
 
     @Id
@@ -32,15 +31,15 @@ public class Stop {
     private double coordX;
     private double coordY;
 
-    @ManyToMany(mappedBy = "stops")
+    @ManyToMany(mappedBy = "locations")
     List<Trip> trips;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Stop stop = (Stop) o;
-        return id != null && Objects.equals(id, stop.id);
+        Location location = (Location) o;
+        return id != null && Objects.equals(id, location.id);
     }
 
     @Override
