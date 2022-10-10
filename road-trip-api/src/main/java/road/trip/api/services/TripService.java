@@ -112,14 +112,14 @@ public class TripService {
             if (request.getEndDate() != null) {
                 t.setEndDate(request.getEndDate());
             }
-            
-            List<LocationRequest> stops = request.getStops();
+            if(request.getStops() != null){
+                List<LocationRequest> stops = request.getStops();
 
-            for (int i = 0; i < stops.size(); i++) {
+                for (int i = 0; i < stops.size(); i++) {
 //                if(stops.get(i).getId() == null){
-                // create new Location and new Stop
-                Location l = locationService.createLocation(stops.get(i));
-                locationService.createStop(t, l, i);
+                    // create new Location and new Stop
+                    Location l = locationService.createLocation(stops.get(i));
+                    locationService.createStop(t, l, i);
 //                }
 //                else {
 //                    // Update Stop to have correct Order
@@ -130,8 +130,8 @@ public class TripService {
 //                    else {
 //
 //                    }
+                }
             }
-
             tripRepository.save(t);
             return t.getId();
         } else {
