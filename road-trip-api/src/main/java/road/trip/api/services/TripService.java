@@ -13,6 +13,7 @@ import road.trip.api.responses.TripResponse;
 import road.trip.api.responses.ReducedTripResponse;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
+import road.trip.persistence.models.Location;
 import road.trip.persistence.models.Trip;
 
 import java.util.List;
@@ -37,15 +38,9 @@ public class TripService {
 
         if (optionalTrip.isPresent()) {
             Trip t = optionalTrip.get();
-            tr = TripResponse.builder().distance(t.getDistance())
-                .duration(t.getDuration())
-                .advLevel(t.getAdventureLevel().toString())
-                .startDate(t.getStartDate())
-                .endDate(t.getEndDate())
-                .id(t.getId())
-                .start(new LocationResponse())
-                .build();
-            tr.setStops(locationService.getLocationsForTrip(t.getId()));
+            Location start = t.getStart();
+            Location end = t.getEnd();
+            tr = new TripResponse(t);
         }
         return tr;
     }

@@ -3,6 +3,8 @@ package road.trip.api.responses;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.Stop;
+import road.trip.persistence.models.Trip;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -10,9 +12,20 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
 @Builder
 public class TripResponse extends ReducedTripResponse {
+    public TripResponse(Trip t) {
+        distance = t.getDistance();
+        duration = t.getDuration();
+        advLevel = t.getAdventureLevel().toString();
+        startDate = t.getStartDate();
+        endDate = t.getEndDate();
+        id = t.getId();
+        start = new LocationResponse(t.getStart());
+        end = new LocationResponse(t.getEnd());
+        stops = t.getStops();
+    }
+
     @NonNull
     private Long id;
     @NonNull
@@ -32,5 +45,5 @@ public class TripResponse extends ReducedTripResponse {
     @NonNull
     private LocationResponse end;
 
-    private List<Location> stops;
+    private List<Stop> stops;
 }
