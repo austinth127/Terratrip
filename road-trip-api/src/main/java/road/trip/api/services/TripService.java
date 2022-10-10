@@ -1,6 +1,7 @@
 package road.trip.api.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import road.trip.api.requests.StopRequest;
@@ -16,6 +17,7 @@ import road.trip.persistence.models.Trip;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TripService {
@@ -73,9 +75,16 @@ public class TripService {
      * Deletes the trip of the given id. Should only delete the trip
      * if it is owned by the user making the request.
      */
-    public Object deleteTrip(String id){
-        // TODO
-        return null;
+    public void deleteTrip(Long id){
+        Optional<Trip> t = tripRepository.findById(id);
+        if(t.isEmpty()){
+            log.error("No trip found.");
+        }
+        if(userService.user() == t.get().getCreator()){
+            tripRepository.deleteById(id);
+        } else {
+            log.error("Trip not owned by user.");
+        }
     }
 
     /**
@@ -85,6 +94,7 @@ public class TripService {
         tripRepository.findByCreator_Id(userService.getId());
 
         return null;
+
     }
 
 }

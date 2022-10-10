@@ -62,8 +62,9 @@ public class TripController {
      * if it is owned by the user making the request.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTrip(@PathVariable("id") String id) {
-        return ResponseEntity.ok(tripService.deleteTrip(id));
+    public ResponseEntity<?> deleteTrip(@PathVariable("id") long id) {
+        tripService.deleteTrip(id);
+        return ResponseEntity.ok().build();
     }
 
 }
