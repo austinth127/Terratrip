@@ -23,7 +23,7 @@ public class Playlist {
 
     String name, url;
     //Genre genre;
-    long userId, tripId;
+    //long userId, tripId;
 
 
     @Override

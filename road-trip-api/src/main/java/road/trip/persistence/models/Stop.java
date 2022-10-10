@@ -19,23 +19,26 @@ public class Stop {
     public static final String TABLE_NAME = "STOP";
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long stopId;
 
     @ManyToOne
+    @JoinColumn(name = "trip_id", nullable = false)
     Trip trip;
 
     @ManyToOne
+    @JoinColumn(name = "location_id")
     Location location;
 
-    int order;
+    @Column
+    Integer order;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Stop stop = (Stop) o;
-        return id != null && Objects.equals(id, stop.id);
+        return stopId != null && Objects.equals(stopId, stop.stopId);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import road.trip.api.requests.LocationRequest;
 import road.trip.api.responses.LocationsResponse;
 import road.trip.persistence.daos.LocationRepository;
+import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.models.Location;
 
 @Service
@@ -14,6 +15,7 @@ import road.trip.persistence.models.Location;
 public class LocationService {
 
     private final LocationRepository locationRepository;
+    private final StopRepository stopRepository;
 
     public Location createStop(LocationRequest locationRequest) {
 
