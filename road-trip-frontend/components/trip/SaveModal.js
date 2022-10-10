@@ -69,36 +69,28 @@ const SaveModal = () => {
                     <div className="my-1 text-slate-900 font-semibold">
                         Review:
                     </div>
-                    <div className="p-1">
-                        <div className="mt-2 text-green-600 font-semibold">
-                            Endpoints:
+                    <div
+                        className={`flex flex-col gap-2 text-sm text-slate-900 pt-2 pb-4`}
+                    >
+                        <div className="flex flex-row gap-2">
+                            <p>{location.start?.place_name ?? ""}</p>
+                            <p className="font-semibold text-green-600">to</p>
+                            <p>{location.end?.place_name ?? ""}</p>
                         </div>
-                        <p>{location.start?.place_name ?? "not specified"}</p>
-                        <p className="font-semibold text-slate-600">to</p>
-                        <p>{location.end?.place_name ?? "not specified"}</p>
-                        <div className="mt-2 text-green-600 font-semibold">
-                            Adventure Levels:
+                        <div className="flex flex-row gap-2">
+                            <div className=" text-green-600 font-semibold">
+                                Adventure Level:
+                            </div>
+                            <p>{advLevel ?? "not specified"}</p>
                         </div>
-                        <p>
-                            {advLevel.length == 0
-                                ? "not specified"
-                                : advLevel.join(", ")}
-                        </p>
-                        <p></p>
-                        {dates.start && dates.end ? (
-                            <>
-                                <div className="mt-2 text-green-600 font-semibold">
-                                    Dates:
-                                </div>
-                                <p>{dates.start ?? "not specified"}</p>
-                                <p className="font-semibold text-slate-600">
-                                    to
-                                </p>
-                                <p>{dates.end ?? "not specified"}</p>
-                            </>
-                        ) : (
-                            <></>
-                        )}
+                        <div className="flex flex-row gap-2">
+                            <div className=" text-green-600 font-semibold">
+                                Dates:
+                            </div>
+                            <p>{dates?.start ?? "not specified"}</p>
+                            <p className="font-semibold text-green-600">to</p>
+                            <p>{dates?.end ?? "not specified"}</p>
+                        </div>
                     </div>
                 </div>
                 <div className="absolute bottom-4 right-4">

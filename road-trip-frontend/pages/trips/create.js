@@ -18,38 +18,19 @@ import {
 } from "../../utils/atoms";
 import Alert from "../../components/auth/Alert";
 import { useRouter } from "next/router";
-
-const levels = ["Relaxed", "Moderate", "High", "Extreme", "All"];
+import { levelOptions as levels } from "../../utils/filters";
 
 const Create = () => {
     const [start, setStart] = useAtom(startAtom);
     const [end, setEnd] = useAtom(endAtom);
     const [startDate, setStartDate] = useAtom(startDateAtom);
     const [endDate, setEndDate] = useAtom(endDateAtom);
-    const [activeLevels, setActiveLevels] = useAtom(advLevelAtom);
+    const [activeLevel, setActiveLevel] = useAtom(advLevelAtom);
     const router = useRouter();
 
     const [alert, setAlert] = useState();
 
     console.log(start, end);
-
-    const handleActivityLevel = (level) => {
-        if (activeLevels.includes(level)) {
-            if (level == "All") {
-                activeLevels = [];
-            } else {
-                activeLevels.splice(activeLevels.indexOf(level), 1);
-            }
-        } else {
-            if (level == "All") {
-                activeLevels = levels;
-            } else {
-                activeLevels.push(level);
-            }
-        }
-
-        setActiveLevels([...activeLevels]);
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -113,10 +94,10 @@ const Create = () => {
                     <div className="flex flex-row gap-4 mt-4">
                         {levels.map((level) => (
                             <Button
-                                onClick={() => handleActivityLevel(level)}
+                                onClick={() => setActiveLevel(level)}
                                 key={level}
                                 className={
-                                    activeLevels.includes(level)
+                                    activeLevel == level
                                         ? stdBtnStyle
                                         : darkOutlineBtnStyle
                                 }
