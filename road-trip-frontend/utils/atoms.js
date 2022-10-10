@@ -27,6 +27,7 @@ export const startAtom = atom();
 export const endAtom = atom();
 
 export const routeAtom = atom();
+export const tripNameAtom = atom();
 
 // Map
 export const showSaveModalAtom = atom(false);
