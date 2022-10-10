@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
+import road.trip.api.requests.StopRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
 import road.trip.api.responses.StopResponse;
@@ -38,6 +39,10 @@ public class TripService {
             tr.setStops(locationService.getLocationsForTrip(t.getId()));
         }
         return tr;
+    }
+
+    public StopResponse addStop(StopRequest request) {
+        return null; // TODO:
     }
 
     /**

@@ -5,8 +5,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import road.trip.api.requests.StopRequest;
 import road.trip.api.requests.TripCreateRequest;
 import road.trip.api.requests.TripEditRequest;
+import road.trip.api.responses.StopResponse;
 import road.trip.api.responses.TripResponse;
 import road.trip.api.responses.TripsResponse;
 import road.trip.api.services.TripService;
@@ -45,6 +47,11 @@ public class TripController {
     @PostMapping
     public ResponseEntity<Long> createTrip(@RequestBody TripCreateRequest request) {
         return ResponseEntity.ok(tripService.createTrip(request));
+    }
+
+    @PostMapping
+    public ResponseEntity<StopResponse> addStop(@RequestBody StopRequest request) {
+        return ResponseEntity.ok(tripService.addStop(request));
     }
 
     /**
