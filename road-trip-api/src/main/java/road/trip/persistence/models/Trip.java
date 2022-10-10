@@ -25,7 +25,7 @@ public class Trip {
     Long id;
 
     String name;
-    int adventureLevel;
+    int adventureLevel;//5 adventure levels
     int duration;
     double distance;
 
@@ -34,6 +34,10 @@ public class Trip {
 
     @OneToMany(mappedBy = "trip")
     List<Stop> stops;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    User creator;
 
     @Override
     public boolean equals(Object o) {

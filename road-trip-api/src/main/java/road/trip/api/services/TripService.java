@@ -24,6 +24,7 @@ public class TripService {
 
     private final TripRepository tripRepository;
     private final LocationService locationService;
+    private final UserService userService;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
@@ -83,7 +84,8 @@ public class TripService {
      * Gets all the trips created by the user making the request
      */
     public List<TripsResponse> getTrips(){
-        // TODO
+        tripRepository.findByCreator_Id(userService.getId());
+
         return null;
     }
 
