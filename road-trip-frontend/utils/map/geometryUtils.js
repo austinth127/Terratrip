@@ -23,7 +23,7 @@ export const getRoute = async (start, end) => {
     );
 
     const data = res.data.routes[0];
-    const route = data.geometry.coordinates;
+    const route = data;
     const geojson = {
         type: "Feature",
         properties: {},

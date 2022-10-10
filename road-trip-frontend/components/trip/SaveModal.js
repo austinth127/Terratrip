@@ -22,9 +22,9 @@ const SaveModal = () => {
     const location = useAtomValue(locAtom);
     const dates = useAtomValue(tripDateAtom);
     const advLevel = useAtomValue(advLevelAtom);
-    const routeDesc = useAtomValue(routeDescAtom);
+    const route = useAtomValue(routeAtom);
 
-    console.log(location, dates, advLevel, routeDesc);
+    console.log(location, dates, advLevel, route);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -46,6 +46,8 @@ const SaveModal = () => {
             startDate: dates.start,
             endDate: dates.end,
             advLevel,
+            distance: route.distance,
+            duration: route.duration,
         });
 
         /**@todo redirect */
