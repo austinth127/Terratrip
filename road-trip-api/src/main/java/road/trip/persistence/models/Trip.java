@@ -18,6 +18,7 @@ import java.util.Objects;
 @Builder
 public class Trip {
     public static final String TABLE_NAME = "TRIP";
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
@@ -28,12 +29,8 @@ public class Trip {
     double distance;
     LocalDateTime startDate;
 
-    @ManyToMany
-    @JoinTable(
-        name = "trip_stop",
-        joinColumns = @JoinColumn(name = "trip_id"),
-        inverseJoinColumns = @JoinColumn(name = "stop_id"))
-    List<Location> locations;
+    @OneToMany(mappedBy ="trip")
+    List<Stop> stops;
 
     @Override
     public boolean equals(Object o) {

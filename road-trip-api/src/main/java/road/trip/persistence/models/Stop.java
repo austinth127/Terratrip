@@ -1,10 +1,10 @@
 package road.trip.persistence.models;
 
+
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -12,38 +12,32 @@ import java.util.Objects;
 @ToString
 @Entity
 @AllArgsConstructor
-@Table(name = Location.TABLE_NAME)
+@Table(name = Stop.TABLE_NAME)
 @NoArgsConstructor
 @Builder
-public class Location {
-    public static final String TABLE_NAME = "LOCATION";
+public class Stop {
+    public static final String TABLE_NAME = "STOP";
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private String name;
-    private String description;
-    private int rating;
-
-    private String type;
-    private String geoType;
-    private double coordX;
-    private double coordY;
-
-    @OneToMany(mappedBy = "location")
-    List<Stop> stops;
+    Long trip_id;
+    Long loc_id;
+    int order;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Location location = (Location) o;
-        return id != null && Objects.equals(id, location.id);
+        Stop stop = (Stop) o;
+        return id != null && Objects.equals(id, stop.id);
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
+
+
 }
