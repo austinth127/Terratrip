@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { DarkOutlineButton } from "../general/Buttons";
+import {
+    Button,
+    darkOutlineBtnStyle,
+    DarkOutlineButton,
+    stdBtnStyle,
+} from "../general/Buttons";
 import ReactStars from "react-stars";
 import { colors } from "../../utils/colors";
 import dynamic from "next/dynamic";
@@ -44,7 +49,6 @@ const TripCard = ({ trip }) => {
         if (rating == null) {
             setRating(0);
         }
-        setIsEditRating(!isEditRating);
     };
 
     return (
@@ -82,13 +86,12 @@ const TripCard = ({ trip }) => {
                         color2={colors.green600}
                         half
                         value={rating}
-                        edit={isEditRating}
+                        edit={true}
                         onChange={(newVal) => {
                             axios.post(`/trip/${trip.id}/rate`, {
                                 rating: newVal,
                             });
                             setRating(rating);
-                            setIsEditRating(false);
                         }}
                     />
                 </div>
@@ -98,7 +101,7 @@ const TripCard = ({ trip }) => {
                 </div>
             )}
             <div className="absolute bottom-4 right-4 flex flex-row gap-4">
-                {!trip.rating ? (
+                {rating == null ? (
                     <DarkOutlineButton onClick={handleRating}>
                         Rate
                     </DarkOutlineButton>

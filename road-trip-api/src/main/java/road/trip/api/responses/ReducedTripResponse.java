@@ -24,6 +24,7 @@ public class ReducedTripResponse {
         advLevel = t.getAdventureLevel().toString();
         start = new LocationResponse(t.getStart());
         end = new LocationResponse(t.getEnd());
+        rating = t.getRating();
     }
     @NonNull
     private Long id;
@@ -43,4 +44,5 @@ public class ReducedTripResponse {
     private LocationResponse start;
     @NonNull
     private LocationResponse end;
+    private Double rating;
 }

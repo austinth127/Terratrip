@@ -3,57 +3,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import TripCard from "../../../components/trip/TripCard";
 
-const demoTrips = [
-    {
-        name: "2022 Amazing Roadtrip",
-        start: {
-            place_name: "Frisco, Texas",
-            center: [1, 1],
-        },
-        end: {
-            place_name: "Seattle, Washington",
-            center: [2, 3],
-        },
-        advLevel: "Extreme",
-        dates: {
-            start: "10/10/2022",
-            end: "11/01/2022",
-        },
-        rating: 3.5,
-    },
-    {
-        name: "Road Trip with the Boys",
-        start: {
-            place_name: "Frisco, Texas",
-            center: [1, 1],
-        },
-        end: {
-            place_name: "Vancouver, Canada",
-            center: [2, 3],
-        },
-        advLevel: "Relaxed",
-        dates: {
-            start: "12/10/2022",
-        },
-        rating: 4.5,
-    },
-    {
-        name: "Trip to the Grand Canyon",
-        start: {
-            place_name: "Waco, Texas",
-            center: [1, 1],
-        },
-        end: {
-            place_name: "Grand Canyon, AZ",
-            center: [2, 3],
-        },
-        advLevel: "Moderate",
-        dates: {
-            end: "12/10/2023",
-        },
-    },
-];
-
 const UserTrips = () => {
     const router = useRouter();
     const [trips, setTrips] = useState();
