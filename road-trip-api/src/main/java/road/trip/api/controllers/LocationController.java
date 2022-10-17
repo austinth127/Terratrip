@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.requests.LocationRequest;
-import road.trip.api.responses.LocationsResponse;
+import road.trip.api.responses.LocationResponse;
 import road.trip.api.services.LocationService;
 import road.trip.persistence.models.Location;
+
+import java.util.List;
 
 @RestController
 @Log4j2
@@ -26,7 +28,7 @@ public class LocationController {
     }
 
     @GetMapping
-    public ResponseEntity<LocationsResponse> getRecommendedStops(Long tripId, Double range) {
+    public ResponseEntity<List<LocationResponse>> getRecommendedStops(Long tripId, Double range) {
         return ResponseEntity.ok(locationService.getRecommendedStops(tripId, range));
     }
 }

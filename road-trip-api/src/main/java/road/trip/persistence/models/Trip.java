@@ -30,10 +30,16 @@ public class Trip {
     int driveDuration;
     double distance;
 
-    Double rating;
+    double rating;
 
     LocalDate startDate;
     LocalDate endDate;
+
+    @ManyToOne(targetEntity = Location.class)
+    Location start;
+
+    @ManyToOne(targetEntity = Location.class)
+    Location end;
 
     @OneToMany(mappedBy = "trip", targetEntity = Stop.class)
     @OrderBy("stop_order ASC")
@@ -41,7 +47,7 @@ public class Trip {
 
 
     public Location getStart() {
-        return stops.get(0).getLocation();
+        return start;
     }
 
     public Location getEnd() {

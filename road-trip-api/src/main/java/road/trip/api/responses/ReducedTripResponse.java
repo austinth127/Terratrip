@@ -2,11 +2,13 @@ package road.trip.api.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor
@@ -14,35 +16,40 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ReducedTripResponse {
-    public ReducedTripResponse(Trip t){
-        id = t.getId();
-        name = t.getName();
+    public ReducedTripResponse(Trip t) {
+        distance = t.getDistance();
+        duration = t.getDriveDuration();
+        advLevel = t.getAdventureLevel().toString();
         startDate = t.getStartDate();
         endDate = t.getEndDate();
-        duration = t.getDriveDuration();
-        distance = t.getDistance();
-        advLevel = t.getAdventureLevel().toString();
+        id = t.getId();
         start = new LocationResponse(t.getStart());
         end = new LocationResponse(t.getEnd());
         rating = t.getRating();
     }
+
     @NonNull
     private Long id;
+
     @NonNull
     private String name;
-    @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
-    @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    @NonNull
+    private String advLevel;
+
     @NonNull
     private double duration;
     @NotNull
     private double distance;
-    @NonNull
-    private String advLevel;
+
+    private double rating;
+
+    @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
+
     @NonNull
     private LocationResponse start;
     @NonNull
     private LocationResponse end;
-    private Double rating;
 }
