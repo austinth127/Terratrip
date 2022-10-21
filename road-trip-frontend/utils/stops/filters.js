@@ -1,3 +1,5 @@
+import stopData from "./stops.json";
+
 export const levels = {
     0: "Relaxed",
     1: "Moderate",
@@ -6,3 +8,4 @@ export const levels = {
 };
 
 export const levelOptions = ["Relaxed", "Moderate", "High", "Extreme"];
+export const filters = stopData;
