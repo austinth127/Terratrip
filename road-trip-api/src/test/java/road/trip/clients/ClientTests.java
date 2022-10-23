@@ -1,4 +1,4 @@
-package road.trip.api.clients;
+package road.trip.clients;
 
 import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
