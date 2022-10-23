@@ -1,25 +1,13 @@
 package road.trip.api.clients;
-import lombok.RequiredArgsConstructor;
 import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import road.trip.api.requests.LocationRequest;
-import road.trip.api.requests.TripCreateRequest;
-import road.trip.api.services.LocationService;
-import road.trip.api.services.TripService;
-import road.trip.api.services.UserService;
+import road.trip.api.location.LocationService;
+import road.trip.api.trip.TripService;
+import road.trip.api.user.UserService;
 import road.trip.persistence.daos.TripRepository;
-import road.trip.persistence.models.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 public class ServiceTests {
 
     /**

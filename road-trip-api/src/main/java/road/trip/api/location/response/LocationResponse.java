@@ -1,4 +1,4 @@
-package road.trip.api.responses;
+package road.trip.api.location.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

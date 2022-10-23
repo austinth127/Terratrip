@@ -1,14 +1,16 @@
-package road.trip.api.services;
+package road.trip.api.trip;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import road.trip.api.requests.LocationRequest;
-import road.trip.api.requests.TripCreateRequest;
-import road.trip.api.requests.TripEditRequest;
-import road.trip.api.responses.TripResponse;
-import road.trip.api.responses.ReducedTripResponse;
+import road.trip.api.location.LocationService;
+import road.trip.api.location.request.LocationRequest;
+import road.trip.api.trip.request.TripCreateRequest;
+import road.trip.api.trip.request.TripEditRequest;
+import road.trip.api.trip.response.TripResponse;
+import road.trip.api.trip.response.ReducedTripResponse;
+import road.trip.api.user.UserService;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;

@@ -1,4 +1,4 @@
-package road.trip.api.controllers;
+package road.trip.api.location;
 
 
 import lombok.RequiredArgsConstructor;
@@ -6,9 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import road.trip.api.requests.LocationRequest;
-import road.trip.api.responses.LocationResponse;
-import road.trip.api.services.LocationService;
+import road.trip.api.location.request.LocationRequest;
+import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.models.Location;
 
 import java.util.List;

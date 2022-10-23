@@ -1,9 +1,11 @@
-package road.trip.api.requests;
+package road.trip.api.trip.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import road.trip.api.location.request.LocationRequest;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 

@@ -1,12 +1,12 @@
-package road.trip.api.services;
+package road.trip.api.location;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import road.trip.api.requests.LocationRequest;
-import road.trip.api.responses.LocationResponse;
+import road.trip.api.location.request.LocationRequest;
+import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.models.Location;

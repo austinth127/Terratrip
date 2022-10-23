@@ -1,14 +1,12 @@
-package road.trip.api.responses;
+package road.trip.api.trip.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import road.trip.persistence.models.Stop;
+import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.models.Trip;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor

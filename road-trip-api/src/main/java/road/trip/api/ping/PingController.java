@@ -1,4 +1,4 @@
-package road.trip.api.controllers;
+package road.trip.api.ping;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

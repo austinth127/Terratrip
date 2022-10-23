@@ -4,9 +4,8 @@ import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import road.trip.api.clients.geoapify.GeoApifyClient;
-import road.trip.api.clients.geoapify.LocationMapper;
+import road.trip.clients.geoapify.GeoApifyClient;
+import road.trip.clients.geoapify.LocationMapper;
 import road.trip.persistence.models.Location;
 
 import java.util.List;

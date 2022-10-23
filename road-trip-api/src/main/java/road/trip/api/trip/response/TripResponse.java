@@ -1,8 +1,9 @@
-package road.trip.api.responses;
+package road.trip.api.trip.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import road.trip.persistence.models.Location;
+import road.trip.api.location.response.LocationResponse;
+import road.trip.api.trip.response.ReducedTripResponse;
 import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 

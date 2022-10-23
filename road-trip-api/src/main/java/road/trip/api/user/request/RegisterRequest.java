@@ -1,4 +1,4 @@
-package road.trip.api.requests;
+package road.trip.api.user.request;
 
 import lombok.Data;
 

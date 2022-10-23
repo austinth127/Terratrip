@@ -1,4 +1,4 @@
-package road.trip.api.services;
+package road.trip.api.playlist;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
