@@ -61,7 +61,7 @@
     },
     "rentals": {
         "bicycle": {
-            "level":2,
+            "level": 2,
             "query": "rental.bicycle"
         },
         "boat": {

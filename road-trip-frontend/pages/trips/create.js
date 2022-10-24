@@ -18,7 +18,7 @@ import {
 } from "../../utils/atoms";
 import Alert from "../../components/auth/Alert";
 import { useRouter } from "next/router";
-import { levelOptions as levels } from "../../utils/filters";
+import { levelOptions as levels } from "../../utils/stops/filters";
 
 const Create = () => {
     const [start, setStart] = useAtom(startAtom);

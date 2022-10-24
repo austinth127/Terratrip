@@ -50,3 +50,13 @@ export const DarkOutlineButton = ({ ...props }) => {
         </button>
     );
 };
+
+export const Checkbox = ({ isChecked, ...props }) => {
+    return (
+        <input
+            type="checkbox"
+            className="mr-2  checked:accent-green-600"
+            checked={isChecked}
+        />
+    );
+};
