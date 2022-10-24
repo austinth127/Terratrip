@@ -29,6 +29,10 @@ public class Location {
     private double coordX;
     private double coordY;
 
+    private String mapboxId;        // mapbox id
+    private String geoapifyId;      // geoapify id
+    private String otmId;           // open trip map id
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
