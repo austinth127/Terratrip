@@ -34,16 +34,20 @@ public class LocationService {
     }
 
     public Location createLocation(LocationRequest locationRequest) {
+        Optional<Location> l = locationRepository.findById(locationRequest.getId());
+        if(l.isEmpty()) {
+            Location location = Location.builder()
+                .name(locationRequest.getName())
+                .description(locationRequest.getDescription())
+                .rating(locationRequest.getRating())
+                .coordX(locationRequest.getCoordX())
+                .coordY(locationRequest.getCoordY())
+                .build();
 
-        Location location = Location.builder()
-            .name(locationRequest.getName())
-            .description(locationRequest.getDescription())
-            .rating(locationRequest.getRating())
-            .coordX(locationRequest.getCoordX())
-            .coordY(locationRequest.getCoordY())
-            .build();
+            return locationRepository.save(location);
+        }
 
-        return locationRepository.save(location);
+        return l.get();
     }
 
     public void updateOrder(Long tripId, Long locId,  int order, int newOrder) {

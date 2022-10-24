@@ -45,15 +45,6 @@ public class Trip {
     @OrderBy("stop_order ASC")
     List<Stop> stops;
 
-
-    public Location getStart() {
-        return start;
-    }
-
-    public Location getEnd() {
-        return stops.get(stops.size() - 1).getLocation();
-    }
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User creator;

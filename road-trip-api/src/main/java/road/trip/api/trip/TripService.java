@@ -105,24 +105,20 @@ public class TripService {
             if (request.getEndDate() != null) {
                 t.setEndDate(request.getEndDate());
             }
+            if (request.getStart() != null) {
+                Location l = locationService.createLocation(request.getStart());
+                t.setStart(l);
+            }
+            if (request.getEnd() != null) {
+                Location l = locationService.createLocation(request.getEnd());
+                t.setEnd(l);
+            }
             if(request.getStops() != null){
                 List<LocationRequest> stops = request.getStops();
 
                 for (int i = 0; i < stops.size(); i++) {
-//                if(stops.get(i).getId() == null){
-                    // create new Location and new Stop
                     Location l = locationService.createLocation(stops.get(i));
                     locationService.createStop(t, l, i);
-//                }
-//                else {
-//                    // Update Stop to have correct Order
-//                    locationService.updateOrder(t.get().getId(), stops.get(i).getId(), );
-//                    if(l.isEmpty()) {
-//                        log.error("LocationId not found.");
-//                    }
-//                    else {
-//
-//                    }
                 }
             }
             tripRepository.save(t);
