@@ -34,12 +34,11 @@ public class ReducedTripResponse {
     @NonNull
     private String advLevel;
 
-    @NonNull
-    private double duration;
-    @NotNull
-    private double distance;
+    private Double duration;
 
-    private double rating;
+    private Double distance;
+
+    private Double rating;
 
     @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;

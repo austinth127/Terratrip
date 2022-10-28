@@ -1,5 +1,6 @@
 package road.trip.persistence.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -27,10 +28,10 @@ public class Trip {
     String name;
     AdventureLevel adventureLevel;
 
-    int driveDuration;
-    double distance;
+    Double driveDuration;
+    Double distance;
 
-    double rating;
+    Double rating;
 
     LocalDate startDate;
     LocalDate endDate;
@@ -44,6 +45,11 @@ public class Trip {
     @OneToMany(mappedBy = "trip", targetEntity = Stop.class)
     @OrderBy("stop_order ASC")
     List<Stop> stops;
+
+    @OneToMany(mappedBy = "trip")
+    @ToString.Exclude
+    @JsonIgnore
+    List<Notification> notifications;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

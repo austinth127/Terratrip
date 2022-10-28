@@ -20,7 +20,7 @@ public class TripCreateRequest {
     private String adventureLevel;
 
     @NotNull @JsonProperty("duration")
-    private int driveDuration;
+    private double driveDuration;
     @NotNull
     private double distance;
 

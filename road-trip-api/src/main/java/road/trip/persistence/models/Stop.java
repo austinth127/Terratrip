@@ -1,6 +1,7 @@
 package road.trip.persistence.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -24,6 +25,8 @@ public class Stop {
 
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)
+    @ToString.Exclude
+    @JsonIgnore
     Trip trip;
 
     @ManyToOne

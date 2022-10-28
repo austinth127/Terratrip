@@ -22,8 +22,8 @@ public class TripResponse extends ReducedTripResponse {
         startDate = t.getStartDate();
         endDate = t.getEndDate();
         id = t.getId();
-        start = new LocationResponse(t.getStart());
-        end = new LocationResponse(t.getEnd());
+        start = t.getStart() == null ? null : new LocationResponse(t.getStart());
+        end = t.getEnd() == null ? null : new LocationResponse(t.getEnd());
         stops = t.getStops().stream()
             .map(Stop::getLocation)
             .map(LocationResponse::new)
@@ -39,12 +39,11 @@ public class TripResponse extends ReducedTripResponse {
     @NonNull
     private String advLevel;
 
-    @NonNull
-    private double duration;
-    @NotNull
-    private double distance;
+    private Double duration;
 
-    private double rating;
+    private Double distance;
+
+    private Double rating;
 
     @NonNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;

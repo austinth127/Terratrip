@@ -34,6 +34,11 @@ public class User {
     @JsonIgnore
     List<Trip> trips;
 
+    @OneToMany(mappedBy = "user", targetEntity = Notification.class)
+    @ToString.Exclude
+    @JsonIgnore
+    List<User> notifications;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

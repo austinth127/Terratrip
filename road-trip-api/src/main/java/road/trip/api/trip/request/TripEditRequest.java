@@ -18,7 +18,7 @@ public class TripEditRequest {
     private AdventureLevel adventureLevel;
 
     @JsonProperty("duration")
-    private Integer driveDuration;
+    private Double driveDuration;
 
     private Double distance;
 
