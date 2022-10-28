@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import road.trip.api.location.LocationService;
 import road.trip.api.location.request.LocationRequest;
+import road.trip.api.notification.NotificationService;
 import road.trip.api.trip.request.TripCreateRequest;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
@@ -28,6 +29,7 @@ public class TripService {
     private final TripRepository tripRepository;
     private final LocationService locationService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
@@ -70,6 +72,8 @@ public class TripService {
 
         locationService.createStop(trip, start, 0);
         locationService.createStop(trip, end, 1);
+
+        notificationService.enqueueNotifications(trip);
 
         return trip.getId();
     }
@@ -122,6 +126,8 @@ public class TripService {
                 }
             }
             tripRepository.save(t);
+
+            notificationService.editNotifications(t);
             return t.getId();
         } else {
             log.error("Trip not owned by user.");
@@ -151,6 +157,7 @@ public class TripService {
             log.error("No trip found.");
         } else if (userService.user() == t.get().getCreator()) {
             tripRepository.deleteById(id);
+            notificationService.deleteNotifications(t.get());
         } else {
             log.error("Trip not owned by user.");
         }

@@ -14,6 +14,7 @@ import road.trip.persistence.models.Trip;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -66,5 +67,71 @@ public class NotificationService {
         notifications.forEach(notificationRepository::delete);
 
         return response;
+    }
+
+    public List<Notification> editNotifications(Trip trip) {
+        Optional<Notification> upcomingNotification = notificationRepository.findByTripAndType(trip, NotificationType.UPCOMING_TRIP);;
+        Optional<Notification> completedNotification = notificationRepository.findByTripAndType(trip, NotificationType.COMPLETED_TRIP);
+
+        Notification un = createUpcomingTripNotification(trip);
+        Notification cn = createCompletedNotification(trip);
+
+        upcomingNotification.ifPresent((n) -> {
+            notificationRepository.delete(n);
+            notificationRepository.save(un);
+        });
+        completedNotification.ifPresent((n) -> {
+            notificationRepository.delete(n);
+            notificationRepository.save(cn);
+        });
+
+        return List.of(un, cn);
+    }
+
+    public void deleteNotifications(Trip trip) {
+        notificationRepository.deleteAllByTrip(trip);
+    }
+
+    /**
+     * Adds notifications relevant to the trip to the notification priority queue.
+     * These notifications will get pulled from the queue when the current time is later than the
+     * notification's "sendAt" time.
+     *
+     * @param trip the trip for which to generate notifications
+     * @return the list of created notifications
+     */
+    public List<Notification> enqueueNotifications(Trip trip) {
+        Notification upcomingNotification = createUpcomingTripNotification(trip);
+        Notification completedNotification = createCompletedNotification(trip);
+
+        notificationRepository.save(upcomingNotification);
+        notificationRepository.save(completedNotification);
+
+        return List.of(upcomingNotification, completedNotification);
+    }
+
+
+    /**
+     * Generates upcoming trip notification 5 days before the start date
+     */
+    private Notification createUpcomingTripNotification(Trip trip) {
+        return Notification.builder()
+            .trip(trip)
+            .user(trip.getCreator())
+            .sendAt(trip.getStartDate().minusDays(5).atStartOfDay())
+            .type(NotificationType.UPCOMING_TRIP)
+            .build();
+    }
+
+    /**
+     * Generates trip completion notification at 8pm on the end date
+     */
+    private Notification createCompletedNotification(Trip trip) {
+         return Notification.builder()
+            .trip(trip)
+            .user(trip.getCreator())
+            .sendAt(trip.getEndDate().atTime(20, 0))
+            .type(NotificationType.COMPLETED_TRIP)
+            .build();
     }
 }
