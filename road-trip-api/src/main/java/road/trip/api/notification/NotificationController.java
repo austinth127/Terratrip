@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.notification.response.NotificationResponse;
+import road.trip.api.util.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class NotificationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNotification(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteNotification(@PathVariable("id") Long id) throws NotFoundException {
         notificationService.deleteNotification(id);
         return ResponseEntity.ok().build();
     }

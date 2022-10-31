@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import road.trip.api.util.exceptions.NotFoundException;
 import road.trip.api.notification.response.NotificationResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.NotificationRepository;
@@ -77,7 +78,10 @@ public class NotificationService {
         return List.of(un, cn);
     }
 
-    public void deleteNotification(Long id) {
+    public void deleteNotification(Long id) throws NotFoundException {
+        if (!notificationRepository.existsById(id)) {
+            throw new NotFoundException();
+        }
         notificationRepository.deleteById(id);
     }
 
