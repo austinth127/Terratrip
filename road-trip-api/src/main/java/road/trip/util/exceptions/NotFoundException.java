@@ -1,4 +1,4 @@
-package road.trip.api.util.exceptions;
+package road.trip.util.exceptions;
 
 public class NotFoundException extends Exception {
     public NotFoundException() {

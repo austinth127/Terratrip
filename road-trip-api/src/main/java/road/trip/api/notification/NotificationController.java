@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.notification.response.NotificationResponse;
-import road.trip.api.util.exceptions.NotFoundException;
+import road.trip.util.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;

@@ -8,8 +8,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.models.Location;
+import road.trip.util.exceptions.UnauthorizedException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,6 +64,10 @@ public class GeoApifyClient {
             .build();
         HttpResponse<String> httpResponse = client.send(httpRequest, BodyHandlers.ofString());
 
+        if(httpResponse.statusCode() == 401){
+            throw new UnauthorizedException();
+        }
+
         return httpResponse.body();
     }
 
@@ -99,14 +105,19 @@ public class GeoApifyClient {
     }
 
     //https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect%3A10.716463143326969%2C48.755151258420966%2C10.835314015356737%2C48.680903341613316&limit=20&apiKey=a9b12a2a2ae0491cb7874bbf0fab7115
+    /**
+     * radius - radius of search circle in meters
+     */
     public List<LocationResponse> getRecommendedLocations(Double lon, Double lat, Double radius, List<String> categories, Integer limit) {
+        log.info(lon + " " + lat + " " + radius + " " + categories + " " + limit);
         URI uri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("categories", String.join(",", categories)),
-            new BasicNameValuePair("filter", "circle:" + lon + "," + lat + "," + radius),
+            new BasicNameValuePair("filter", "circle:" + lat + "," + lon + "," + radius),
             new BasicNameValuePair( limit + "", "10"),
-            new BasicNameValuePair("apiKey", API_KEY)));
+            new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115"))); //API_KEY
         try {
             String jsonBody = doGet(uri);
+            log.info(jsonBody);
             return locationMapper.getLocationResponsesFromLocations(jsonBody);
         } catch (Exception e) {
             log.error(e);
@@ -114,8 +125,9 @@ public class GeoApifyClient {
         }
     }
     public static void main(String args[]){
+        System.out.println("Hello World");
         GeoApifyClient g = new GeoApifyClient(new LocationMapper());
-        List<LocationResponse> r = g.getRecommendedLocations(100.0, 50.0, 20.0, List.of("accommodation", "activity"), 20);
-        r.get(0);
+        List<LocationResponse> r = g.getRecommendedLocations(-74.0060,40.7128, 1000.0, List.of("accommodation", "activity"), 20);
+        System.out.print("Done");
     }
 }

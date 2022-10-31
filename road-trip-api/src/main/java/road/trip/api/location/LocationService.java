@@ -2,6 +2,7 @@ package road.trip.api.location;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import road.trip.persistence.models.Trip;
 import java.util.*;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LocationService {
 
@@ -94,6 +96,7 @@ public class LocationService {
      * route, and recommends outdoors activities and sleep locations.
      */
     public List<LocationResponse> getRecommendedLocations(Long tripId, Double radius, List<String> categories, List<List<Double>> route) {
+        log.info(tripId + " " + radius + " " + categories + " " + route);
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         List<LocationResponse> locationResponses = new ArrayList<>();
         if(optTrip.isPresent()) {

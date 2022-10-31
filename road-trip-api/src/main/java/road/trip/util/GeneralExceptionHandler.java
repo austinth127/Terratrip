@@ -1,4 +1,4 @@
-package road.trip.api.util;
+package road.trip.util;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import road.trip.api.util.exceptions.NotFoundException;
+import road.trip.util.exceptions.NotFoundException;
 
 /**
  * Handles all exceptions thrown by controllers.
