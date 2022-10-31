@@ -104,7 +104,6 @@ const Map = ({ ...props }) => {
             setZoom(map.current.getZoom().toFixed(2));
         });
     });
-
     return (
         <div className="relative">
             <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono text-xs z-[1] absolute top-12 right-0 m-3 rounded-lg">

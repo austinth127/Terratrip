@@ -18,38 +18,17 @@ import {
 } from "../../utils/atoms";
 import Alert from "../../components/auth/Alert";
 import { useRouter } from "next/router";
-
-const levels = ["Relaxed", "Moderate", "High", "Extreme", "All"];
+import { levelOptions as levels } from "../../utils/stops/filters";
 
 const Create = () => {
     const [start, setStart] = useAtom(startAtom);
     const [end, setEnd] = useAtom(endAtom);
     const [startDate, setStartDate] = useAtom(startDateAtom);
     const [endDate, setEndDate] = useAtom(endDateAtom);
-    const [activeLevels, setActiveLevels] = useAtom(advLevelAtom);
+    const [activeLevel, setActiveLevel] = useAtom(advLevelAtom);
     const router = useRouter();
 
     const [alert, setAlert] = useState();
-
-    console.log(start, end);
-
-    const handleActivityLevel = (level) => {
-        if (activeLevels.includes(level)) {
-            if (level == "All") {
-                activeLevels = [];
-            } else {
-                activeLevels.splice(activeLevels.indexOf(level), 1);
-            }
-        } else {
-            if (level == "All") {
-                activeLevels = levels;
-            } else {
-                activeLevels.push(level);
-            }
-        }
-
-        setActiveLevels([...activeLevels]);
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -62,7 +41,7 @@ const Create = () => {
     };
 
     return (
-        <div className="w-full h-full flex flex-row sm:ml-16 pt-12">
+        <div className="w-full h-full flex flex-row sm:ml-16 ml-8 pt-12">
             <form className="h-3/4 w-1/2 text-gray-50" onSubmit={handleSubmit}>
                 <h1 className="text-2xl font-semibold mb-2">Plan your Trip.</h1>
                 <h4 className="text-base font-light text-gray-100">
@@ -110,13 +89,13 @@ const Create = () => {
                         Help us tailor your trip by selecting how strenuous of
                         outdoor activities that you want to be recommended.
                     </p>
-                    <div className="flex flex-row gap-4 mt-4">
+                    <div className="sm:flex flex-row gap-4 mt-4 grid grid-rows-2 grid-cols-2 -mr-20 lg:mr-0">
                         {levels.map((level) => (
                             <Button
-                                onClick={() => handleActivityLevel(level)}
+                                onClick={() => setActiveLevel(level)}
                                 key={level}
                                 className={
-                                    activeLevels.includes(level)
+                                    activeLevel == level
                                         ? stdBtnStyle
                                         : darkOutlineBtnStyle
                                 }
@@ -137,16 +116,18 @@ const Create = () => {
                             />
                         </h2>
                         <h2 className="text-lg font-semibold w-64">
-                            <div className="mb-2 ml-1">End Date</div>
+                            <div className="mb-2 ml-1 mt-4 sm:mt-0">
+                                End Date
+                            </div>
                             <DarkTextInput
                                 type="date"
                                 onChange={(event) =>
-                                    setStartDate(event.target.value)
+                                    setEndDate(event.target.value)
                                 }
                             />
                         </h2>
                     </div>
-                    <div className="mt-16 -ml-1">
+                    <div className="mt-16 -ml-1 mb-20 just">
                         <DarkOutlineButton type="submit">
                             Let's Go &nbsp;&nbsp;&rarr;
                         </DarkOutlineButton>

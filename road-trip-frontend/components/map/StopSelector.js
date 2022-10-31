@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Geocoder from "./Geocoder";
 import TextInput from "../general/TextInput";
+import StopFilters from "./StopFilters";
 
 const StopSelector = () => {
     const [stop, setStop] = useState();
@@ -13,6 +14,7 @@ const StopSelector = () => {
                 <h1 className="mb-2 font-semibold text-slate-800">Add Stop</h1>
                 <Geocoder callback={setStop} InputComponent={TextInput} />
             </div>
+            <StopFilters />
         </div>
     );
 };

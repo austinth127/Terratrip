@@ -1,15 +1,24 @@
+import axios from "axios";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TripCard from "../../../components/trip/TripCard";
-
-const demoTrips = [
-    "2022 Amazing Roadtrip",
-    "Road Trip with the Boys",
-    "Trip to the Grand Canyon",
-];
 
 const UserTrips = () => {
     const router = useRouter();
+    const [trips, setTrips] = useState();
+
+    useEffect(() => {
+        const getData = async () => {
+            const res = await axios.get("/trip");
+            // console.log(res.data);
+            setTrips(res.data);
+        };
+        getData();
+    }, []);
+
+    if (!trips) {
+        return <></>;
+    }
 
     return (
         <div className="py-2 pr-2">
@@ -18,8 +27,8 @@ const UserTrips = () => {
                     My Trips
                 </h1>
                 <div className="flex flex-col gap-4">
-                    {demoTrips.map((trip) => (
-                        <TripCard trip={{ name: trip }} key={trip}></TripCard>
+                    {trips.map((trip) => (
+                        <TripCard trip={trip} key={trip.id}></TripCard>
                     ))}
                 </div>
             </div>
@@ -28,3 +37,28 @@ const UserTrips = () => {
 };
 
 export default UserTrips;
+
+// This is how you can get server side data befre render
+// export async function getServerSideProps() {
+//     // Fetch data from external API
+//     const page = Math.floor(Math.random() * 10) + 1;
+
+//     try {
+//         const res = await axios.get(
+//             `https://api.pexels.com/v1/search?query=nature&per_page=1&orientation=landscape&page=${page}`,
+//             {
+//                 headers: {
+//                     Authorization:
+//                         "563492ad6f91700001000001088d0dbdcca94fb4bd0ca364d64f06b8",
+//                 },
+//             }
+//         );
+//         const photo = res.data.photos[0];
+
+//         // Pass data to the page via props
+//         return { props: { photo } };
+//     } catch (e) {
+//         console.log("Error getting server side props from api", e);
+//     }
+//     return { props: {} };
+// }

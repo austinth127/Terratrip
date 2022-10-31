@@ -26,13 +26,12 @@ public class Location {
     private String description;
     private int rating;
 
-    private String type;
-    private String geoType;
     private double coordX;
     private double coordY;
 
-    @OneToMany(mappedBy = "location")
-    List<Stop> stops;
+    private String mapboxId;        // mapbox id
+    private String geoapifyId;      // geoapify id
+    private String otmId;           // open trip map id
 
     @Override
     public boolean equals(Object o) {

@@ -4,6 +4,7 @@ import NavItem from "./NavItem";
 import { tabs } from "../../utils/tabs";
 import { useRouter } from "next/router";
 import AuthRoutes from "./AuthRoutes";
+import Userfront from "@userfront/core";
 
 /**
  * A navbar to be displayed on the left side of the screen, pops out
@@ -14,6 +15,11 @@ import AuthRoutes from "./AuthRoutes";
 const Navbar = ({ ...props }) => {
     const [navOpen, setNavOpen] = useState();
     const router = useRouter();
+    const [isSignedIn, setIsSignedIn] = useState(false);
+
+    useEffect(() => {
+        setIsSignedIn(Userfront.user && Userfront.user.userId);
+    }, [Userfront.user]);
 
     useEffect(() => {
         const handleRouteChange = () => {
@@ -61,19 +67,24 @@ const Navbar = ({ ...props }) => {
                         </NavItem>
                     </div>
                     <AuthRoutes />
-                    {tabs.map((tab, index) => (
-                        <div
-                            key={tab.section}
-                            className="lg:my-3 text-slate-800 text-sm sm:my-0 my-3"
-                        >
-                            <h2 className="uppercase">{tab.section}</h2>
-                            {tab.tabs.map((tab, index) => (
-                                <NavItem key={index} href={tab.href}>
-                                    {tab.name}
-                                </NavItem>
-                            ))}
-                        </div>
-                    ))}
+
+                    {isSignedIn ? (
+                        tabs.map((tab, index) => (
+                            <div
+                                key={tab.section}
+                                className="lg:my-3 text-slate-800 text-sm sm:my-0 my-3"
+                            >
+                                <h2 className="uppercase">{tab.section}</h2>
+                                {tab.tabs.map((tab, index) => (
+                                    <NavItem key={index} href={tab.href}>
+                                        {tab.name}
+                                    </NavItem>
+                                ))}
+                            </div>
+                        ))
+                    ) : (
+                        <></>
+                    )}
                 </ul>
             </nav>
         </div>

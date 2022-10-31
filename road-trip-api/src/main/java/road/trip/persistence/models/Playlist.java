@@ -11,7 +11,7 @@ import java.util.Objects;
 @ToString
 @Entity
 @AllArgsConstructor
-@Table(name = Trip.TABLE_NAME)
+@Table(name = Playlist.TABLE_NAME)
 @NoArgsConstructor
 @Builder
 public class Playlist {
@@ -23,7 +23,7 @@ public class Playlist {
 
     String name, url;
     //Genre genre;
-    long userId, tripId;
+    //long userId, tripId;
 
 
     @Override

@@ -12,6 +12,16 @@ build-job:
     - docker build -t road-trip-frontend .
     - cd ..
 
+test-job:
+  stage: test
+  script:
+    - echo "This job tests stuff"
+    - whoami
+    - cd road-trip-api
+    - ./gradlew test
+# TODO: install java
+    - cd ..
+    - echo "Testing complete"
 
 deploy-prod:
   stage: deploy
