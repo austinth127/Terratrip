@@ -1,8 +1,7 @@
 import React from "react";
 import Navbar from "../../components/navigation/Navbar";
 import Footer from "../../components/navigation/Footer";
-import { useRouter } from "next/router";
-import Image from "next/image";
+import NotificationOverlay from "../notifications/NotificationOverlay";
 
 /**
  * This is a layout for all pages, included in _app.js. Nextjs will auto-route
@@ -21,6 +20,7 @@ const Layout = ({ children, ...props }) => {
 
                 <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-50">
                     <Navbar />
+                    <NotificationOverlay />
                     <main className="relative min-h-screen lg:ml-16">
                         {children}
                         {/* Footer Padding */}

@@ -34,7 +34,7 @@ const SaveModal = () => {
 
     const router = useRouter();
 
-    console.log(location, dates, advLevel, route);
+    console.log(route);
 
     const handleSubmit = (event) => {
         event.preventDefault();
