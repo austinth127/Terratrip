@@ -25,9 +25,16 @@ const NotificationOverlay = () => {
                     className="w-fit h-fit text-gray-100 text-xs p-2 text-center bg-slate-900 bg-opacity-70 rounded-lg z-40 isolate"
                     onClick={() => setShowNotifs(!showNotifs)}
                 >
-                    {showNotifs
-                        ? "Hide Notifications"
-                        : `Show ${notifications.length} Notifications `}
+                    {showNotifs ? (
+                        <p>Hide Notifications</p>
+                    ) : (
+                        <div>
+                            <span className="pr-2 text-green-600">
+                                {notifications.length}
+                            </span>
+                            <i className="fa fa-bell fa-solid fa-bounce"></i>
+                        </div>
+                    )}
                 </button>
             </div>
             {showNotifs ? (
