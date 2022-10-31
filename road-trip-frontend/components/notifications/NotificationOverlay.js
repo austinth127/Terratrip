@@ -29,7 +29,7 @@ const NotificationOverlay = () => {
         return <></>;
     }
     return (
-        <div className="lg:flex hidden w-fit absolute top-2 right-2 flex-col gap-1">
+        <div className="lg:flex hidden w-fit absolute top-4 right-4 flex-col gap-1">
             <div className="flex flex-row justify-end">
                 <button
                     className="w-fit h-fit text-gray-100 text-xs p-2 text-center bg-slate-900 bg-opacity-70 rounded-lg z-40 isolate"
@@ -55,17 +55,14 @@ const NotificationOverlay = () => {
                             index={index}
                             key={notification.id}
                             removeNotif={() => {
-                                axios
-                                    .delete(`/notification/${notification.id}`)
-                                    .then((res) => {
-                                        const toRemove =
-                                            notifications.findIndex(
-                                                (item) =>
-                                                    item.id == notification.id
-                                            );
-                                        notifications.splice(toRemove, 1);
-                                        setNotifications([...notifications]);
-                                    });
+                                axios.delete(
+                                    `/notification/${notification.id}`
+                                );
+                                const toRemove = notifications.findIndex(
+                                    (item) => item.id == notification.id
+                                );
+                                notifications.splice(toRemove, 1);
+                                setNotifications([...notifications]);
                             }}
                         ></NotificationCard>
                     ))}
