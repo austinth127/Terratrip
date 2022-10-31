@@ -1,21 +1,31 @@
+import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { notificationAtom, showNotifAtom } from "../../utils/atoms";
+import { showNotifAtom } from "../../utils/atoms";
+import LoadingSpinner from "../general/LoadingSpinner";
 import NotificationCard from "./NotificationCard";
 
 const NotificationOverlay = () => {
-    const [notifications, setNotifications] = useAtom(notificationAtom);
+    const [notifications, setNotifications] = useState(null);
     const maxLen = 3;
-    const [shortNotifs, setShortNotifs] = useState(
-        notifications.slice(0, maxLen)
-    );
+    const [shortNotifs, setShortNotifs] = useState(null);
     const [showNotifs, setShowNotifs] = useAtom(showNotifAtom);
 
     useEffect(() => {
-        setShortNotifs(notifications.slice(0, maxLen));
-    }, [notifications]);
+        /** @TODO better error handling */
+        const getData = async () => {
+            const res = await axios.get(`/notification`);
+            notifications = res.data;
+            setNotifications(notifications);
+            setShortNotifs(
+                notifications ? notifications.slice(0, maxLen) : null
+            );
+        };
 
-    if (notifications.length < 1) {
+        getData();
+    }, []);
+
+    if (!notifications || notifications.length < 1) {
         return <></>;
     }
     return (
@@ -45,11 +55,17 @@ const NotificationOverlay = () => {
                             index={index}
                             key={notification.id}
                             removeNotif={() => {
-                                const toRemove = notifications.findIndex(
-                                    (item) => item.id == notification.id
-                                );
-                                notifications.splice(toRemove, 1);
-                                setNotifications([...notifications]);
+                                axios
+                                    .delete(`/notification/${notification.id}`)
+                                    .then((res) => {
+                                        const toRemove =
+                                            notifications.findIndex(
+                                                (item) =>
+                                                    item.id == notification.id
+                                            );
+                                        notifications.splice(toRemove, 1);
+                                        setNotifications([...notifications]);
+                                    });
                             }}
                         ></NotificationCard>
                     ))}

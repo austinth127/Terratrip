@@ -45,7 +45,7 @@ const StopFilterChecklist = () => {
                             </h2>
                         }
                     >
-                        <div className="pl-1">
+                        <div className="pl-1 py-2">
                             {option.subcategories.map((subcat) => (
                                 <FilterItem
                                     key={subcat.query}
