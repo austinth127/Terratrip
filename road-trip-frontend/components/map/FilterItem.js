@@ -12,12 +12,13 @@ import { Checkbox } from "../general/Buttons";
 const FilterItem = ({ filter }) => {
     const name = formatTitle(filter.name);
     const [isChecked, setIsChecked] = useState(false);
+
     return (
-        <div
-            className="text-slate-600 grad-txt-rs-yllw font-hubballi w-fit h-fit hover:cursor-pointer"
-            onClick={() => setIsChecked(!isChecked)}
-        >
-            <Checkbox isChecked={isChecked} />
+        <div className="text-slate-600 grad-txt-rs-yllw font-hubballi w-fit h-fit hover:cursor-pointer">
+            <Checkbox
+                isChecked={isChecked}
+                onChange={(e) => setIsChecked(e.target.value)}
+            />
             {name}
         </div>
     );
