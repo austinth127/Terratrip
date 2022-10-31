@@ -61,4 +61,4 @@ export const notificationAtom = atom([
         id: 4,
     },
 ]);
-export const showNotifAtom = atom(true);
+export const showNotifAtom = atom(false);

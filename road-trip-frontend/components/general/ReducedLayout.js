@@ -12,10 +12,10 @@ const ReducedLayout = ({ children, ...props }) => {
     return (
         <>
             {/* Background */}
-            <div className="w-full h-screen absolute bg-cover bg-wireframe-terrain bg-fixed bg-no-repeat">
+            <div className="w-full h-fit min-h-screen absolute bg-cover bg-wireframe-terrain bg-fixed bg-no-repeat bg-bottom">
                 {/* Dimmer */}
 
-                <div className="h-full text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-95">
+                <div className="h-fit min-h-screen text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-95">
                     <main className="relative h-full ">{children}</main>
                     <a
                         href="https://www.vecteezy.com/free-vector/wireframe-terrain"
