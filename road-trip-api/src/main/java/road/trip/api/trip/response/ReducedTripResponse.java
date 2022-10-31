@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Builder
 public class ReducedTripResponse {
     public ReducedTripResponse(Trip t) {
+        name = t.getName();
         distance = t.getDistance();
         duration = t.getDriveDuration();
         advLevel = t.getAdventureLevel().toString();
