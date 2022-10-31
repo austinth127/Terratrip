@@ -1,4 +1,4 @@
-package road.trip.api.controllers;
+package road.trip.api.location;
 
 
 import lombok.RequiredArgsConstructor;
@@ -6,15 +6,17 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import road.trip.api.requests.LocationRequest;
-import road.trip.api.responses.LocationsResponse;
-import road.trip.api.services.LocationService;
+import road.trip.api.location.request.LocationRequest;
+import road.trip.api.location.request.RecommendRequest;
+import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.models.Location;
+
+import java.util.List;
 
 @RestController
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/stop")
+@RequestMapping("/location")
 public class LocationController {
 
     final LocationService locationService;
@@ -22,11 +24,11 @@ public class LocationController {
     @Deprecated
     @PostMapping("/create-stop")
     public ResponseEntity<Location> saveStop(@RequestBody LocationRequest locationRequest) {
-        return ResponseEntity.ok(locationService.createStop(locationRequest));
+        return ResponseEntity.ok(locationService.createLocation(locationRequest));
     }
 
-    @GetMapping
-    public ResponseEntity<LocationsResponse> getRecommendedStops(Long tripId, Double range) {
-        return locationService.getRecommendedStops(tripId, range);
+    @PostMapping("recommend")
+    public ResponseEntity<List<LocationResponse>> getRecommendedLocations(@RequestBody RecommendRequest recommendRequest) {
+        return ResponseEntity.ok(locationService.getRecommendedLocations(recommendRequest.getTripId(), recommendRequest.getRange(), recommendRequest.getCategories(), recommendRequest.getRoute()));
     }
 }

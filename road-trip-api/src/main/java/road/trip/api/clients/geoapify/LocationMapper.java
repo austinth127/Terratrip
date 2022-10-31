@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
+import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.models.Location;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 @Log4j2
 @Component
 public class LocationMapper {
-    public List<Location> getStopsFromJSON(String json) {
+    public List<Location> getLocationsFromJSON(String json) {
 
         JSONParser parser = new JSONParser();
 
@@ -43,6 +44,19 @@ public class LocationMapper {
         }
         return locations;
     }
+
+
+    //TODO: Places doesn't provide a description
+    //TODO: Places doesn't provide a rating and it's an int instead of Integer
+    public List<LocationResponse> getLocationResponsesFromLocations(String json){
+        List<LocationResponse> locationResponses = new ArrayList<>();
+        List<Location> locations = getLocationsFromJSON(json);
+        for(Location l : locations){
+            locationResponses.add(new LocationResponse(l));
+        }
+        return locationResponses;
+    }
+
     /*
     public static void main(String[] args) {
         try {
