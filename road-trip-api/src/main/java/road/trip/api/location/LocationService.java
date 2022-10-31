@@ -2,6 +2,7 @@ package road.trip.api.location;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import road.trip.persistence.models.Trip;
 
 import java.util.*;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LocationService {
@@ -34,8 +36,9 @@ public class LocationService {
     }
 
     public Location createLocation(LocationRequest locationRequest) {
-        Optional<Location> l = locationRepository.findById(locationRequest.getId());
-        if(l.isEmpty()) {
+        Location l = findLocation(locationRequest);
+        if(l == null) {
+            System.out.println("trip Created: " + locationRequest.getName());
             Location location = Location.builder()
                 .name(locationRequest.getName())
                 .description(locationRequest.getDescription())
@@ -47,20 +50,25 @@ public class LocationService {
             return locationRepository.save(location);
         }
 
-        return l.get();
-    }
-
-    public void updateOrder(Long tripId, Long locId,  int order, int newOrder) {
-        Optional<Stop> s = stopRepository.findByTrip_IdAndLocation_IdAndOrder(tripId, locId, order);
-        if(s.isPresent()) {
-            s.get().setOrder(newOrder);
-            stopRepository.save(s.get());
-        }
-
+        return l;
     }
 
     public Optional<Location> getLocationById(Long locId) {
         return locationRepository.findById(locId);
+    }
+
+    public Location findLocation(LocationRequest request) {
+        List<Location> locs = locationRepository.findByNameAndCoordXAndCoordY(request.getName(), request.getCoordX(), request.getCoordY());
+        if(locs.size() == 1) {
+            return locs.get(0);
+        }
+        else if (locs.size() > 1) {
+            log.error("Duplicate Data in Database");
+        }
+        else {
+            log.info("No Stop found");
+        }
+        return null;
     }
 
     public List<Location> getLocationsForTrip(Long tripId) {

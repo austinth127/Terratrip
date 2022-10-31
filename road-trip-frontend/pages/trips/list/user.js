@@ -17,7 +17,13 @@ const UserTrips = () => {
     }, []);
 
     if (!trips) {
-        return <></>;
+        return (
+            <div className="py-10">
+                <h1 className="text-2xl font-semibold mb-12 text-white text-center">
+                Your Trips Will Appear Here
+            </h1>
+            </div>
+        );
     }
 
     return (
