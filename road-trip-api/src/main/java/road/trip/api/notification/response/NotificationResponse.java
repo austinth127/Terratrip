@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 public class NotificationResponse {
 
+    @JsonProperty("id")
     private Long id;
 
     @JsonProperty("text")
