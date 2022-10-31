@@ -35,6 +35,7 @@ public class NotificationService {
     private NotificationResponse getResponse(Notification notification) {
         Trip trip = notification.getTrip();
         NotificationResponse response = NotificationResponse.builder()
+            .id(notification.getId())
             .type(notification.getType())
             .notifiedAt(LocalDateTime.now())
             .build();
@@ -50,7 +51,6 @@ public class NotificationService {
 
     /**
      * Gets the list of notifications that should be sent to the authenticated user
-     * and clears them from the database so that they only get sent to the user once
      *
      * @return the list of notifications
      */
@@ -59,14 +59,9 @@ public class NotificationService {
         List<Notification> notifications = notificationRepository.getNotificationsByUserAndSendAtBefore(userService.user(), LocalDateTime.now());
 
         // Convert the notification into a format that the frontend wants
-        List<NotificationResponse> response = notifications.stream()
+        return notifications.stream()
             .map(this::getResponse)
             .collect(Collectors.toList());
-
-        // Remove the notifications that have been processed
-        notifications.forEach(notificationRepository::delete);
-
-        return response;
     }
 
     public List<Notification> editNotifications(Trip trip) {
@@ -76,16 +71,14 @@ public class NotificationService {
         Notification un = createUpcomingTripNotification(trip);
         Notification cn = createCompletedNotification(trip);
 
-        upcomingNotification.ifPresent((n) -> {
-            notificationRepository.delete(n);
-            notificationRepository.save(un);
-        });
-        completedNotification.ifPresent((n) -> {
-            notificationRepository.delete(n);
-            notificationRepository.save(cn);
-        });
+        upcomingNotification.ifPresent((n) -> notificationRepository.save(un));
+        completedNotification.ifPresent((n) -> notificationRepository.save(cn));
 
         return List.of(un, cn);
+    }
+
+    public void deleteNotification(Long id) {
+        notificationRepository.deleteById(id);
     }
 
     public void deleteNotifications(Trip trip) {

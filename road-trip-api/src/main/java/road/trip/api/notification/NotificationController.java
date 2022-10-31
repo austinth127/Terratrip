@@ -3,9 +3,7 @@ package road.trip.api.notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import road.trip.api.notification.response.NotificationResponse;
 
 import java.util.List;
@@ -20,6 +18,12 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<List<NotificationResponse>> getNotifications() {
         return ResponseEntity.of(Optional.of(notificationService.getNotifications()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteNotification(@PathVariable("id") Long id) {
+        notificationService.deleteNotification(id);
+        return ResponseEntity.ok().build();
     }
 
 }
