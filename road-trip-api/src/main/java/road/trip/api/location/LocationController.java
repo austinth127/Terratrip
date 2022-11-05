@@ -27,7 +27,7 @@ public class LocationController {
         return ResponseEntity.ok(locationService.createLocation(locationRequest));
     }
 
-    @PostMapping("recommend")
+    @PostMapping("/recommend")
     public ResponseEntity<List<LocationResponse>> getRecommendedLocations(@RequestBody RecommendRequest recommendRequest) {
         log.info(recommendRequest);
         log.info(recommendRequest.getRoute());

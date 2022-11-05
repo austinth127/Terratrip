@@ -18,7 +18,6 @@ import road.trip.persistence.models.Trip;
 
 import java.util.*;
 
-@Log4j2
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
