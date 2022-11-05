@@ -12,9 +12,11 @@ import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
 import road.trip.api.trip.response.ReducedTripResponse;
 import road.trip.api.user.UserService;
+import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class TripService {
     private final LocationService locationService;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final StopRepository stopRepository;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
@@ -55,6 +58,7 @@ public class TripService {
      * Creates a trip and returns the id of the newly created trip
      */
     public Long createTrip(TripCreateRequest request) {
+        System.out.println(request.toString());
         Location start = locationService.createLocation(request.getStart());
         Location end = locationService.createLocation(request.getEnd());
 
@@ -66,12 +70,11 @@ public class TripService {
             .startDate(request.getStartDate())
             .endDate(request.getEndDate())
             .creator(userService.user())
+            .start(start)
+            .end(end)
             .build();
 
         trip = tripRepository.save(trip);
-
-        locationService.createStop(trip, start, 0);
-        locationService.createStop(trip, end, 1);
 
         notificationService.enqueueNotifications(trip);
 
@@ -120,11 +123,24 @@ public class TripService {
             if(request.getStops() != null){
                 List<LocationRequest> stops = request.getStops();
 
-                for (int i = 0; i < stops.size(); i++) {
-                    Location l = locationService.createLocation(stops.get(i));
-                    locationService.createStop(t, l, i);
+                // Remove Stops in trip
+                List<Stop> oldStops = stopRepository.findByTrip_Id(id);
+                for (int i = 0; i < oldStops.size(); i++) {
+                    stopRepository.deleteById(oldStops.get(i).getStopId());
+                }
+
+
+                oldStops = stopRepository.findByTrip_Id(id);
+
+                if (oldStops.size() == 0) {
+                    // Re-add stops
+                    for (int i = 0; i < stops.size(); i++) {
+                        Location l = locationService.createLocation(stops.get(i));
+                        locationService.createStop(t, l, i);
+                    }
                 }
             }
+
             tripRepository.save(t);
 
             notificationService.editNotifications(t);

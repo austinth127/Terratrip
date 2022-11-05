@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class LocationRequest {
 
-    private Long id;
-
     @NotNull @JsonProperty("place_name")
     private String name;
     @NotNull @JsonProperty("lng")

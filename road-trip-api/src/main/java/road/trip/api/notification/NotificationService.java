@@ -66,14 +66,20 @@ public class NotificationService {
     }
 
     public List<Notification> editNotifications(Trip trip) {
-        Optional<Notification> upcomingNotification = notificationRepository.findByTripAndType(trip, NotificationType.UPCOMING_TRIP);;
+        Optional<Notification> upcomingNotification = notificationRepository.findByTripAndType(trip, NotificationType.UPCOMING_TRIP);
         Optional<Notification> completedNotification = notificationRepository.findByTripAndType(trip, NotificationType.COMPLETED_TRIP);
 
         Notification un = createUpcomingTripNotification(trip);
         Notification cn = createCompletedNotification(trip);
 
-        upcomingNotification.ifPresent((n) -> notificationRepository.save(un));
-        completedNotification.ifPresent((n) -> notificationRepository.save(cn));
+        upcomingNotification.ifPresent((n) -> {
+            notificationRepository.delete(n);
+            notificationRepository.save(un);
+        });
+        completedNotification.ifPresent((n) -> {
+            notificationRepository.delete(n);
+            notificationRepository.save(cn);
+        });
 
         return List.of(un, cn);
     }
