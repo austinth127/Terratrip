@@ -19,6 +19,7 @@ public class Category {
 
     @Column(unique = true)
     private String name;
+    private String apiCategories;
     private Month seasonStart;
     private Month seasonEnd;
 
