@@ -14,6 +14,7 @@ import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.PlacesAPI;
 import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
@@ -61,6 +62,25 @@ public class LocationService {
         return l;
     }
 
+    public List<Location> getLocationsForTrip(Long tripId) {
+        List<Stop> stops = stopRepository.findByTrip_Id(tripId).stream()
+                .sorted(Comparator.comparingInt(Stop::getOrder)).toList();
+
+        List<Location> locs = new ArrayList<>();
+
+        for (int i = 0; i < stops.size(); i++) {
+            Optional<Location> optLoc = locationRepository.findById(stops.get(i).getLocation().getId());
+            if(optLoc.isPresent()) {
+                locs.add(optLoc.get());
+            }
+            else{
+                // TODO: add log message
+                System.out.println("Error: no Location found");
+            }
+        }
+        return locs;
+    }
+
     public Optional<Location> getLocationById(Long locId) {
         return locationRepository.findById(locId);
     }
@@ -79,34 +99,18 @@ public class LocationService {
         return null;
     }
 
-    public List<Location> getLocationsForTrip(Long tripId) {
-        List<Stop> stops = stopRepository.findByTrip_Id(tripId).stream()
-            .sorted(Comparator.comparingInt(Stop::getOrder)).toList();
-
-        List<Location> locs = new ArrayList<>();
-
-        for (int i = 0; i < stops.size(); i++) {
-            Optional<Location> optLoc = locationRepository.findById(stops.get(i).getLocation().getId());
-            if(optLoc.isPresent()) {
-                locs.add(optLoc.get());
-            }
-            else{
-                // TODO: add log message
-                System.out.println("Error: no Location found");
-            }
-        }
-        return locs;
-    }
-
     //TODO: Limit number of stops per request dynamically (based on route points)
     /**
      * Gets a recommended list of stops for the given trip. Searches in the given range around the
      * route, and recommends outdoors activities and sleep locations.
      */
-    public List<LocationResponse> getRecommendedLocations(Long tripId, Double radius, List<String> categories, List<List<Double>> route) {
-        log.info(tripId + " " + radius + " " + categories + " " + route);
+    public List<LocationResponse> getRecommendedLocations(Long tripId, Double radius, List<String> frontendCategories, List<List<Double>> route) {
+
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         List<LocationResponse> locationResponses = new ArrayList<>();
+        List<String> categories = null; //getApiCategories(frontendCategories, PlacesAPI.GEOAPIFY);
+
+        log.info(tripId + " " + radius + " " + categories + " " + route);
         if(optTrip.isPresent()) {
             if(categories.isEmpty()){
                 categories = categoryService.getRecommendedCategories(optTrip.get());

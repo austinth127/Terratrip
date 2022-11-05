@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.category.request.CategoryRequest;
 import road.trip.api.category.response.CategoryResponse;
+import road.trip.persistence.models.Trip;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,5 +32,13 @@ public class CategoryController {
         categoryService.addCategory(request);
         return ResponseEntity.ok().build();
     }
+
+    /*
+    @GetMapping
+    public ResponseEntity<List<List<String>>> getFilterCategories(Trip t){
+        List<List<String>> filterCategories = categoryService.getFilterCategories(t);
+        return
+    }
+     */
 
 }
