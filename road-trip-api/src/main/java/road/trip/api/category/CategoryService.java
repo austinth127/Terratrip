@@ -11,6 +11,7 @@ import road.trip.persistence.models.Trip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -26,6 +27,21 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
+    /**
+     * Returns two lists of categories to be displayed on the frontend.
+     * The first list contains the recommended ones which the user might be more interested in.
+     * The second contains the rest of the categories.
+     */
+    public List<List<String>> getFilterCategories(Trip t){
+        List<String> primary = getRecommendedCategories(t);
+        List<String> secondary = getCategories().stream().map(Category::getName).collect(Collectors.toList());
+        secondary.remove(primary);
+        return List.of(primary, secondary);
+    }
+
+    /**
+     * Returns a list of category names which the user might be interested in.
+     */
     public List<String> getRecommendedCategories(Trip t){
         List<String> recommendedCategories = new ArrayList<>();
         List<Category> categories = getCategories();
