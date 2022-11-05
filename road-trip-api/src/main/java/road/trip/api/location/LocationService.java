@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import road.trip.api.category.CategoryService;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.api.location.response.LocationResponse;
 import road.trip.clients.geoapify.GeoApifyClient;
@@ -26,6 +27,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final StopRepository stopRepository;
 
+    private final CategoryService categoryService;
     private final TripRepository tripRepository;
 
     private final GeoApifyClient geoApifyClient;
@@ -106,6 +108,9 @@ public class LocationService {
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         List<LocationResponse> locationResponses = new ArrayList<>();
         if(optTrip.isPresent()) {
+            if(categories.isEmpty()){
+                categories = categoryService.getRecommendedCategories(optTrip.get());
+            }
             for(List<Double> point : route){
                 locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, 5));
             }
