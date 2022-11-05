@@ -105,7 +105,11 @@ public class LocationService {
      * route, and recommends outdoors activities and sleep locations.
      */
     public List<LocationResponse> getRecommendedLocations(Long tripId, Double radius, List<String> frontendCategories, List<List<Double>> route) {
-
+        //The approximate number of total results the function returns
+        final Integer desiredResultSize = 30;
+        //The limit per request to meet the desired result size
+        Integer limit = desiredResultSize / frontendCategories.size();
+        if(limit == 0){ limit = 1; } //Special case where there are more points along the route than the desired result size
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         List<LocationResponse> locationResponses = new ArrayList<>();
         List<String> categories = null; //getApiCategories(frontendCategories, PlacesAPI.GEOAPIFY);
@@ -116,7 +120,7 @@ public class LocationService {
                 categories = categoryService.getRecommendedCategories(optTrip.get());
             }
             for(List<Double> point : route){
-                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, 5));
+                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
             }
         } else{
             // TODO: add log message
