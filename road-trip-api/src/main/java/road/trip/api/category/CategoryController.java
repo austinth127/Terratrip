@@ -19,10 +19,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getCategories() {
-        List<CategoryResponse> categories = categoryService.getCategories().stream()
-            .map(CategoryResponse::new)
-            .collect(Collectors.toList());
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(categoryService.getCategoryResponses());
     }
 
     /** TODO: ADMIN ONLY */

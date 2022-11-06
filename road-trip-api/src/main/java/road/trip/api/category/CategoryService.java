@@ -1,18 +1,21 @@
 package road.trip.api.category;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import road.trip.api.category.request.CategoryRequest;
+import road.trip.api.category.response.CategoryResponse;
 import road.trip.persistence.daos.CategoryRepository;
 import road.trip.persistence.models.Category;
+import road.trip.persistence.models.PlacesAPI;
 import road.trip.persistence.models.Trip;
 import road.trip.util.exceptions.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -21,6 +24,20 @@ public class CategoryService {
 
     public List<Category> getCategories() {
         return categoryRepository.findAll();
+    }
+
+    public List<CategoryResponse> getCategoryResponses() {
+        List<CategoryResponse> categories = new ArrayList<>();
+
+        getCategories().stream()
+            .map(c -> c.getName().split("\\."))
+            .collect(groupingBy(c -> c[0]))
+            .forEach((c, subs) -> categories.add(new CategoryResponse(c, subs.stream()
+                .map(sub -> sub[1])
+                .collect(Collectors.toList())))
+            );
+
+        return categories;
     }
 
     public void addCategory(CategoryRequest request) {
@@ -62,7 +79,7 @@ public class CategoryService {
         return recommendedCategories;
     }
 
-    public Category getCategory(String categoryName) throws NotFoundException {
+    public Category getCategory(String categoryName) {
         Optional<Category> optCategory = categoryRepository.findByName(categoryName);
         if (optCategory.isEmpty()) {
             throw new NotFoundException(categoryName + " category not found in database");
