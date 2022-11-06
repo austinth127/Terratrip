@@ -13,7 +13,13 @@ import road.trip.persistence.models.Trip;
 import road.trip.util.exceptions.NotFoundException;
 
 import java.util.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.*;
 import java.util.stream.Collectors;
+import road.trip.util.UtilityFunctions;
+
+import static road.trip.util.UtilityFunctions.fallsWithinTimeframe;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -70,12 +76,11 @@ public class CategoryService {
                 //If category is year round
                 if(c.getSeasonStart() == null || c.getSeasonEnd() == null){
                     recommendedCategories.add(c.getName());
-                } else if( false ){ //TODO Check to see if category timeframe overlaps trip timeframe
+                } else if( fallsWithinTimeframe(c.getSeasonStart(), c.getSeasonEnd(), t.getStartDate(), t.getEndDate()) ){
                     recommendedCategories.add(c.getName());
                 }
             }
         }
-
         return recommendedCategories;
     }
 
@@ -86,4 +91,5 @@ public class CategoryService {
         }
         return optCategory.get();
     }
+
 }
