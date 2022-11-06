@@ -109,11 +109,12 @@ public class LocationService {
         //The approximate number of total results the function returns
         final Integer desiredResultSize = 30;
         //The limit per request to meet the desired result size
-        Integer limit = desiredResultSize / frontendCategories.size();
+        Integer limit = desiredResultSize / route.size();
         if(limit == 0){ limit = 1; } //Special case where there are more points along the route than the desired result size
+
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         List<LocationResponse> locationResponses = new ArrayList<>();
-        List<String> categories = null; //getApiCategories(frontendCategories, PlacesAPI.GEOAPIFY);
+        List<String> categories = categoryService.getCategoriesByApi(frontendCategories, PlacesAPI.GEOAPIFY);
 
         log.info(tripId + " " + radius + " " + categories + " " + route);
         if(optTrip.isPresent()) {

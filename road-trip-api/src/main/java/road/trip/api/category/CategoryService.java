@@ -75,9 +75,9 @@ public class CategoryService {
             if(c.getAdventureLevel().ordinal() <= t.getAdventureLevel().ordinal()){
                 //If category is year round
                 if(c.getSeasonStart() == null || c.getSeasonEnd() == null){
-                    recommendedCategories.add(c.getName());
+                    recommendedCategories.add(c.getApiCategories());
                 } else if( fallsWithinTimeframe(c.getSeasonStart(), c.getSeasonEnd(), t.getStartDate(), t.getEndDate()) ){
-                    recommendedCategories.add(c.getName());
+                    recommendedCategories.add(c.getApiCategories());
                 }
             }
         }
@@ -90,6 +90,21 @@ public class CategoryService {
             throw new NotFoundException(categoryName + " category not found in database");
         }
         return optCategory.get();
+    }
+
+    /*Given a list of categories formatted for the frontend, generate a list of categories that the api can interpret*/
+    public List<String> getCategoriesByApi(List<String> frontendCategories, PlacesAPI api){
+        List<Optional<Category>> categories = new ArrayList<>();
+        List<String> apiCategories = new ArrayList<>();
+        for(String str : frontendCategories){
+            categories.add(categoryRepository.findByName(str));
+        }
+        for(Optional<Category> c : categories){
+            if(c.isPresent() && c.get().getApi() == api){
+                apiCategories.add(c.get().getApiCategories());
+            }
+        }
+        return apiCategories;
     }
 
 }
