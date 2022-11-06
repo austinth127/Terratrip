@@ -18,6 +18,9 @@ export const getPoints = (...coords) => {
 };
 
 export const getRoute = async (start, end) => {
+    if (!mapboxgl.accessToken) {
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+    }
     const res = await axios.get(
         `https://api.mapbox.com/directions/v5/mapbox/driving/${start.center[0]},${start.center[1]};${end.center[0]},${end.center[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
     );

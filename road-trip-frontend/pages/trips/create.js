@@ -33,8 +33,6 @@ const Create = () => {
 
     const [alert, setAlert] = useState();
 
-
-    
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert();
@@ -47,9 +45,15 @@ const Create = () => {
             return;
         }
 
+        /** @todo Make sure trip is possible for given route duration */
         getRoute(start, end).then(
             (success) => {
                 // setRoute(success[0]);
+                console.log(success[0]);
+
+                // check for possible
+
+                // if possible ->
                 router.push("/trips/map");
             },
             (error) => {
