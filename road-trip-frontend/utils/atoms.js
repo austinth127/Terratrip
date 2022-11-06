@@ -32,7 +32,7 @@ export const routeAtom = atomWithStorage("route", null);
 export const tripNameAtom = atomWithStorage("tripName", null);
 
 // Map
-export const showSaveModalAtom = atomWithStorage("showSaveModal", false);
+export const showSaveModalAtom = atom(false);
 export const editModeAtom = atomWithStorage("editMode", false);
 export const tripIdAtom = atomWithStorage("tripId", null);
 

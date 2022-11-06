@@ -18,7 +18,6 @@ const StopFilterChecklist = () => {
                 if (filters[category][subcategory].level <= levelNum) {
                     subcategories.push({
                         name: subcategory,
-                        query: filters[category][subcategory].query,
                         level: filters[category][subcategory].level,
                     });
                 }
@@ -48,7 +47,7 @@ const StopFilterChecklist = () => {
                         <div className="pl-1 py-2">
                             {option.subcategories.map((subcat) => (
                                 <FilterItem
-                                    key={subcat.query}
+                                    key={subcat.name}
                                     filter={subcat}
                                 ></FilterItem>
                             ))}

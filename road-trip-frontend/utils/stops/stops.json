@@ -1,198 +1,153 @@
 {
     "leisure": {
         "picnic": {
-            "level": 0,
-            "query": "leisure.picnic"
+            "level": 0
         },
         "playground": {
-            "level": 0,
-            "query": "leisure.playground"
+            "level": 0
         },
         "park": {
-            "level": 0,
-            "query": "leisure.park"
+            "level": 0
         },
         "garden": {
-            "level": 1,
-            "query": "leisure.park.garden"
+            "level": 1
         },
         "nature_reserve": {
-            "level": 1,
-            "query": "leisure.park.nature_reserve"
+            "level": 1
         },
         "UNESCO_herritage_sites": {
-            "level": 0,
-            "query": "heritage.unesco"
+            "level": 0
         },
         "viewpoint": {
-            "level": 0,
-            "query": "tourism.attraction.viewpoint"
+            "level": 0
         }
     },
     "natural": {
         "forest": {
-            "level": 1,
-            "query": "natural.forest"
+            "level": 1
         },
         "water": {
-            "level": 1,
-            "query": "natural.water"
+            "level": 1
         },
         "mountain": {
-            "level": 2,
-            "query": "natural.mountain"
+            "level": 2
         },
         "sand": {
-            "level": 1,
-            "query": "natural.sand"
+            "level": 1
         },
         "national_park": {
-            "level": 1,
-            "query": "national_park"
+            "level": 1
         },
         "beach": {
-            "level": 0,
-            "query": "beach"
+            "level": 0
         },
         "protected_area": {
-            "level": 1,
-            "query": "natural.protected_area"
+            "level": 1
         }
     },
     "rentals": {
         "bicycle": {
-            "level": 2,
-            "query": "rental.bicycle"
+            "level": 2
         },
         "boat": {
-            "level": 1,
-            "query": "rental.boat"
+            "level": 1
         },
         "ski": {
-            "level": 3,
-            "query": "rental.ski"
+            "level": 3
         },
         "car": {
-            "level": 0,
-            "query": "rental.car"
+            "level": 0
         }
     },
     "accomodations": {
         "beach_resort": {
-            "level": 0,
-            "query": "beach.beach_resort"
+            "level": 0
         },
         "camping": {
-            "level": 3,
-            "query": "camping.camp_pitch,camping.camp_site"
+            "level": 3
         },
         "rv": {
-            "level": 2,
-            "query": "camping.caravan_site"
+            "level": 2
         },
         "hotel": {
-            "level": 0,
-            "query": "accommodation.hotel"
+            "level": 0
         },
         "hostel": {
-            "level": 0,
-            "query": "accommodation.hostel"
+            "level": 0
         },
         "motel": {
-            "level": 0,
-            "query": "accommodation.motel"
+            "level": 0
         },
         "other": {
-            "level": 0,
-            "query": "accommodation.hut,accommodation.chalet,accommodation.guest_house"
+            "level": 0
         }
     },
     "shops": {
         "outdoor_and_sport": {
-            "level": 0,
-            "query": "commercial.outdoor_and_sport"
+            "level": 0
         },
         "water_sports": {
-            "level": 3,
-            "query": "commercial.outdoor_and_sport.water_sports"
+            "level": 3
         },
         "ski": {
-            "level": 3,
-            "query": "commercial.outdoor_and_sport.ski"
+            "level": 3
         },
         "diving": {
-            "level": 3,
-            "query": "commercial.outdoor_and_sport.diving"
+            "level": 3
         },
         "hunting": {
-            "level": 2,
-            "query": "commercial.outdoor_and_sport.hunting"
+            "level": 2
         },
         "bike": {
-            "level": 2,
-            "query": "commercial.outdoor_and_sport.bicycle"
+            "level": 2
         },
         "fishing": {
-            "level": 1,
-            "query": "commercial.outdoor_and_sport.fishing"
+            "level": 1
         },
         "golf": {
-            "level": 0,
-            "query": "commercial.outdoor_and_sport.golf"
+            "level": 0
         },
         "gas": {
-            "level": 0,
-            "query": "commercial.gas"
+            "level": 0
         },
         "convenience": {
-            "level": 0,
-            "query": "commercial.convenience"
+            "level": 0
         }
     },
     "food": {
         "restaraunt": {
-            "level": 0,
-            "query": "catering.restaurant"
+            "level": 0
         },
         "fast_food": {
-            "level": 0,
-            "query": "catering.fast_food"
+            "level": 0
         },
         "cafe": {
-            "level": 0,
-            "query": "catering.cafe"
+            "level": 0
         },
         "food_court": {
-            "level": 0,
-            "query": "catering.food_court"
+            "level": 0
         },
         "drinks": {
-            "level": 0,
-            "query": "catering.bar,catering.pub,catering.biergarten"
+            "level": 0
         }
     },
     "ski_and_snowboard": {
         "ski": {
-            "level": 3,
-            "query": "ski"
+            "level": 3
         },
         "lifts": {
-            "level": 3,
-            "query": "ski.lift"
+            "level": 3
         },
         "gondola": {
-            "level": 1,
-            "query": "ski.lift.gondola,ski.lift.cable_car"
+            "level": 1
         }
     },
     "sport": {
         "dive": {
-            "level": 3,
-            "query": "sport.dive_centre"
+            "level": 3
         },
         "horseback": {
-            "level": 2,
-            "query": "sport.horse_riding"
+            "level": 2
         }
     }
 }
