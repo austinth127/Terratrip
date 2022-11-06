@@ -19,6 +19,7 @@ import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -120,7 +121,9 @@ public class LocationService {
                 categories = categoryService.getRecommendedCategories(optTrip.get());
             }
             for(List<Double> point : route){
-                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
+                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit).stream()
+                    .map(LocationResponse::new)
+                    .collect(Collectors.toList()));
             }
         } else{
             // TODO: add log message

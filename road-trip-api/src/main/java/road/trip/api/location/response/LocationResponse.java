@@ -1,13 +1,10 @@
 package road.trip.api.location.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import road.trip.persistence.models.Location;
 
 import javax.validation.constraints.NotNull;
-
 
 @Data
 public class LocationResponse {
@@ -17,6 +14,9 @@ public class LocationResponse {
         center = new Double[]{start.getCoordX(), start.getCoordY()};
         description = start.getDescription();
         rating = start.getRating();
+        phoneContact = start.getPhoneContact();
+        website = start.getWebsite();
+        address = start.getAddress();
     }
 
     @NotNull
@@ -29,5 +29,8 @@ public class LocationResponse {
     private Double[] center;
 
     private String description;
-    private int rating;
+    private String phoneContact;
+    private String website;
+    private String address;
+    private Integer rating;
 }

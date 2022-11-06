@@ -23,7 +23,11 @@ public class Location {
     private Long id;
 
     private String name;
+    @Column(length = 500)
     private String description;
+    private String phoneContact;
+    private String website;
+    private String address;
     private int rating;
 
     private double coordX;

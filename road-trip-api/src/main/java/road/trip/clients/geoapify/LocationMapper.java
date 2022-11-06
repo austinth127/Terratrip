@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
+@Deprecated
 @Component
 public class LocationMapper {
     public List<Location> getLocationsFromJSON(String json) {

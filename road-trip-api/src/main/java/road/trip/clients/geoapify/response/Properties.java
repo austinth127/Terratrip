@@ -1,0 +1,26 @@
+package road.trip.clients.geoapify.response;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+@Data
+public class Properties {
+    String name;
+    @JsonProperty("formatted")
+    String address;
+    @JsonProperty("place_id")
+    String placeId;
+    @JsonProperty("lon")
+    Double coordX;
+    @JsonProperty("lat")
+    Double coordY;
+    Contact contact;
+    String website;
+    String description;
+
+    @Data
+    static class Contact {
+        String phone;
+        String email;
+    }
+}
