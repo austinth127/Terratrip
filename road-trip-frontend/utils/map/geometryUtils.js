@@ -42,16 +42,12 @@ export const getRoute = async (start, end) => {
 
 /**
  * Get route from mapbox between the start, end, and stops
- * @param {Location} start
- * @param {Location} end
  * @param {Location[]} stops
  * @returns
  */
-export const getRouteWithStops = async (start, end, stops) => {
+export const getRouteWithStops = async (...stops) => {
     const params = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
     const baseURL = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
-    stops.unshift(start);
-    stops.push(end);
     let stopString = stops
         .map((stop) => `${stop.center[0]},${stop.center[1]}`)
         .join(";");

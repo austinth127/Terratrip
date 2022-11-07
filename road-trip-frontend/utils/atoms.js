@@ -51,7 +51,6 @@ export const endAtom = atomWithStorage("endLoc", null);
 
 export const routeAtom = atomWithStorage("route", null);
 export const tripNameAtom = atomWithStorage("tripName", null);
-export const stopsAtom = atomWithStorage("stops", null);
 
 // Map
 export const showSaveModalAtom = atom(false);
