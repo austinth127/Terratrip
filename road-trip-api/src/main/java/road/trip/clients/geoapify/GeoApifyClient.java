@@ -119,7 +119,7 @@ public class GeoApifyClient {
         URI placesUri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("categories", String.join(",", categories)),
             new BasicNameValuePair("filter", "circle:" + lat + "," + lon + "," + radius),
-            new BasicNameValuePair(limit + "", "10"),
+            new BasicNameValuePair("limit", limit + ""),
             new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115"))); //API_KEY
 
         log.info(placesUri);

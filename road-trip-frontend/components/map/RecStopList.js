@@ -2,10 +2,12 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { tripAtom } from "../../utils/atoms";
+import LoadingSpinner from "../general/LoadingSpinner";
 
 const RecStopList = () => {
     const [recStops, setRecStops] = useState();
     const [trip, setTrip] = useAtom(tripAtom);
+    const [waiting, setWaiting] = useState(true);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -20,6 +22,7 @@ const RecStopList = () => {
             categories: [],
             route: trip.route.geometry.coordinates,
         });
+        setWaiting(false);
         setRecStops(res.data);
     };
 
@@ -28,7 +31,9 @@ const RecStopList = () => {
             <div className="text-sm font-semibold text-green-600">
                 Recommended Stops
             </div>
-            {recStops && recStops.length > 0 ? (
+            {waiting ? (
+                <LoadingSpinner />
+            ) : recStops && recStops.length > 0 ? (
                 <></>
             ) : (
                 <h2 className="text-xs text-center p-4">
