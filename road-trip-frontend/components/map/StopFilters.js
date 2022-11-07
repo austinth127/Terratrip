@@ -34,6 +34,7 @@ const StopFilterChecklist = () => {
         });
         return options;
     });
+    const [selectedFilters, setSelectedFilters] = useState(new Set());
 
     return (
         <div className="w-full h-full overflow-y-scroll overflow-x-hidden px-4 text-slate-800">
@@ -51,6 +52,11 @@ const StopFilterChecklist = () => {
                                 <FilterItem
                                     key={subcat.name}
                                     filter={subcat}
+                                    onCheck={() => {
+                                        selectedFilters.add(
+                                            `${option.category}${subcat.name}`
+                                        );
+                                    }}
                                 ></FilterItem>
                             ))}
                         </div>

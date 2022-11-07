@@ -16,15 +16,21 @@ const RecStopList = () => {
     const getData = async () => {
         const res = await axios.post("/location/recommend", {
             tripId: trip.id,
-            range: 30,
+            range: 3000,
             categories: [],
-            route: trip.route,
+            route: trip.route.geometry.coordinates,
         });
         setRecStops(res.data);
     };
     console.log(recStops);
 
-    return <div className="w-full h-1/2"></div>;
+    return (
+        <div className="w-full h-1/2 px-4 pt-2">
+            <div className="text-sm font-semibold text-green-600">
+                Recommended Stops
+            </div>
+        </div>
+    );
 };
 
 export default RecStopList;

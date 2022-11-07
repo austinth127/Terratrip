@@ -12,7 +12,9 @@ const StopSelector = () => {
                         fixed z-20 top-14 left-2 isolate flex flex-col gap-2 py-4"
         >
             <div className="border-b border-gray-300 pb-4 px-2 mx-2 text-slate-900">
-                <h1 className="mb-2 font-semibold text-slate-800">Add Stop</h1>
+                <h1 className="mb-2 font-semibold text-green-600 text-sm">
+                    Add Stop
+                </h1>
                 <Geocoder callback={setStop} InputComponent={TextInput} />
             </div>
             <RecStopList />

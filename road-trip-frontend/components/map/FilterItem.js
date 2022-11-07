@@ -9,7 +9,7 @@ import { Checkbox } from "../general/Buttons";
  * @param {string} props.filter.name
  * @returns
  */
-const FilterItem = ({ filter }) => {
+const FilterItem = ({ filter, onCheck }) => {
     const name = formatTitle(filter.name);
     const [isChecked, setIsChecked] = useState(false);
 
