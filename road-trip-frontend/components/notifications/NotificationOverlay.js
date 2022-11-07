@@ -2,7 +2,6 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { showNotifAtom } from "../../utils/atoms";
-import LoadingSpinner from "../general/LoadingSpinner";
 import NotificationCard from "./NotificationCard";
 
 const NotificationOverlay = () => {
@@ -12,6 +11,7 @@ const NotificationOverlay = () => {
     const [showNotifs, setShowNotifs] = useAtom(showNotifAtom);
 
     useEffect(() => {
+        const abortController = new AbortController();
         /** @TODO better error handling */
         const getData = async () => {
             const res = await axios.get(`/notification`);
@@ -23,16 +23,23 @@ const NotificationOverlay = () => {
         };
 
         getData();
+
+        return () => abortController.abort();
     }, []);
+
+    useEffect(() => {
+        setShortNotifs(notifications ? notifications.slice(0, maxLen) : null);
+    }, [notifications]);
 
     if (!notifications || notifications.length < 1) {
         return <></>;
     }
+
     return (
-        <div className="lg:flex hidden w-fit absolute top-4 right-4 flex-col gap-1">
+        <div className="lg:flex hidden w-fit fixed top-4 right-4 flex-col gap-1 z-40">
             <div className="flex flex-row justify-end">
                 <button
-                    className="w-fit h-fit text-gray-100 text-xs p-2 text-center bg-slate-900 bg-opacity-70 rounded-lg z-40 isolate"
+                    className="w-fit h-fit text-gray-100 text-xs p-2 text-center bg-slate-900 bg-opacity-95 rounded-lg z-40 isolate"
                     onClick={() => setShowNotifs(!showNotifs)}
                 >
                     {showNotifs ? (
@@ -67,7 +74,7 @@ const NotificationOverlay = () => {
                         ></NotificationCard>
                     ))}
                     {notifications.length > maxLen ? (
-                        <div className="w-full h-fit text-gray-100 text-sm p-3 bg-slate-900 bg-opacity-70 rounded-lg z-40 isolate">
+                        <div className="w-full h-fit text-gray-100 text-sm p-3 bg-slate-900 bg-opacity-95 rounded-lg z-40 isolate">
                             {notifications.length - maxLen} more
                             notifications...
                         </div>

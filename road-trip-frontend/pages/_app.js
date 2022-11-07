@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/globals.css";
 
 import Script from "next/script";
@@ -32,6 +32,7 @@ Userfront.init("wbmrp64n");
  * @param {any} props.pageProps Props to be passed to the page
  * @returns {React.Component} The page to be rendered
  */
+
 function MyApp({ Component, pageProps }) {
     useEffect(() => {
         setupAxios();

@@ -72,12 +72,75 @@ const Map = ({ ...props }) => {
                     },
                 });
             }
+
+            const [route1, geojson1] = await getRouteWithStops();
+            //adding the multistop route to the map.
+            map.current.addLayer({
+                id: "routeTest",
+                type: "line",
+                source:{
+                    type: "geojson",
+                    data:geojson1,
+                    data:geojson1
+                },
+                layout:{
+                    "line-join":"round",
+                    "line-cap":"round"
+                },
+                paint:{
+                    "line-color": colors.lime600,
+                    "line-width":5,
+                    "line-opacity":0.5,
+                },
+            })
+            var stops = {
+                type:"FeatureCollection",
+                features:[
+                ]
+            };
+            //Static list of test stops
+            //First pair of coordiantes is start. Last pair is end.
+            var coordinates = new Array("-116.212495", "42.629059", "-100.869516", " 36.990465", "-93.184457", "44.075105", "-104.574812", "46.012432");
+            var stopList = [];
+            for(var i = 0; i < coordinates.length-1;i++){
+                stopList.push({
+                    type: "Feature",
+                    properties: {
+                        title: "test"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [coordinates[i], coordinates[i+1]],
+                    }
+                });
+            }
+            stops.features=stopList;
+            console.log(stops);
+            map.current.addSource('testStops',{
+                'type':'geojson',
+                'data':JSON.stringify(stops)
+            });
+            map.current.addLayer({
+                'id':'testStops',
+                'type':'circle',
+                'source':'testStops',
+                'paint':{
+                    'circle-radius':6,
+                    'circle-color': '#B42222'
+
+                },
+            });
+            //INCOMPLETE: this would add a marker at each point. (a marker can have text associated, hover etc.)
+            // stops.features.forEach(function(marker){
+            //     var popup = new mapboxgl.Popup()
+            //         .setText(marker.properties.title);
+            //     new mapboxgl.Marker().setLng(marker.geometry.coordinates[1]).setLat(marker.geometry.coordinates[0]).addTo(map.current);
+            // });
         }
 
         map.current.on("load", () => {
             // Add the route to the map between start and end locations
             addRoute();
-
             const points = getPoints(start.center, end.center);
 
             map.current.addLayer({
@@ -92,6 +155,11 @@ const Map = ({ ...props }) => {
                     "circle-color": colors.green600,
                 },
             });
+            // // Create a new marker.
+            // const marker = new mapboxgl.Marker()
+            //     .setLngLat([30.5, 50.5])
+            //     .addTo(map.current);
+
         });
     });
 

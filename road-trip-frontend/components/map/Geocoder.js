@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import useGeocodeSuggestions from "../../hooks/useGeocodeSuggestions";
+import useHasMounted from "../../hooks/useHasMounted";
 
 /**
  * An input box powered by mapbox geocode autocomplete to provide search
@@ -13,6 +14,7 @@ import useGeocodeSuggestions from "../../hooks/useGeocodeSuggestions";
  */
 const Geocoder = ({ callback, InputComponent, ...props }) => {
     const address = useGeocodeSuggestions(props.initialValue ?? "");
+
     return (
         <div className="text-sm font-light">
             <InputComponent

@@ -1,129 +1,39 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import React, { useState } from "react";
 import {
-    advLevelAtom,
+    clearTripAtom,
     editModeAtom,
-    locAtom,
-    routeAtom,
     showSaveModalAtom,
-    tripDateAtom,
-    tripIdAtom,
-    tripNameAtom,
+    tripAtom,
 } from "../../utils/atoms";
-import TextInput from "../general/TextInput";
 import Alert from "../auth/Alert";
 import axios from "axios";
-import { Button } from "../general/Buttons";
+import { Button, OutlineButton } from "../general/Buttons";
 import { useRouter } from "next/router";
+import { tripToTripRequest } from "../../utils/trip";
 
 const SaveModal = () => {
-    const [show] = useAtom(showSaveModalAtom);
-    const [tripName, setTripName] = useAtom(tripNameAtom);
-
-    const [location, setLocation] = useAtom(locAtom);
-    const [dates, setDates] = useAtom(tripDateAtom);
-    const [advLevel, setAdvLevel] = useAtom(advLevelAtom);
-    const [showModal, setShowModal] = useAtom(showSaveModalAtom);
-
-    const [editMode, setEditMode] = useAtom(editModeAtom);
-    const [tripId, setTripId] = useAtom(tripIdAtom);
-
+    const [show, setShow] = useAtom(showSaveModalAtom);
+    const editMode = useAtomValue(editModeAtom);
     const [alert, setAlert] = useState("");
-
-    const route = useAtomValue(routeAtom);
+    const trip = useAtomValue(tripAtom);
+    const clearTrip = useSetAtom(clearTripAtom);
 
     const router = useRouter();
-
-    console.log(route);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert("");
-        if (!tripName) {
-            setAlert("Trip name cannot be empty");
-            return;
-        }
 
-        if (editMode) {
-            handleEdit();
-        } else {
-            handleSave();
-        }
-        /**@todo redirect */
-    };
-
-    const handleSave = () => {
-        axios
-            .post("/trip", {
-                name: tripName,
-                start: {
-                    place_name: location.start.place_name,
-                    lng: location.start.center[0],
-                    lat: location.start.center[1],
-                },
-                end: {
-                    place_name: location.end.place_name,
-                    lng: location.end.center[0],
-                    lat: location.end.center[1],
-                },
-                startDate: dates.start,
-                endDate: dates.end,
-                advLevel: advLevel != "" ? advLevel : "Extreme",
-                distance: route.distance,
-                duration: route.duration,
-            })
-            .then(
-                (success) => {
-                    setAdvLevel("");
-                    setLocation({ start: null, end: null });
-                    setDates({ start: null, end: null });
-                    setTripName("");
-                    setShowModal(false);
-                    setEditMode(false);
-                    setTripId(null);
-                    router.push("/trips/list/user");
-                },
-                (fail) => {
-                    setAlert("Trip failed to save");
-                }
-            );
-    };
-
-    const handleEdit = () => {
-        axios
-            .patch(`/trip/${tripId}`, {
-                name: tripName,
-                start: {
-                    place_name: location.start.place_name,
-                    lng: location.start.center[0],
-                    lat: location.start.center[1],
-                },
-                end: {
-                    place_name: location.end.place_name,
-                    lng: location.end.center[0],
-                    lat: location.end.center[1],
-                },
-                startDate: dates.start,
-                endDate: dates.end,
-                advLevel: advLevel != "" ? advLevel : "Extreme",
-                distance: route.distance,
-                duration: route.duration,
-            })
-            .then(
-                (success) => {
-                    setAdvLevel("");
-                    setLocation({ start: null, end: null });
-                    setDates({ start: null, end: null });
-                    setTripName("");
-                    setShowModal(false);
-                    setEditMode(false);
-                    setTripId(null);
-                    router.push("/trips/list/user");
-                },
-                (fail) => {
-                    setAlert("Trip failed to save");
-                }
-            );
+        axios.patch(`/trip/${trip.id}`, tripToTripRequest(trip)).then(
+            (success) => {
+                clearTrip();
+                router.push("/trips/list/user");
+            },
+            (fail) => {
+                setAlert("Trip failed to save");
+            }
+        );
     };
 
     return (
@@ -140,12 +50,13 @@ const SaveModal = () => {
                 <Alert message={alert} className="text-red-600" />
                 <div className="w-64 my-3">
                     <div className="my-1 text-slate-900 font-semibold ml-0.5">
-                        Name your Trip:
+                        Name:
                     </div>
-                    <TextInput
-                        value={tripName}
-                        onChange={(e) => setTripName(e.target.value)}
-                    />
+                    <div>
+                        <p className="font-semibold text-green-600">
+                            {trip.name ?? "Not named"}
+                        </p>
+                    </div>
                 </div>
                 <div className="w-full my-3 flex flex-col text-slate-700 font-light text-sm">
                     <div className="my-1 text-slate-900 font-semibold">
@@ -155,28 +66,31 @@ const SaveModal = () => {
                         className={`flex flex-col gap-2 text-sm text-slate-900 pt-2 pb-4`}
                     >
                         <div className="flex flex-row gap-2">
-                            <p>{location.start?.place_name ?? ""}</p>
+                            <p>{trip.start?.place_name ?? ""}</p>
                             <p className="font-semibold text-green-600">to</p>
-                            <p>{location.end?.place_name ?? ""}</p>
+                            <p>{trip.end?.place_name ?? ""}</p>
                         </div>
                         <div className="flex flex-row gap-2">
                             <div className=" text-green-600 font-semibold">
                                 Adventure Level:
                             </div>
-                            <p>{advLevel ?? "not specified"}</p>
+                            <p>{trip.advLevel ?? "not specified"}</p>
                         </div>
                         <div className="flex flex-row gap-2">
                             <div className=" text-green-600 font-semibold">
                                 Dates:
                             </div>
-                            <p>{dates?.start ?? "not specified"}</p>
+                            <p>{trip.startDate ?? "not specified"}</p>
                             <p className="font-semibold text-green-600">to</p>
-                            <p>{dates?.end ?? "not specified"}</p>
+                            <p>{trip.endDate ?? "not specified"}</p>
                         </div>
                     </div>
                 </div>
-                <div className="absolute bottom-4 right-4">
+                <div className="absolute bottom-4 right-4 gap-2 flex flex-row">
                     <Button type="submit">Submit</Button>
+                    <OutlineButton onClick={() => setShow(false)}>
+                        Cancel
+                    </OutlineButton>
                 </div>
             </form>
         </div>

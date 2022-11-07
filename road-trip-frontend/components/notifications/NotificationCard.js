@@ -4,7 +4,7 @@ import { notificationAtom } from "../../utils/atoms";
 
 const NotificationCard = ({ notification, removeNotif }) => {
     return (
-        <div className=" bg-slate-900 bg-opacity-70 p-4 h-fit text-gray-100 rounded-lg relative text-sm lg:w-80 w-48 flex flex-col gap-2 isolate z-40">
+        <div className=" bg-slate-900 bg-opacity-95 p-4 h-fit text-gray-100 rounded-lg relative text-sm lg:w-80 w-48 flex flex-col gap-2 isolate z-40">
             <button
                 className="absolute top-2 right-4 w-fit h-fit "
                 onClick={removeNotif}

@@ -8,20 +8,34 @@ const UserTrips = () => {
     const [trips, setTrips] = useState();
 
     useEffect(() => {
-        const getData = async () => {
-            const res = await axios.get("/trip");
-            // console.log(res.data);
-            setTrips(res.data);
-        };
+        const abortController = new AbortController();
         getData();
+
+        return () => abortController.abort();
     }, []);
+
+    const getData = async () => {
+        const res = await axios.get("/trip");
+        setTrips(res.data);
+    };
+
+    const handleDeleteTrip = (id) => {
+        axios.delete(`/trip/${id}`).then(
+            (success) => {
+                getData();
+            },
+            (fail) => {
+                /** @todo Handle error */
+            }
+        );
+    };
 
     if (!trips) {
         return (
             <div className="py-10">
                 <h1 className="text-2xl font-semibold mb-12 text-white text-center">
-                Your Trips Will Appear Here
-            </h1>
+                    Your Trips Will Appear Here
+                </h1>
             </div>
         );
     }
@@ -34,7 +48,13 @@ const UserTrips = () => {
                 </h1>
                 <div className="flex flex-col gap-4">
                     {trips.map((trip) => (
-                        <TripCard trip={trip} key={trip.id}></TripCard>
+                        <TripCard
+                            trip={trip}
+                            key={trip.id}
+                            deleteCallback={() => {
+                                handleDeleteTrip(trip.id);
+                            }}
+                        ></TripCard>
                     ))}
                 </div>
             </div>

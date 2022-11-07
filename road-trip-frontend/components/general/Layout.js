@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../../components/navigation/Navbar";
 import Footer from "../../components/navigation/Footer";
 import NotificationOverlay from "../notifications/NotificationOverlay";
+import { useSetAtom } from "jotai";
+import { clearTripAtom } from "../../utils/atoms";
 
 /**
  * This is a layout for all pages, included in _app.js. Nextjs will auto-route
@@ -12,6 +14,11 @@ import NotificationOverlay from "../notifications/NotificationOverlay";
  * @returns {React.Component} The page surrounded by the layout
  */
 const Layout = ({ children, ...props }) => {
+    const clearTrip = useSetAtom(clearTripAtom);
+    useEffect(() => {
+        clearTrip();
+    });
+
     return (
         <>
             {/* Background */}

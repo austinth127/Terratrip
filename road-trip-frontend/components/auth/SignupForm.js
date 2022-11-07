@@ -70,7 +70,6 @@ const SignUpForm = () => {
                             setAlert(
                                 "Failed to access the server, try again later"
                             );
-                            /** @TODO Handle user being in userfront but not in backend */
                         });
                 }
             },
