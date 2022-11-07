@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.api.location.request.RecommendRequest;
 import road.trip.api.location.response.LocationResponse;
+import road.trip.persistence.daos.LocationRatingRepository;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.LocationRating;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class LocationController {
 
     final LocationService locationService;
+    final LocationRatingRepository locationRatingRepository;
 
     @Deprecated
     @PostMapping("/create-stop")
@@ -33,5 +36,15 @@ public class LocationController {
         log.info(recommendRequest.getRoute());
         return ResponseEntity.ok(locationService.getRecommendedLocations(recommendRequest.getTripId(), recommendRequest.getRange(), recommendRequest.getCategories(), recommendRequest.getRoute()));
 
+    }
+
+    @PostMapping("/{location_id}")
+    public ResponseEntity<?> rateLocation(@PathVariable("location_id") Long id){
+        locationService.addLocationRating(id);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/{location_id}")
+    public ResponseEntity<?> getLocationRating(@PathVariable("location_id") Long id){
+        return ResponseEntity.ok(locationService.getRatingByIDAndUser(id));
     }
 }

@@ -21,7 +21,7 @@ public class LocationRating {
     private Double rating;
     @ManyToOne(targetEntity = Location.class)
     private Location ratedLocation;
-    @OneToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class)
     private User ratingUser;
 
 }

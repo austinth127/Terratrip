@@ -44,6 +44,7 @@ public class LocationResponse {
     private String address;
     private Double rating;
     private List<String> categories;
+    private Double userRating;
 
     @JsonProperty("geoapify_id")
     private String geoapifyId;

@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import road.trip.api.category.CategoryService;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.api.location.response.LocationResponse;
+import road.trip.api.user.UserService;
 import road.trip.clients.geoapify.GeoApifyClient;
+import road.trip.persistence.daos.LocationRatingRepository;
 import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.*;
+import road.trip.util.exceptions.NotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,6 +33,8 @@ public class LocationService {
     private final TripRepository tripRepository;
 
     private final GeoApifyClient geoApifyClient;
+    private final LocationRatingRepository locationRatingRepository;
+    private final UserService userService;
 
     public Stop createStop(Trip trip, Location location, int order){
 
@@ -48,7 +53,7 @@ public class LocationService {
             log.info("trip Created: " + locationRequest.getName());
 
             Location location = locationRequest.buildLocation();
-
+//            location.setRating(locationRatingRepository.countAllByRatedLocation(location));
             return locationRepository.save(location);
         }
 
@@ -131,5 +136,30 @@ public class LocationService {
             })
             .map(LocationResponse::new)     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
+    }
+    public void addLocationRating(Long locationID){
+        //locaiton exists
+        //rating exists for that user.
+        if (!locationRepository.existsById(locationID)){
+            throw new NotFoundException();
+        }
+        LocationRating prevRating = locationRatingRepository.findByUserAndLocation(userService.user(),locationRepository.findById(locationID));
+        if(Objects.isNull(prevRating)){
+            locationRatingRepository.save(LocationRating.builder()
+                .ratedLocation(locationRepository.findById(locationID))
+                .build())
+        }
+        else{
+
+        }
+
+    }
+
+    public LocationRating getRatingByIDAndUser(Long id) {
+        LocationRating ret = locationRatingRepository.findByUserAndLocation(userService.user(),locationRepository.findById(id));
+        if(Objects.isNull(ret)){
+            throw new NotFoundException();
+        }
+        return ret;
     }
 }
