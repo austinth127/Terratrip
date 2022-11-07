@@ -23,7 +23,11 @@ public class Location {
     private Long id;
 
     private String name;
+    @Column(length = 500)
     private String description;
+    private String phoneContact;
+    private String website;
+    private String address;
     private Double rating;
 
     private double coordX;
@@ -32,12 +36,18 @@ public class Location {
     private String mapboxId;        // mapbox id
     private String geoapifyId;      // geoapify id
     private String otmId;           // open trip map id
+
+    private String categories;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Location location = (Location) o;
-        return id != null && Objects.equals(id, location.id);
+        return (id != null && Objects.equals(id, location.id)) ||
+            (geoapifyId != null && Objects.equals(geoapifyId, location.geoapifyId)) ||
+            (mapboxId != null && Objects.equals(mapboxId, location.mapboxId)) ||
+            (otmId != null && Objects.equals(otmId, location.otmId));
     }
 
     @Override

@@ -10,7 +10,6 @@ import road.trip.api.notification.NotificationService;
 import road.trip.api.trip.request.TripCreateRequest;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
-import road.trip.api.trip.response.ReducedTripResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.daos.TripRepository;
@@ -188,9 +187,9 @@ public class TripService {
     /**
      * Gets all the trips created by the user making the request
      */
-    public List<ReducedTripResponse> getTrips() {
+    public List<TripResponse> getTrips() {
         List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
-        return trips.stream().map(ReducedTripResponse::new).collect(Collectors.toList());
+        return trips.stream().map(TripResponse::new).collect(Collectors.toList());
     }
 
 }

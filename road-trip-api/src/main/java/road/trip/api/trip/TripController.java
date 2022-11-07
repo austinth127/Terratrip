@@ -9,7 +9,6 @@ import road.trip.api.trip.request.TripCreateRequest;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.request.TripRateRequest;
 import road.trip.api.trip.response.TripResponse;
-import road.trip.api.trip.response.ReducedTripResponse;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class TripController {
      * Gets all the trips created by the user making the request
      */
     @GetMapping
-    public ResponseEntity<List<ReducedTripResponse>> getTrips() {
+    public ResponseEntity<List<TripResponse>> getTrips() {
         return ResponseEntity.ok(tripService.getTrips());
     }
 
