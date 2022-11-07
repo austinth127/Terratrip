@@ -2,8 +2,12 @@ import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useAtom } from "jotai";
-import { endAtom, routeAtom, startAtom } from "../../utils/atoms";
-import { getPoints, getRoute } from "../../utils/map/geometryUtils";
+import {
+    getPoints,
+    getRoute,
+    getRouteWithStops,
+} from "../../utils/map/geometryUtils";
+import { endAtom, routeAtom, startAtom, stopsAtom } from "../../utils/atoms";
 import { colors } from "../../utils/colors";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -29,6 +33,7 @@ const Map = ({ ...props }) => {
     const [start, setStart] = useAtom(startAtom);
     const [end, setEnd] = useAtom(endAtom);
     const [route, setRoute] = useAtom(routeAtom);
+    const [stops, setStops] = useAtom(stopsAtom);
 
     // Initialize mapbox map
     useEffect(() => {
@@ -41,7 +46,7 @@ const Map = ({ ...props }) => {
         });
 
         async function addRoute() {
-            const [route, geojson] = await getRoute(start, end);
+            const [route, geojson] = await getRouteWithStops(start, end, []);
 
             setRoute(route);
 
@@ -70,16 +75,11 @@ const Map = ({ ...props }) => {
         }
 
         map.current.on("load", () => {
+            // Add the route to the map between start and end locations
             addRoute();
 
             const points = getPoints(start.center, end.center);
-            // var popup = new mapboxgl.Popup()
-            // .setText('Description')
-            // .addTo(map.current);
-            // marker = new mapboxgl.Marker()
-            //     .setLngLat(points)
-            //     .addTo(map.current)
-            //     .setPopup(popup);
+
             map.current.addLayer({
                 id: "routeEndpoints",
                 type: "circle",
@@ -95,6 +95,7 @@ const Map = ({ ...props }) => {
         });
     });
 
+    // onMove
     // Update longitude/lattitude/zoom as the user moves around
     useEffect(() => {
         if (!map.current) return;
@@ -104,6 +105,7 @@ const Map = ({ ...props }) => {
             setZoom(map.current.getZoom().toFixed(2));
         });
     });
+
     return (
         <div className="relative">
             <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono text-xs z-[1] absolute top-12 right-0 m-3 rounded-lg">
@@ -117,18 +119,22 @@ const Map = ({ ...props }) => {
 
 export default Map;
 
-//when user clicks on the map create a red dot and display route between red dot and Waco
-// map.current.on("click", (event) => {
-//     const coords = Object.keys(event.lngLat).map(
-//         (key) => event.lngLat[key]
-//     );
-
-//     getRoute(coords);
+//INCOMPLETE: this would add a marker at each point. (a marker can have text associated, hover etc.)
+// stops.features.forEach(function(marker){
+//     var popup = new mapboxgl.Popup()
+//         .setText(marker.properties.title);
+//     new mapboxgl.Marker().setLng(marker.geometry.coordinates[1]).setLat(marker.geometry.coordinates[0]).addTo(map.current);
 // });
 
-// //If this is first click need to create new layer.
-// // if (map.current.getLayer("end")) {
-// //     map.current.getSource("end").setData(endPoint);
-// // } else {
+// // Create a new marker.
+// const marker = new mapboxgl.Marker()
+//     .setLngLat([30.5, 50.5])
+//     .addTo(map.current);
 
-// }
+// var popup = new mapboxgl.Popup()
+// .setText('Description')
+// .addTo(map.current);
+// marker = new mapboxgl.Marker()
+//     .setLngLat(points)
+//     .addTo(map.current)
+//     .setPopup(popup);

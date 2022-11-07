@@ -10,7 +10,9 @@ const StopFilterChecklist = () => {
     const [level] = useAtom(advLevelAtom);
     const [options, setOptions] = useState(() => {
         let options = [];
-        const levelNum = levelOptions.findIndex((name) => name == level);
+        const levelNum = levelOptions.findIndex(
+            (name) => name.toLowerCase() == level.toLowerCase()
+        );
 
         Object.keys(filters).forEach((category) => {
             let subcategories = [];
