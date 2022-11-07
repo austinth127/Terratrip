@@ -1,5 +1,6 @@
 import axios from "axios";
 import mapboxgl from "mapbox-gl";
+import { Location } from "../typedefs";
 
 export const getPoints = (...coords) => {
     const points = coords.map((coord) => ({
@@ -7,7 +8,7 @@ export const getPoints = (...coords) => {
         properties: {},
         geometry: {
             type: "Point",
-            coordinates: coord,
+            coordinates: coord.center,
         },
     }));
 
@@ -38,18 +39,34 @@ export const getRoute = async (start, end) => {
 
     return [route, geojson];
 };
-export const getRouteWithStops = async (...stops) => {
-    var bruh = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-    var bruh0 = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
-    var count = 0;
-    for(let i = 0; i < stops.length; i++){
-        bruh0+=stops[i];
+
+/**
+ * Get route from mapbox between the start, end, and stops
+ * @param {Location[]} stops
+ * @returns
+ */
+export const getRouteWithStops = async (stops) => {
+    if (!stops || stops.length < 2) return [null, null];
+    const params = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
+    const baseURL = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
+    let fail = false;
+    let stopString = stops
+        .map((stop) => {
+            if (!stop || !stop.center || stop.center.length < 2) {
+                fail = true;
+                return;
+            }
+            return `${stop.center[0]},${stop.center[1]}`;
+        })
+        .join(";");
+
+    if (fail) {
+        console.error("Failed to get route");
+        return [null, null];
     }
-    bruh0+=bruh;
-    console.log(bruh0);
-    const res = await axios.get(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/-116.212495,42.629059;-100.869516,36.990465;-93.184457,44.075105;-104.574812,46.012432?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiYXVzdGludGgxMjciLCJhIjoiY2w4c3prOWo1MDJrMjNwazFhMmxpMXViaSJ9.BynXNuEZFLbDBLZtSbaFVg`
-    );
+
+    const res = await axios.get(`${baseURL}${stopString}${params}`);
+
     const data = res.data.routes[0];
     const route = data;
     const geojson = {
@@ -62,5 +79,4 @@ export const getRouteWithStops = async (...stops) => {
     };
 
     return [route, geojson];
-
 };

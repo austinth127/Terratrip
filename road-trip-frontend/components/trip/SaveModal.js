@@ -27,8 +27,7 @@ const SaveModal = () => {
 
         axios.patch(`/trip/${trip.id}`, tripToTripRequest(trip)).then(
             (success) => {
-                clearTrip();
-                router.push("/trips/list/user");
+                setShow(false);
             },
             (fail) => {
                 setAlert("Trip failed to save");

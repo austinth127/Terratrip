@@ -38,6 +38,7 @@ export const clearTripAtom = atom(null, (get, set) => {
     set(routeAtom, null);
     set(stopsAtom, null);
     set(tripIdAtom, null);
+    set(filtersAtom, []);
 });
 
 // Create Trip
@@ -55,7 +56,14 @@ export const tripNameAtom = atomWithStorage("tripName", null);
 // Map
 export const showSaveModalAtom = atom(false);
 export const tripIdAtom = atomWithStorage("tripId", null);
-export const stopsAtom = atomWithStorage("stops", null);
+export const stopsAtom = atomWithStorage("stops", []);
+export const allLocationsAtom = atom((get) => {
+    if (!get(stopsAtom) || get(stopsAtom).length < 1) {
+        return [get(startAtom), get(endAtom)];
+    }
+
+    return [get(startAtom), ...get(stopsAtom), get(endAtom)];
+});
 
 export const editModeAtom = atom((get) => get(tripIdAtom) != null);
 
@@ -77,3 +85,5 @@ export const editModeAtom = atom((get) => get(tripIdAtom) != null);
 // }));
 
 export const showNotifAtom = atom(false);
+
+export const filtersAtom = atom([]);

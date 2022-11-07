@@ -27,20 +27,46 @@ const TripCard = ({ trip, deleteCallback }) => {
     };
 
     const handleRating = () => {
-        if (rating == null) {
-            setRating(0);
-        }
+        makeTripActive(trip, setActiveTrip);
+        router.push("/trips/rate");
     };
 
     if (!hasMounted) return null;
 
+    let isComplete = false;
+    let inProgress = false;
+
+    if (new Date(trip.endDate) < Date.now()) {
+        isComplete = true;
+    } else if (new Date(trip.startDate) < Date.now()) {
+        inProgress = true;
+    }
+
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-start gap-4">
                 <h2 className="font-semibold text-lg">{trip.name}</h2>
-                <div onClick={deleteCallback}>
-                    <i class="fa-solid fa-trash"></i>
-                </div>
+                <button
+                    onClick={deleteCallback}
+                    className="text-slate-400 hover:text-slate-500"
+                >
+                    <i className="fa-solid fa-trash"></i>
+                </button>
+            </div>
+            <div
+                className={`absolute top-4 right-4 text-sm italic ${
+                    isComplete
+                        ? `text-green-600`
+                        : inProgress
+                        ? `text-green-700`
+                        : `text-slate-300`
+                }`}
+            >
+                {isComplete
+                    ? "Completed!"
+                    : inProgress
+                    ? "In Progress"
+                    : "Upcoming"}
             </div>
             <div
                 className={`flex flex-col gap-2 text-xs text-gray-50 pt-2 pb-4 ${
@@ -74,7 +100,7 @@ const TripCard = ({ trip, deleteCallback }) => {
                         color2={colors.green600}
                         half
                         value={rating}
-                        edit={true}
+                        edit={false}
                         onChange={(newVal) => {
                             axios.post(`/trip/${trip.id}/rate`, {
                                 rating: newVal,
@@ -88,14 +114,11 @@ const TripCard = ({ trip, deleteCallback }) => {
                     Not yet rated.
                 </div>
             )}
+
             <div className="absolute bottom-4 right-4 flex flex-row gap-4">
-                {rating == null ? (
-                    <DarkOutlineButton onClick={handleRating}>
-                        Rate
-                    </DarkOutlineButton>
-                ) : (
-                    <></>
-                )}
+                <DarkOutlineButton onClick={handleRating}>
+                    Rate
+                </DarkOutlineButton>
                 <DarkOutlineButton onClick={handleViewTrip}>
                     View
                 </DarkOutlineButton>

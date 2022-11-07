@@ -17,7 +17,7 @@ const MapNav = ({ ...props }) => {
 
     const handleCancel = () => {
         clearTrip();
-        router.push("/");
+        router.push("/trips/list/user");
     };
 
     return (
@@ -40,7 +40,7 @@ const MapNav = ({ ...props }) => {
             </div>
             <div className="flex flex-row justify-evenly gap-2">
                 <Button onClick={() => setShowModal(!showModal)}>Save</Button>
-                <OutlineButton onClick={handleCancel}>Cancel</OutlineButton>
+                <OutlineButton onClick={handleCancel}>Exit</OutlineButton>
             </div>
         </div>
     );

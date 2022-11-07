@@ -19,10 +19,13 @@ public class Category {
 
     @Column(unique = true)
     private String name;
+    private String apiCategories;
     private Month seasonStart;
     private Month seasonEnd;
 
     private AdventureLevel adventureLevel;
+
+    private Boolean useByDefault;
 
     private PlacesAPI api;
 

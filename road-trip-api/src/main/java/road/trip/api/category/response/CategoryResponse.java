@@ -1,13 +1,14 @@
 package road.trip.api.category.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import road.trip.persistence.models.Category;
 
-@Data
-public class CategoryResponse {
-    private String name;
+import java.util.List;
 
-    public CategoryResponse(Category category) {
-        name = category.getName();
-    }
+@Data @AllArgsConstructor @NoArgsConstructor
+public class CategoryResponse {
+    private String category;
+    private List<String> subcategories;
 }

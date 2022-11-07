@@ -69,15 +69,18 @@ const Create = () => {
                 setRoute(success[0]);
                 trip.route = success[0];
 
+                let neededDays = Math.ceil(trip.route["duration"] / 86400.0);
+                let requestedDays = Math.ceil(
+                    (new Date(endDate).getTime() -
+                        new Date(startDate).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                );
 
-                let neededDays = Math.ceil(trip.route["duration"]/86400.0)
-                let requestedDays = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime())/(1000*60*60*24))
-
-                if(neededDays > requestedDays) {
-                    setAlert("Trip not completable within time frame.")
-                }
-
-                else if (editMode) {
+                /** @todo add this back */
+                // if (neededDays < requestedDays) {
+                //     setAlert("Trip not completable within time frame.");
+                // } else
+                if (editMode) {
                     axios
                         .patch(`/trip/${trip.id}`, tripToTripRequest(trip))
                         .then(

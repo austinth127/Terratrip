@@ -1,9 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useAtom } from "jotai";
-import { endAtom, routeAtom, startAtom } from "../../utils/atoms";
-import { getPoints, getRoute, getRouteWithStops } from "../../utils/map/geometryUtils";
+import { useAtom, useAtomValue } from "jotai";
+import {
+    getPoints,
+    getRoute,
+    getRouteWithStops,
+} from "../../utils/map/geometryUtils";
+import {
+    allLocationsAtom,
+    endAtom,
+    routeAtom,
+    startAtom,
+    stopsAtom,
+} from "../../utils/atoms";
 import { colors } from "../../utils/colors";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -21,6 +31,7 @@ const Map = ({ ...props }) => {
     const mapContainer = useRef(null);
     /** @type {React.MutableRefObject<mapboxgl.Map>} */
     const map = useRef(null);
+    const [isLoaded, setisLoaded] = useState(false);
 
     const [lng, setLng] = useState(-97.141);
     const [lat, setLat] = useState(31.55);
@@ -29,7 +40,75 @@ const Map = ({ ...props }) => {
     const [start, setStart] = useAtom(startAtom);
     const [end, setEnd] = useAtom(endAtom);
     const [route, setRoute] = useAtom(routeAtom);
+    const locs = useAtomValue(allLocationsAtom);
+    const [markers, setMarkers] = useState([]);
 
+    async function addRoute() {
+        if (!map.current) return;
+        if (!locs || locs.length < 2) return;
+        const [route, geojson] = await getRouteWithStops(locs);
+
+        setRoute(route);
+        if (!locs || !route) {
+            return;
+        }
+
+        //if route layer exists, update with new route, else create the layer and add the route.
+        if (map.current.getSource("route")) {
+            map.current.getSource("route").setData(geojson);
+        } else {
+            map.current.addLayer({
+                id: "route",
+                type: "line",
+                source: {
+                    type: "geojson",
+                    data: geojson,
+                },
+                layout: {
+                    "line-join": "round",
+                    "line-cap": "round",
+                },
+                paint: {
+                    "line-color": colors.green600,
+                    "line-width": 5,
+                    "line-opacity": 0.5,
+                },
+            });
+        }
+
+        markers.forEach((marker) => marker.remove());
+        setMarkers([]);
+
+        locs.forEach((location) => {
+            // var popup = new mapboxgl.Popup().setText(
+            //     marker.properties.title
+            // );
+
+            // const el = document.createElement("div");
+            // const width = marker.properties.iconSize[0];
+            // const height = marker.properties.iconSize[1];
+            // el.className = "marker";
+            // el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
+            // el.style.width = `${width}px`;
+            // el.style.height = `${height}px`;
+            // el.style.backgroundSize = "100%";
+
+            // el.addEventListener("click", () => {
+            //     window.alert(marker.properties.message);
+            // });
+
+            // Add markers to the map.
+            const marker = new mapboxgl.Marker()
+                .setLngLat(location.center)
+                .addTo(map.current);
+
+            const popup = new mapboxgl.Popup();
+            popup.addTo(map.current);
+            popup.setLngLat(location.center);
+            markers.push(marker);
+        });
+        setMarkers([...markers]);
+    }
     // Initialize mapbox map
     useEffect(() => {
         if (map.current) return;
@@ -40,129 +119,19 @@ const Map = ({ ...props }) => {
             zoom: zoom,
         });
 
-        async function addRoute() {
-            const [route, geojson] = await getRoute(start, end);
-
-            setRoute(route);
-
-            //if route layer exists, update with new route, else create the layer and add the route.
-            if (map.current.getSource("route")) {
-                map.current.getSource("route").setData(geojson);
-            } else {
-                map.current.addLayer({
-                    id: "route",
-                    type: "line",
-                    source: {
-                        type: "geojson",
-                        data: geojson,
-                    },
-                    layout: {
-                        "line-join": "round",
-                        "line-cap": "round",
-                    },
-                    paint: {
-                        "line-color": colors.green600,
-                        "line-width": 5,
-                        "line-opacity": 0.5,
-                    },
-                });
-            }
-
-            const [route1, geojson1] = await getRouteWithStops();
-            //adding the multistop route to the map.
-            map.current.addLayer({
-                id: "routeTest",
-                type: "line",
-                source:{
-                    type: "geojson",
-                    data:geojson1,
-                    data:geojson1
-                },
-                layout:{
-                    "line-join":"round",
-                    "line-cap":"round"
-                },
-                paint:{
-                    "line-color": colors.lime600,
-                    "line-width":5,
-                    "line-opacity":0.5,
-                },
-            })
-            var stops = {
-                type:"FeatureCollection",
-                features:[
-                ]
-            };
-            //Static list of test stops
-            //First pair of coordiantes is start. Last pair is end.
-            var coordinates = new Array("-116.212495", "42.629059", "-100.869516", " 36.990465", "-93.184457", "44.075105", "-104.574812", "46.012432");
-            var stopList = [];
-            for(var i = 0; i < coordinates.length-1;i++){
-                stopList.push({
-                    type: "Feature",
-                    properties: {
-                        title: "test"
-                    },
-                    geometry: {
-                        type: "Point",
-                        coordinates: [coordinates[i], coordinates[i+1]],
-                    }
-                });
-            }
-            stops.features=stopList;
-            console.log(stops);
-            map.current.addSource('testStops',{
-                'type':'geojson',
-                'data':JSON.stringify(stops)
-            });
-            map.current.addLayer({
-                'id':'testStops',
-                'type':'circle',
-                'source':'testStops',
-                'paint':{
-                    'circle-radius':6,
-                    'circle-color': '#B42222'
-
-                },
-            });
-            //INCOMPLETE: this would add a marker at each point. (a marker can have text associated, hover etc.)
-            // stops.features.forEach(function(marker){
-            //     var popup = new mapboxgl.Popup()
-            //         .setText(marker.properties.title);
-            //     new mapboxgl.Marker().setLng(marker.geometry.coordinates[1]).setLat(marker.geometry.coordinates[0]).addTo(map.current);
-            // });
-        }
-
         map.current.on("load", () => {
+            // Add the route to the map between start and end locations
+            setisLoaded(true);
             addRoute();
-            const points = getPoints(start.center, end.center);
-            // var popup = new mapboxgl.Popup()
-            // .setText('Description')
-            // .addTo(map.current);
-            // marker = new mapboxgl.Marker()
-            //     .setLngLat(points)
-            //     .addTo(map.current)
-            //     .setPopup(popup);
-            map.current.addLayer({
-                id: "routeEndpoints",
-                type: "circle",
-                source: {
-                    type: "geojson",
-                    data: points,
-                },
-                paint: {
-                    "circle-radius": 10,
-                    "circle-color": colors.green600,
-                },
-            });
-            // // Create a new marker.
-            // const marker = new mapboxgl.Marker()
-            //     .setLngLat([30.5, 50.5])
-            //     .addTo(map.current);
-
         });
     });
 
+    useEffect(() => {
+        if (!isLoaded || !locs) return;
+        addRoute();
+    }, [locs]);
+
+    // onMove
     // Update longitude/lattitude/zoom as the user moves around
     useEffect(() => {
         if (!map.current) return;
@@ -172,6 +141,7 @@ const Map = ({ ...props }) => {
             setZoom(map.current.getZoom().toFixed(2));
         });
     });
+
     return (
         <div className="relative">
             <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono text-xs z-[1] absolute top-12 right-0 m-3 rounded-lg">
@@ -184,3 +154,23 @@ const Map = ({ ...props }) => {
 };
 
 export default Map;
+
+//INCOMPLETE: this would add a marker at each point. (a marker can have text associated, hover etc.)
+// stops.features.forEach(function(marker){
+//     var popup = new mapboxgl.Popup()
+//         .setText(marker.properties.title);
+//     new mapboxgl.Marker().setLng(marker.geometry.coordinates[1]).setLat(marker.geometry.coordinates[0]).addTo(map.current);
+// });
+
+// // Create a new marker.
+// const marker = new mapboxgl.Marker()
+//     .setLngLat([30.5, 50.5])
+//     .addTo(map.current);
+
+// var popup = new mapboxgl.Popup()
+// .setText('Description')
+// .addTo(map.current);
+// marker = new mapboxgl.Marker()
+//     .setLngLat(points)
+//     .addTo(map.current)
+//     .setPopup(popup);
