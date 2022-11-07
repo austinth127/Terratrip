@@ -4,6 +4,7 @@ import {
     Button,
     darkOutlineBtnStyle,
     DarkOutlineButton,
+    OutlineButton,
     stdBtnStyle,
 } from "../../components/general/Buttons";
 import { DarkTextInput } from "../../components/general/TextInput";
@@ -27,7 +28,7 @@ import { levelOptions as levels } from "../../utils/stops/filters";
 import { getRoute } from "../../utils/map/geometryUtils";
 import ClientOnly from "../../components/general/ClientOnly";
 import axios from "axios";
-import { tripToTripRequest } from "../../utils/converters";
+import { tripToTripRequest } from "../../utils/trip";
 
 const Create = () => {
     const [start, setStart] = useAtom(startAtom);
@@ -207,9 +208,19 @@ const Create = () => {
                     </div>
                     <div className="mt-16 mb-20">
                         {editMode ? (
-                            <DarkOutlineButton type="submit">
-                                Save
-                            </DarkOutlineButton>
+                            <div className="flex flex-row gap-4">
+                                <DarkOutlineButton type="submit">
+                                    Save
+                                </DarkOutlineButton>
+                                <DarkOutlineButton
+                                    onClick={() => {
+                                        clearTrip();
+                                        router.back();
+                                    }}
+                                >
+                                    Cancel
+                                </DarkOutlineButton>
+                            </div>
                         ) : (
                             <DarkOutlineButton type="submit">
                                 Let's Go &nbsp;&nbsp;&rarr;

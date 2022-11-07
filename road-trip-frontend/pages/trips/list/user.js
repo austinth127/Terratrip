@@ -25,7 +25,7 @@ const UserTrips = () => {
                 getData();
             },
             (fail) => {
-                /** Handle error */
+                /** @todo Handle error */
             }
         );
     };

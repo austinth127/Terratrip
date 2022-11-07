@@ -18,3 +18,15 @@ export const tripToTripRequest = (trip) => {
         duration: trip.route.duration,
     };
 };
+
+export const makeTripActive = (trip, setActiveTrip) => {
+    setActiveTrip({
+        start: trip.start,
+        end: trip.end,
+        name: trip.name,
+        advLevel: trip.advLevel,
+        id: trip.id,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+    });
+};

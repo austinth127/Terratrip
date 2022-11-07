@@ -10,7 +10,7 @@ import Alert from "../auth/Alert";
 import axios from "axios";
 import { Button, OutlineButton } from "../general/Buttons";
 import { useRouter } from "next/router";
-import { tripToTripRequest } from "../../utils/converters";
+import { tripToTripRequest } from "../../utils/trip";
 
 const SaveModal = () => {
     const [show, setShow] = useAtom(showSaveModalAtom);
