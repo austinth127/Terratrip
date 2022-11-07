@@ -2,7 +2,9 @@ package road.trip.api.location.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import road.trip.api.location.LocationService;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.User;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -16,6 +18,25 @@ public class LocationResponse {
         center = new Double[]{location.getCoordX(), location.getCoordY()};
         description = location.getDescription();
         rating = location.getRating();
+        phoneContact = location.getPhoneContact();
+        website = location.getWebsite();
+        address = location.getAddress();
+        geoapifyId = location.getGeoapifyId();
+
+        if (location.getCategories() != null) {
+            categories = Arrays.stream(location.getCategories().split(",")).toList();
+        }
+        else {
+            categories = null;
+        }
+    }
+    public LocationResponse(Location location, User user, LocationService locationService){
+        id = location.getId();
+        name = location.getName();
+        center = new Double[]{location.getCoordX(), location.getCoordY()};
+        description = location.getDescription();
+        rating = locationService.getAverageRating(location);
+        userRating = locationService.getRatingByIDAndUser(id,user).getRating();
         phoneContact = location.getPhoneContact();
         website = location.getWebsite();
         address = location.getAddress();

@@ -134,10 +134,10 @@ public class LocationService {
                     .toList()));
                 return location;
             })
-            .map(LocationResponse::new)     // Location -> LocationResponse
+            .map(e-> new LocationResponse(e,userService.user(),this))     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
     }
-    public void addLocationRating(Long locationID){
+    public void addLocationRating(Long locationID, Double rating){
         //locaiton exists
         //rating exists for that user.
         if (!locationRepository.existsById(locationID)){
@@ -146,20 +146,32 @@ public class LocationService {
         LocationRating prevRating = locationRatingRepository.findByUserAndLocation(userService.user(),locationRepository.findById(locationID));
         if(Objects.isNull(prevRating)){
             locationRatingRepository.save(LocationRating.builder()
-                .ratedLocation(locationRepository.findById(locationID))
-                .build())
+                .ratedLocation(locationRepository.findById(locationID).get()).rating(rating).ratingUser(userService.user())
+                .build());
         }
         else{
-
+            prevRating.setRating(rating);
+            locationRatingRepository.save(prevRating);
         }
 
     }
 
-    public LocationRating getRatingByIDAndUser(Long id) {
-        LocationRating ret = locationRatingRepository.findByUserAndLocation(userService.user(),locationRepository.findById(id));
+    public LocationRating getRatingByIDAndUser(Long id, User u ) {
+        LocationRating ret = locationRatingRepository.findByUserAndLocation(u,locationRepository.findById(id));
         if(Objects.isNull(ret)){
             throw new NotFoundException();
         }
         return ret;
+    }
+
+    public Double getAverageRating(Location location) {
+        Double ratingsValue = 0.0;
+        Double count = 0.0;
+        count = Double.valueOf(locationRatingRepository.countAllByRatedLocation(location));
+        List<LocationRating> ratings = locationRatingRepository.findAllByRatedLocation(location);
+        for(int i = 0; i < ratings.size();i++){
+            ratingsValue+= ratings.get(i).getRating();
+        }
+        return ratingsValue/count;
     }
 }

@@ -5,10 +5,12 @@ import road.trip.persistence.models.Location;
 import road.trip.persistence.models.LocationRating;
 import road.trip.persistence.models.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LocationRatingRepository extends JpaRepository<LocationRating, Long>{
     Integer countAllByRatingUser(User user);
     LocationRating  findByUserAndLocation(User user, Optional<Location> location);
     Integer countAllByRatedLocation(Location location);
+    List<LocationRating> findAllByRatedLocation(Location location);
 }
