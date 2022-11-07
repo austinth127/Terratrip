@@ -120,15 +120,15 @@ public class LocationService {
             log.error("Error: no Trip found");
         }
         return locations.stream()
-            .map(location -> {
-                location.setCategories(String.join(",", Arrays.stream(location.getCategories().split(","))
-                    .map(categoryService::getCategoryFromCategoryApiName)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(Category::getName)
-                    .toList()));
-                return location;
-            })
+//            .map(location -> {
+//                location.setCategories(String.join(",", Arrays.stream(location.getCategories().split(","))
+//                    .map(categoryService::getCategoryFromCategoryApiName)
+//                    .filter(Optional::isPresent)
+//                    .map(Optional::get)
+//                    .map(Category::getName)
+//                    .toList()));
+//                return location;
+//            })
             .map(LocationResponse::new)     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
     }
