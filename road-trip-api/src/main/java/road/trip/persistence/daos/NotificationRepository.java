@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> getNotificationsByUserAndSendAtBefore(User user, LocalDateTime cutoff);
+    List<Notification> getNotificationsByUserAndSendAtBeforeAndExpireAtAfter(User user, LocalDateTime cutoff, LocalDateTime cutoff2);
     void deleteAllByTrip(Trip trip);
     List<Notification> findByTrip_Id(Long trip_Id);
 

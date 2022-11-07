@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import road.trip.api.notification.NotificationService;
 import road.trip.api.user.request.RegisterRequest;
 import road.trip.config.jwt.JwtAuthentication;
+import road.trip.persistence.daos.NotificationRepository;
 import road.trip.persistence.models.User;
 import road.trip.persistence.daos.UserRepository;
 
@@ -17,15 +19,6 @@ import road.trip.persistence.daos.UserRepository;
 public class UserService {
     final UserRepository userRepository;
 
-    public User register(RegisterRequest request) {
-        User user = User.builder()
-            .username(request.getUsername())
-            .userfrontId(request.getUserId())
-            .name(request.getName())
-            .emailAddress(request.getEmail())
-            .build();
-        return userRepository.save(user);
-    }
 
     /**
      * Extracts a Spring Security User object from the Spring Security Context
