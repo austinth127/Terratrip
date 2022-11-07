@@ -39,7 +39,7 @@ const TripCard = ({ trip, deleteCallback }) => {
             <div className="flex flex-row justify-between">
                 <h2 className="font-semibold text-lg">{trip.name}</h2>
                 <div onClick={deleteCallback}>
-                    <i class="fa-solid fa-trash hover:fa-duotone"></i>
+                    <i class="fa-solid fa-trash"></i>
                 </div>
             </div>
             <div
