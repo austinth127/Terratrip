@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface StopRepository  extends JpaRepository<Stop, Long> {
-    List<Stop> findByTrip_Id(Long tripId);
-    List<Stop> findByTrip_IdAndLocation_IdAndOrder(Long tripId, Long locId, int order);
+    List<Stop> findByTrip_Id(Long trip_Id);
+    Long deleteByTrip_Id(Long trip_Id);
 }

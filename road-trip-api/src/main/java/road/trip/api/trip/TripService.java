@@ -171,8 +171,14 @@ public class TripService {
         if (t.isEmpty()) {
             log.error("No trip found.");
         } else if (userService.user() == t.get().getCreator()) {
-            tripRepository.deleteById(id);
+            List<Stop> s = stopRepository.findByTrip_Id(id);
+
+            for (int i = 0; i < s.size(); i++) {
+                stopRepository.deleteById(s.get(i).getStopId());
+            }
+
             notificationService.deleteNotifications(t.get());
+            tripRepository.deleteById(id);
         } else {
             log.error("Trip not owned by user.");
         }
