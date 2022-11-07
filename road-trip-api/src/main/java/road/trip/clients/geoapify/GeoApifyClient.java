@@ -133,25 +133,28 @@ public class GeoApifyClient {
             return null;
         }
 
-        places.getFeatures().forEach(f -> log.info(f.getProperties().getPlaceId()));
+        return places.getFeatures().stream().map(Feature::buildLocation).toList();                   //
 
-        return places.getFeatures().parallelStream()
-            .map(feature -> {
-                try {
-                    URI placeDetailsUri = buildUri("/v2/place-details", List.of(
-                        new BasicNameValuePair("features", "details"),
-                        new BasicNameValuePair("id", feature.getProperties().getPlaceId()),
-                        new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")
-                    ));
-                    String jsonBody = doGet(placeDetailsUri);
-                    return mapper.readValue(jsonBody, FeatureCollection.class).getFeatures().get(0);
-                } catch (Exception e) {
-                    log.error(e);
-                    return feature;
-                }
-            })
-            .map(Feature::buildLocation)
-            .collect(Collectors.toList());
+//        // Uncomment for place details
+//        places.getFeatures().forEach(f -> log.info(f.getProperties().getPlaceId()));
+//
+//        return places.getFeatures().parallelStream()
+//            .map(feature -> {
+//                try {
+//                    URI placeDetailsUri = buildUri("/v2/place-details", List.of(
+//                        new BasicNameValuePair("features", "details"),
+//                        new BasicNameValuePair("id", feature.getProperties().getPlaceId()),
+//                        new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")
+//                    ));
+//                    String jsonBody = doGet(placeDetailsUri);
+//                    return mapper.readValue(jsonBody, FeatureCollection.class).getFeatures().get(0);
+//                } catch (Exception e) {
+//                    log.error(e);
+//                    return feature;
+//                }
+//            })
+//            .map(Feature::buildLocation)
+//            .collect(Collectors.toList());
     }
 
     public static void main(String args[]){

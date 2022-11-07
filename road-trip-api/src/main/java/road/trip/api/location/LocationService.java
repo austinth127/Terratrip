@@ -114,7 +114,7 @@ public class LocationService {
 //        if(limit == 0){ limit = 1; } //Special case where there are more points along the route than the desired result size
 
         Optional<Trip> optTrip = tripRepository.findById(tripId);
-        List<LocationResponse> locationResponses = new ArrayList<>();
+        Set<Location> locations = new HashSet<>();
         List<String> categories = categoryService.getCategoriesByApi(frontendCategories, PlacesAPI.GEOAPIFY);
 
         log.info(tripId + " " + radius + " " + categories + " " + route);
@@ -123,14 +123,12 @@ public class LocationService {
                 categories = categoryService.getRecommendedCategories(optTrip.get());
             }
             for(List<Double> point : route){
-                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit).stream()
-                    .map(LocationResponse::new)
-                    .collect(Collectors.toList()));
+                locations.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
             }
         } else{
             // TODO: add log message
             System.out.println("Error: no Trip found");
         }
-        return locationResponses;
+        return locations.stream().map(LocationResponse::new).collect(Collectors.toList());
     }
 }

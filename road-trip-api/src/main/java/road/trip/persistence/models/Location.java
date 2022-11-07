@@ -42,7 +42,10 @@ public class Location {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Location location = (Location) o;
-        return id != null && Objects.equals(id, location.id);
+        return (id != null && Objects.equals(id, location.id)) ||
+            (geoapifyId != null && Objects.equals(geoapifyId, location.geoapifyId)) ||
+            (mapboxId != null && Objects.equals(mapboxId, location.mapboxId)) ||
+            (otmId != null && Objects.equals(otmId, location.otmId));
     }
 
     @Override
