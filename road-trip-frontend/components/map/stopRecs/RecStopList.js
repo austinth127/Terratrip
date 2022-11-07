@@ -5,7 +5,10 @@ import { filtersAtom, tripAtom } from "../../../utils/atoms";
 import LoadingSpinner from "../../general/LoadingSpinner";
 import RecStopDisplay from "./RecStopItem";
 
-/** @todo Range slider */
+/**
+ *  @todo Range slider
+ *  @todo refresh
+ */
 const RecStopList = () => {
     const [recStops, setRecStops] = useState();
     const [trip, setTrip] = useAtom(tripAtom);
@@ -19,6 +22,7 @@ const RecStopList = () => {
     }, [filters]);
 
     const getData = async () => {
+        if (!trip.route) return;
         setWaiting(true);
         const res = await axios.post("/location/recommend", {
             tripId: trip.id,

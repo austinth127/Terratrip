@@ -19,8 +19,14 @@ public class LocationResponse {
         phoneContact = location.getPhoneContact();
         website = location.getWebsite();
         address = location.getAddress();
-        categories = Arrays.stream(location.getCategories().split(",")).toList();
         geoapifyId = location.getGeoapifyId();
+
+        if (location.getCategories() != null) {
+            categories = Arrays.stream(location.getCategories().split(",")).toList();
+        }
+        else {
+            categories = null;
+        }
     }
 
     @NotNull

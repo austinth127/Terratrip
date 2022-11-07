@@ -5,14 +5,6 @@ import { stopsAtom } from "../../../utils/atoms";
 const TripStopItem = ({ stop, order }) => {
     const [stops, setStops] = useAtom(stopsAtom);
 
-    const start = false,
-        end = false;
-    if (order == 0) {
-        start = true;
-    } else if (order == stops.length + 1) {
-        end = true;
-    }
-
     const handleMoveUp = () => {
         const thisIndex = order - 1;
         stops[thisIndex] = stops.splice(thisIndex - 1, 1, stops[thisIndex])[0];
@@ -30,6 +22,18 @@ const TripStopItem = ({ stop, order }) => {
         setStops([...stops]);
     };
 
+    if (!stop || !stops) {
+        return null;
+    }
+
+    const start = false,
+        end = false;
+    if (order == 0) {
+        start = true;
+    } else if (order == stops.length + 1) {
+        end = true;
+    }
+
     return (
         <div
             className={`bg-slate-900 bg-opacity-80 rounded-lg flex flex-row items-center p-2 gap-4`}
@@ -45,6 +49,19 @@ const TripStopItem = ({ stop, order }) => {
                 <p className="text-green-600 font-semibold text-sm">
                     {stop.place_name}
                 </p>
+                {stop.categories ? (
+                    <p className="text-slate-300 font-light">
+                        Types:{" "}
+                        {stop.categories
+                            .map((cat) => {
+                                let words = cat.split(".");
+                                return words[words.length - 1];
+                            })
+                            .join(", ")}
+                    </p>
+                ) : (
+                    <></>
+                )}
                 <p className="">{stop.address ?? ""}</p>
                 <p className="text-slate-400 font-light">
                     {stop.phoneContact ?? ""}

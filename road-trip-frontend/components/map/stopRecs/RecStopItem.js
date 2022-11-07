@@ -17,6 +17,19 @@ const RecStopDisplay = ({ stop }) => {
             onClick={handleAddStop}
         >
             <p className="text-green-600 font-semibold  ">{stop.place_name}</p>
+            {stop.categories ? (
+                <p className="text-slate-600 font-light">
+                    Types:{" "}
+                    {stop.categories
+                        .map((cat) => {
+                            let words = cat.split(".");
+                            return words[words.length - 1];
+                        })
+                        .join(", ")}
+                </p>
+            ) : (
+                <></>
+            )}
             <p className="">{stop.address ?? ""}</p>
             <p className="text-slate-700 font-light">
                 {stop.phoneContact ?? ""}
