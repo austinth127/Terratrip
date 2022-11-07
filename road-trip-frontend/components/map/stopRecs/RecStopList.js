@@ -21,6 +21,11 @@ const RecStopList = () => {
         return () => abortController.abort();
     }, [filters]);
 
+    useEffect(() => {
+        if (recStops) return;
+        getData();
+    }, [trip.route]);
+
     const getData = async () => {
         if (!trip.route) return;
         setWaiting(true);

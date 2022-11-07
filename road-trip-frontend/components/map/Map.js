@@ -50,6 +50,9 @@ const Map = ({ ...props }) => {
         const [route, geojson] = await getRouteWithStops(locs);
 
         setRoute(route);
+        if (!locs || !route) {
+            return;
+        }
 
         //if route layer exists, update with new route, else create the layer and add the route.
         if (map.current.getSource("route")) {
@@ -125,7 +128,7 @@ const Map = ({ ...props }) => {
     });
 
     useEffect(() => {
-        if (!isLoaded) return;
+        if (!isLoaded || !locs) return;
         addRoute();
     }, [locs]);
 

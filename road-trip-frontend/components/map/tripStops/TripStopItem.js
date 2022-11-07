@@ -64,7 +64,7 @@ const TripStopItem = ({ stop, order }) => {
                 )}
                 <p className="">{stop.address ?? ""}</p>
                 <p className="text-slate-400 font-light">
-                    {stop.phoneContact ?? ""}
+                    {stop.phone_contact ?? ""}
                 </p>
             </div>
             {!start && !end ? (

@@ -34,6 +34,15 @@ const TripCard = ({ trip, deleteCallback }) => {
 
     if (!hasMounted) return null;
 
+    let isComplete = false;
+    let inProgress = false;
+
+    if (new Date(trip.endDate) < Date.now()) {
+        isComplete = true;
+    } else if (new Date(trip.startDate) < Date.now()) {
+        inProgress = true;
+    }
+
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
             <div className="flex flex-row justify-between">
@@ -41,6 +50,21 @@ const TripCard = ({ trip, deleteCallback }) => {
                 <div onClick={deleteCallback}>
                     <i class="fa-solid fa-trash"></i>
                 </div>
+            </div>
+            <div
+                className={`absolute top-4 right-4 text-sm italic ${
+                    isComplete
+                        ? `text-green-600`
+                        : inProgress
+                        ? `text-green-700`
+                        : `text-slate-300`
+                }`}
+            >
+                {isComplete
+                    ? "Completed!"
+                    : inProgress
+                    ? "In Progress"
+                    : "Upcoming"}
             </div>
             <div
                 className={`flex flex-col gap-2 text-xs text-gray-50 pt-2 pb-4 ${
