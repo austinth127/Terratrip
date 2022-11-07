@@ -20,9 +20,7 @@ import {
 import { useRouter } from "next/router";
 import axios from "axios";
 
-// /trip/{id}/rate post body {rating: Double}
-
-const TripCard = ({ trip }) => {
+const TripCard = ({ trip, deleteCallback }) => {
     const [rating, setRating] = useState(trip.rating);
     const [isEditRating, setIsEditRating] = useState(false);
 
@@ -43,6 +41,7 @@ const TripCard = ({ trip }) => {
         setTripId(trip.id);
         router.push("/trips/map");
     };
+
     if (typeof window === "undefined") return;
 
     const handleRating = () => {
@@ -110,6 +109,9 @@ const TripCard = ({ trip }) => {
                 )}
                 <DarkOutlineButton onClick={handleViewTrip}>
                     View
+                </DarkOutlineButton>
+                <DarkOutlineButton onClick={deleteCallback}>
+                    <i class="fa-solid fa-trash"></i>
                 </DarkOutlineButton>
             </div>
         </div>

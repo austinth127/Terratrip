@@ -13,12 +13,14 @@ import {
     endAtom,
     endDateAtom,
     locAtom,
+    routeAtom,
     startAtom,
     startDateAtom,
 } from "../../utils/atoms";
 import Alert from "../../components/auth/Alert";
 import { useRouter } from "next/router";
 import { levelOptions as levels } from "../../utils/stops/filters";
+import { getRoute } from "../../utils/map/geometryUtils";
 
 const Create = () => {
     const [start, setStart] = useAtom(startAtom);
@@ -26,6 +28,7 @@ const Create = () => {
     const [startDate, setStartDate] = useAtom(startDateAtom);
     const [endDate, setEndDate] = useAtom(endDateAtom);
     const [activeLevel, setActiveLevel] = useAtom(advLevelAtom);
+    const [route, setRoute] = useAtom(routeAtom);
     const router = useRouter();
 
     const [alert, setAlert] = useState();
@@ -37,7 +40,28 @@ const Create = () => {
             setAlert("Start and end locations should be set below.");
             return;
         }
-        router.push("/trips/map");
+        if (startDate > endDate) {
+            setAlert("Start date cannot be after end date.");
+            return;
+        }
+
+        /** @todo Make sure trip is possible for given route duration */
+        getRoute(start, end).then(
+            (success) => {
+                // setRoute(success[0]);
+                console.log(success[0]);
+
+                // check for possible
+
+                // if possible ->
+                router.push("/trips/map");
+            },
+            (error) => {
+                setAlert(
+                    "Cannot find a driving route between these locations."
+                );
+            }
+        );
     };
 
     return (

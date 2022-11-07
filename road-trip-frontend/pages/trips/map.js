@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Map from "../../components/map/Map";
 import StopSelector from "../../components/map/StopSelector";
 import SaveModal from "../../components/trip/SaveModal";
@@ -7,6 +7,10 @@ import { showSaveModalAtom } from "../../utils/atoms";
 
 const TripMapper = () => {
     const [showModal, setShowModal] = useAtom(showSaveModalAtom);
+
+    useEffect(() => {
+        setShowModal(false);
+    }, []);
 
     return (
         <>

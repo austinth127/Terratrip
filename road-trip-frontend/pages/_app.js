@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/globals.css";
 
 import Script from "next/script";
@@ -21,6 +21,7 @@ import { setupAxios, setupLogger } from "../utils/axiosSetup";
 import Userfront from "@userfront/core";
 import { Provider } from "jotai";
 import ReducedLayout from "../components/general/ReducedLayout";
+import LoadingSpinner from "../components/general/LoadingSpinner";
 Userfront.init("wbmrp64n");
 
 /**
@@ -32,10 +33,15 @@ Userfront.init("wbmrp64n");
  * @param {any} props.pageProps Props to be passed to the page
  * @returns {React.Component} The page to be rendered
  */
+
 function MyApp({ Component, pageProps }) {
+    const [isSSR, setIsSSR] = useState(false);
+    const SsrSuspense = isSSR ? React.Fragment : React.Suspense;
+
     useEffect(() => {
         setupAxios();
         setupLogger();
+        setIsSSR(typeof window === "undefined");
     }, []);
 
     return (
@@ -53,19 +59,21 @@ function MyApp({ Component, pageProps }) {
                 crossorigin="anonymous"
             ></Script>
             <Provider>
-                {Component.usesMapLayout ? (
-                    <MapLayout>
-                        <Component {...pageProps} />
-                    </MapLayout>
-                ) : Component.usesReducedLayout ? (
-                    <ReducedLayout>
-                        <Component {...pageProps} />
-                    </ReducedLayout>
-                ) : (
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
-                )}
+                <SsrSuspense fallback={<LoadingSpinner />}>
+                    {Component.usesMapLayout ? (
+                        <MapLayout>
+                            <Component {...pageProps} />
+                        </MapLayout>
+                    ) : Component.usesReducedLayout ? (
+                        <ReducedLayout>
+                            <Component {...pageProps} />
+                        </ReducedLayout>
+                    ) : (
+                        <Layout>
+                            <Component {...pageProps} />
+                        </Layout>
+                    )}
+                </SsrSuspense>
             </Provider>
         </>
     );
