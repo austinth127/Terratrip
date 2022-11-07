@@ -36,7 +36,12 @@ const TripCard = ({ trip, deleteCallback }) => {
 
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
-            <h2 className="font-semibold text-lg">{trip.name}</h2>
+            <div className="flex flex-row justify-between">
+                <h2 className="font-semibold text-lg">{trip.name}</h2>
+                <div onClick={deleteCallback}>
+                    <i class="fa-solid fa-trash hover:fa-duotone"></i>
+                </div>
+            </div>
             <div
                 className={`flex flex-col gap-2 text-xs text-gray-50 pt-2 pb-4 ${
                     trip.start?.place_name != null ? `` : `hidden`
@@ -96,9 +101,6 @@ const TripCard = ({ trip, deleteCallback }) => {
                 </DarkOutlineButton>
                 <DarkOutlineButton onClick={handleEditTrip}>
                     Edit
-                </DarkOutlineButton>
-                <DarkOutlineButton onClick={deleteCallback}>
-                    <i className="fa-solid fa-trash"></i>
                 </DarkOutlineButton>
             </div>
         </div>
