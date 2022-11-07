@@ -24,7 +24,7 @@ public class Location {
 
     private String name;
     private String description;
-    private int rating;
+    private Double rating;
 
     private double coordX;
     private double coordY;
@@ -32,7 +32,6 @@ public class Location {
     private String mapboxId;        // mapbox id
     private String geoapifyId;      // geoapify id
     private String otmId;           // open trip map id
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

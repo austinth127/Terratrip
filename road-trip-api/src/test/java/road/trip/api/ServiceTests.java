@@ -1,16 +1,23 @@
 package road.trip.api;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import road.trip.api.location.LocationService;
 import road.trip.api.trip.TripService;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.TripRepository;
 
+import static org.mockito.Mockito.lenient;
+
 public class ServiceTests {
 
-    /**
+
     @Autowired
     ServiceTests(LocationService locationService, TripService tripService, UserService userService, TripRepository tripRepository) {
         this.locationService = locationService;
@@ -18,7 +25,7 @@ public class ServiceTests {
         this.userService = userService;
         this.tripRepository = tripRepository;
     }
-    */
+
     private LocationService locationService;
     private TripService tripService;
     private UserService userService;
@@ -47,6 +54,7 @@ public class ServiceTests {
              */
         }
     }
+    @ExtendWith(MockitoExtension.class)
     @Nested
     @DisplayName("Trip Service Tests")
     class TripServiceTest{
@@ -75,6 +83,18 @@ public class ServiceTests {
             );
 
              */
+        }
+        @Mock
+        TripService tripService;
+        @Before
+        void init(){
+
+        }
+        @Test
+        @DisplayName("Edit Trip Request")
+        void editTrip(){
+
+
         }
     }
     @Nested

@@ -123,7 +123,7 @@ public class TripService {
             if(request.getStops() != null){
                 List<LocationRequest> stops = request.getStops();
 
-                // Remove Stops in trip
+//                 Remove Stops in trip
                 List<Stop> oldStops = stopRepository.findByTrip_Id(id);
                 for (int i = 0; i < oldStops.size(); i++) {
                     stopRepository.deleteById(oldStops.get(i).getStopId());
