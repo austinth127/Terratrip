@@ -8,7 +8,7 @@ export const getPoints = (...coords) => {
         properties: {},
         geometry: {
             type: "Point",
-            coordinates: coord,
+            coordinates: coord.center,
         },
     }));
 
@@ -45,7 +45,7 @@ export const getRoute = async (start, end) => {
  * @param {Location[]} stops
  * @returns
  */
-export const getRouteWithStops = async (...stops) => {
+export const getRouteWithStops = async (stops) => {
     const params = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
     const baseURL = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
     let stopString = stops

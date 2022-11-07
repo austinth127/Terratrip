@@ -56,11 +56,13 @@ export const tripNameAtom = atomWithStorage("tripName", null);
 export const showSaveModalAtom = atom(false);
 export const tripIdAtom = atomWithStorage("tripId", null);
 export const stopsAtom = atomWithStorage("stops", []);
-export const allLocationsAtom = atom((get) => [
-    get(startAtom),
-    ...get(stopsAtom),
-    get(endAtom),
-]);
+export const allLocationsAtom = atom((get) => {
+    if (!get(stopsAtom) || get(stopsAtom).length < 1) {
+        return [get(startAtom), get(endAtom)];
+    }
+
+    return [get(startAtom), ...get(stopsAtom), get(endAtom)];
+});
 
 export const editModeAtom = atom((get) => get(tripIdAtom) != null);
 

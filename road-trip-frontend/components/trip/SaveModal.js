@@ -27,8 +27,7 @@ const SaveModal = () => {
 
         axios.patch(`/trip/${trip.id}`, tripToTripRequest(trip)).then(
             (success) => {
-                clearTrip();
-                router.push("/trips/list/user");
+                setShow(false);
             },
             (fail) => {
                 setAlert("Trip failed to save");
@@ -89,7 +88,7 @@ const SaveModal = () => {
                 <div className="absolute bottom-4 right-4 gap-2 flex flex-row">
                     <Button type="submit">Submit</Button>
                     <OutlineButton onClick={() => setShow(false)}>
-                        Cancel
+                        Exit
                     </OutlineButton>
                 </div>
             </form>
