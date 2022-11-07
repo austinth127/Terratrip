@@ -16,11 +16,13 @@ export const tripToTripRequest = (trip) => {
         advLevel: trip.advLevel != "" ? trip.advLevel.toUpperCase() : "EXTREME",
         distance: trip.route.distance,
         duration: trip.route.duration,
-        stops: trip.stops.map((stop) => ({
-            ...stop,
-            lng: stop.center[0],
-            lat: stop.center[1],
-        })),
+        stops: trip.stops
+            ? trip.stops.map((stop) => ({
+                  ...stop,
+                  lng: stop.center[0],
+                  lat: stop.center[1],
+              }))
+            : null,
     };
 };
 

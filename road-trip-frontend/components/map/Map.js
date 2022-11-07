@@ -46,7 +46,6 @@ const Map = ({ ...props }) => {
     async function addRoute() {
         if (!map.current) return;
         if (!locs || locs.length < 2) return;
-        console.log(locs);
         const [route, geojson] = await getRouteWithStops(locs);
 
         setRoute(route);
