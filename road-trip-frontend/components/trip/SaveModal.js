@@ -88,7 +88,7 @@ const SaveModal = () => {
                 <div className="absolute bottom-4 right-4 gap-2 flex flex-row">
                     <Button type="submit">Submit</Button>
                     <OutlineButton onClick={() => setShow(false)}>
-                        Exit
+                        Cancel
                     </OutlineButton>
                 </div>
             </form>

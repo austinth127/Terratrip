@@ -38,6 +38,7 @@ export const clearTripAtom = atom(null, (get, set) => {
     set(routeAtom, null);
     set(stopsAtom, null);
     set(tripIdAtom, null);
+    set(filtersAtom, []);
 });
 
 // Create Trip

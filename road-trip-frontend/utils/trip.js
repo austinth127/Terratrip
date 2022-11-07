@@ -17,10 +17,9 @@ export const tripToTripRequest = (trip) => {
         distance: trip.route.distance,
         duration: trip.route.duration,
         stops: trip.stops.map((stop) => ({
-            place_name: stop.place_name,
+            ...stop,
             lng: stop.center[0],
             lat: stop.center[1],
-            ...stop,
         })),
     };
 };

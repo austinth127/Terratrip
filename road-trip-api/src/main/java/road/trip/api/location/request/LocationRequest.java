@@ -39,7 +39,7 @@ public class LocationRequest {
             .coordX(coordX)
             .geoapifyId(geoapifyId)
             .name(name)
-            .rating(rating)
+            .rating(rating == null ? 0 : rating)
             .address(address)
             .build();
     }

@@ -32,7 +32,7 @@ const RecStopDisplay = ({ stop }) => {
             )}
             <p className="">{stop.address ?? ""}</p>
             <p className="text-slate-700 font-light">
-                {stop.phoneContact ?? ""}
+                {stop.phone_contact ?? ""}
             </p>
         </button>
     );

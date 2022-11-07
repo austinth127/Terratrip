@@ -46,11 +46,24 @@ export const getRoute = async (start, end) => {
  * @returns
  */
 export const getRouteWithStops = async (stops) => {
+    if (!stops || stops.length < 2) return [null, null];
     const params = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
     const baseURL = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
+    let fail = false;
     let stopString = stops
-        .map((stop) => `${stop.center[0]},${stop.center[1]}`)
+        .map((stop) => {
+            if (!stop || !stop.center || stop.center.length < 2) {
+                fail = true;
+                return;
+            }
+            return `${stop.center[0]},${stop.center[1]}`;
+        })
         .join(";");
+
+    if (fail) {
+        console.error("Failed to get route");
+        return [null, null];
+    }
 
     const res = await axios.get(`${baseURL}${stopString}${params}`);
 
