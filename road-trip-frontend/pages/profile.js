@@ -42,7 +42,7 @@ const Profile = () => {
                 {/** @TODO Add trips and playlist to response data */}
                 <div className="mt-12 text-left font-light text-base h-fit">
                     <label className="font-semibold grad-txt-rs-yllw">
-                        <a href="/trips/edit"> My Trips:</a>
+                        <a href="/trips/list/user"> My Trips:</a>
                     </label>
                     <br />
                     {trips ? (

@@ -1,54 +1,48 @@
 import React, { useState } from "react";
-import {
-    Button,
-    darkOutlineBtnStyle,
-    DarkOutlineButton,
-    stdBtnStyle,
-} from "../general/Buttons";
+import { DarkOutlineButton } from "../general/Buttons";
 import ReactStars from "react-stars";
 import { colors } from "../../utils/colors";
 import dynamic from "next/dynamic";
-import { useAtom, useSetAtom } from "jotai";
-import {
-    advLevelAtom,
-    editModeAtom,
-    locAtom,
-    tripDateAtom,
-    tripIdAtom,
-    tripNameAtom,
-} from "../../utils/atoms";
+import { useAtom } from "jotai";
+import { tripAtom } from "../../utils/atoms";
 import { useRouter } from "next/router";
 import axios from "axios";
+import useHasMounted from "../../hooks/useHasMounted";
 
 const TripCard = ({ trip, deleteCallback }) => {
     const [rating, setRating] = useState(trip.rating);
-    const [isEditRating, setIsEditRating] = useState(false);
-
-    const setLoc = useSetAtom(locAtom);
-    const setDate = useSetAtom(tripDateAtom);
-    const setName = useSetAtom(tripNameAtom);
-    const setAdvLevel = useSetAtom(advLevelAtom);
-    const setEditMode = useSetAtom(editModeAtom);
-    const setTripId = useSetAtom(tripIdAtom);
+    const [activeTrip, setActiveTrip] = useAtom(tripAtom);
     const router = useRouter();
+    const hasMounted = useHasMounted();
 
+    const makeTripActive = () => {
+        setActiveTrip({
+            start: trip.start,
+            end: trip.end,
+            name: trip.name,
+            advLevel: trip.advLevel,
+            id: trip.id,
+            startDate: trip.startDate,
+            endDate: trip.endDate,
+        });
+    };
     const handleViewTrip = () => {
-        setLoc({ start: trip.start, end: trip.end });
-        setDate({ start: trip.startDate, end: trip.endDate });
-        setName(trip.name);
-        setAdvLevel(trip.advLevel);
-        setEditMode(true);
-        setTripId(trip.id);
+        makeTripActive();
         router.push("/trips/map");
     };
 
-    if (typeof window === "undefined") return;
+    const handleEditTrip = () => {
+        makeTripActive();
+        router.push("/trips");
+    };
 
     const handleRating = () => {
         if (rating == null) {
             setRating(0);
         }
     };
+
+    if (!hasMounted) return null;
 
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
@@ -110,8 +104,11 @@ const TripCard = ({ trip, deleteCallback }) => {
                 <DarkOutlineButton onClick={handleViewTrip}>
                     View
                 </DarkOutlineButton>
+                <DarkOutlineButton onClick={handleEditTrip}>
+                    Edit
+                </DarkOutlineButton>
                 <DarkOutlineButton onClick={deleteCallback}>
-                    <i class="fa-solid fa-trash"></i>
+                    <i className="fa-solid fa-trash"></i>
                 </DarkOutlineButton>
             </div>
         </div>

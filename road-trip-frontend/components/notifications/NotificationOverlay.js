@@ -2,7 +2,6 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { showNotifAtom } from "../../utils/atoms";
-import LoadingSpinner from "../general/LoadingSpinner";
 import NotificationCard from "./NotificationCard";
 
 const NotificationOverlay = () => {
@@ -12,6 +11,7 @@ const NotificationOverlay = () => {
     const [showNotifs, setShowNotifs] = useAtom(showNotifAtom);
 
     useEffect(() => {
+        const abortController = new AbortController();
         /** @TODO better error handling */
         const getData = async () => {
             const res = await axios.get(`/notification`);
@@ -23,6 +23,8 @@ const NotificationOverlay = () => {
         };
 
         getData();
+
+        return () => abortController.abort();
     }, []);
 
     useEffect(() => {
@@ -32,6 +34,7 @@ const NotificationOverlay = () => {
     if (!notifications || notifications.length < 1) {
         return <></>;
     }
+
     return (
         <div className="lg:flex hidden w-fit fixed top-4 right-4 flex-col gap-1 z-40">
             <div className="flex flex-row justify-end">

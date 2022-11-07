@@ -184,19 +184,3 @@ const Map = ({ ...props }) => {
 };
 
 export default Map;
-
-//when user clicks on the map create a red dot and display route between red dot and Waco
-// map.current.on("click", (event) => {
-//     const coords = Object.keys(event.lngLat).map(
-//         (key) => event.lngLat[key]
-//     );
-
-//     getRoute(coords);
-// });
-
-// //If this is first click need to create new layer.
-// // if (map.current.getLayer("end")) {
-// //     map.current.getSource("end").setData(endPoint);
-// // } else {
-
-// }

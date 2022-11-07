@@ -21,7 +21,6 @@ import { setupAxios, setupLogger } from "../utils/axiosSetup";
 import Userfront from "@userfront/core";
 import { Provider } from "jotai";
 import ReducedLayout from "../components/general/ReducedLayout";
-import LoadingSpinner from "../components/general/LoadingSpinner";
 Userfront.init("wbmrp64n");
 
 /**
@@ -35,13 +34,9 @@ Userfront.init("wbmrp64n");
  */
 
 function MyApp({ Component, pageProps }) {
-    const [isSSR, setIsSSR] = useState(false);
-    const SsrSuspense = isSSR ? React.Fragment : React.Suspense;
-
     useEffect(() => {
         setupAxios();
         setupLogger();
-        setIsSSR(typeof window === "undefined");
     }, []);
 
     return (
@@ -59,21 +54,19 @@ function MyApp({ Component, pageProps }) {
                 crossorigin="anonymous"
             ></Script>
             <Provider>
-                <SsrSuspense fallback={<LoadingSpinner />}>
-                    {Component.usesMapLayout ? (
-                        <MapLayout>
-                            <Component {...pageProps} />
-                        </MapLayout>
-                    ) : Component.usesReducedLayout ? (
-                        <ReducedLayout>
-                            <Component {...pageProps} />
-                        </ReducedLayout>
-                    ) : (
-                        <Layout>
-                            <Component {...pageProps} />
-                        </Layout>
-                    )}
-                </SsrSuspense>
+                {Component.usesMapLayout ? (
+                    <MapLayout>
+                        <Component {...pageProps} />
+                    </MapLayout>
+                ) : Component.usesReducedLayout ? (
+                    <ReducedLayout>
+                        <Component {...pageProps} />
+                    </ReducedLayout>
+                ) : (
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                )}
             </Provider>
         </>
     );

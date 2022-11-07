@@ -2,7 +2,7 @@ export const tabs = [
     {
         section: "Trips",
         tabs: [
-            { name: "Create a Trip", href: "/trips/create" },
+            { name: "Create a Trip", href: "/trips" },
             { name: "My Trips", href: "/trips/list/user" },
             { name: "Popular Trips", href: "/trips/list/popular" },
         ],

@@ -5,10 +5,13 @@ import TripCard from "../../../components/trip/TripCard";
 
 const UserTrips = () => {
     const router = useRouter();
-    const [trips, setTrips] = useState([]);
+    const [trips, setTrips] = useState();
 
     useEffect(() => {
+        const abortController = new AbortController();
         getData();
+
+        return () => abortController.abort();
     }, []);
 
     const getData = async () => {

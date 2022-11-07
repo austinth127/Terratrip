@@ -2,6 +2,8 @@ import axios from "axios";
 import Logger from "js-logger";
 import Userfront from "@userfront/core";
 
+const controller = new AbortController();
+
 axios.interceptors.response.use(
     function (response) {
         try {
@@ -31,6 +33,9 @@ axios.interceptors.response.use(
 
 axios.interceptors.request.use(
     function (request) {
+        if (!request.baseURL) {
+            throw new axios.Cancel("No baseURL Set");
+        }
         try {
             Logger.info(
                 `Sent ${request.method.toLocaleUpperCase()} to ${request.url}`
