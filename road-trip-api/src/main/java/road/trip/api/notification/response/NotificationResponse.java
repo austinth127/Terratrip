@@ -4,19 +4,53 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Setter;
+import road.trip.persistence.models.Notification;
 import road.trip.persistence.models.NotificationType;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Setter
 public class NotificationResponse {
+
+    public NotificationResponse(Notification n) {
+        id = n.getId();
+        tripId = n.getTrip().getId();
+        notifiedAt = n.getSendAt();
+        type = n.getType();
+
+        switch(n.getType()) {
+            case NEW_ACCOUNT -> {
+                title = "Welcome to Terratrip!";
+                body = "You're all set. Time to plan some trips!";
+            }
+            case UPCOMING_TRIP_WEEK -> {
+                title = "Upcoming Trip!";
+                body = "Your trip " + n.getTrip().getName() + " is coming up in one week!";
+            }
+            case UPCOMING_TRIP_DAY -> {
+                title = "Upcoming Trip!";
+                body = "Your trip " + n.getTrip().getName() + " is coming up tomorrow!";
+            }
+            case COMPLETED_TRIP -> {
+                title = "Completed Trip!";
+                body = "Make sure to rate your trip " + n.getTrip().getName() + "!";
+            }
+            default -> throw new IllegalStateException("Oops, not implemented");
+        }
+
+    }
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("text")
-    private String text;
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("body")
+    private String body;
+
+    @JsonProperty("trip_id")
+    private Long tripId;
 
     @JsonProperty("notified_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm a")

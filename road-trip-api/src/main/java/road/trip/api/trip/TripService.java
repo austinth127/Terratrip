@@ -142,7 +142,8 @@ public class TripService {
 
             tripRepository.save(t);
 
-            notificationService.editNotifications(t);
+            notificationService.updateNotifications(t);
+
             return t.getId();
         } else {
             log.error("Trip not owned by user.");
@@ -178,6 +179,7 @@ public class TripService {
             }
 
             notificationService.deleteNotifications(t.get());
+
             tripRepository.deleteById(id);
         } else {
             log.error("Trip not owned by user.");

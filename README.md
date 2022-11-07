@@ -75,3 +75,11 @@
 		- whenever a commit is made, a pipeline should be created for your GitLab project. You can view this pipeline to see its status while it is executing in the "CI/CD -> Pipelines" tab on GitLab.
 
 This will get basic CI/CD functionality setup for your project. Feel free to customize this process to fit your needs as the project progresses.
+
+
+FAQ:
+Dang, the GCP deployment is failing... because space ran out??? Just run this:
+```
+$ sudo docker container prune
+$ sudo docker image prune
+```

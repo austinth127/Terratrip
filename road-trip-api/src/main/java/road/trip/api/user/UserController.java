@@ -15,10 +15,11 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/user")
 public class UserController {
     final UserService userService;
+    final RegistrationService registrationService;
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(userService.register(request));
+        return ResponseEntity.ok(registrationService.register(request));
     }
 
     @GetMapping
