@@ -10,16 +10,17 @@ import java.util.List;
 
 @Data
 public class LocationResponse {
-    public LocationResponse(Location start) {
-        id = start.getId();
-        name = start.getName();
-        center = new Double[]{start.getCoordX(), start.getCoordY()};
-        description = start.getDescription();
-        rating = start.getRating();
-        phoneContact = start.getPhoneContact();
-        website = start.getWebsite();
-        address = start.getAddress();
-        categories = Arrays.stream(start.getCategories().split(",")).toList();
+    public LocationResponse(Location location) {
+        id = location.getId();
+        name = location.getName();
+        center = new Double[]{location.getCoordX(), location.getCoordY()};
+        description = location.getDescription();
+        rating = location.getRating();
+        phoneContact = location.getPhoneContact();
+        website = location.getWebsite();
+        address = location.getAddress();
+        categories = Arrays.stream(location.getCategories().split(",")).toList();
+        geoapifyId = location.getGeoapifyId();
     }
 
     @NotNull
@@ -37,4 +38,7 @@ public class LocationResponse {
     private String address;
     private Integer rating;
     private List<String> categories;
+
+    @JsonProperty("geoapify_id")
+    private String geoapifyId;
 }

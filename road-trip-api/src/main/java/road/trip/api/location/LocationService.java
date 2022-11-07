@@ -45,14 +45,9 @@ public class LocationService {
     public Location createLocation(LocationRequest locationRequest) {
         Location l = findLocation(locationRequest);
         if(l == null) {
-            System.out.println("trip Created: " + locationRequest.getName());
-            Location location = Location.builder()
-                .name(locationRequest.getName())
-                .description(locationRequest.getDescription())
-                .rating(locationRequest.getRating())
-                .coordX(locationRequest.getCoordX())
-                .coordY(locationRequest.getCoordY())
-                .build();
+            log.info("trip Created: " + locationRequest.getName());
+
+            Location location = locationRequest.buildLocation();
 
             return locationRepository.save(location);
         }
@@ -72,8 +67,7 @@ public class LocationService {
                 locs.add(optLoc.get());
             }
             else{
-                // TODO: add log message
-                System.out.println("Error: no Location found");
+                log.error("Error: no Location found");
             }
         }
         return locs;
@@ -123,8 +117,7 @@ public class LocationService {
                 locations.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
             }
         } else{
-            // TODO: add log message
-            System.out.println("Error: no Trip found");
+            log.error("Error: no Trip found");
         }
         return locations.stream()
             .map(location -> {
