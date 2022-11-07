@@ -10,6 +10,7 @@ import road.trip.api.user.UserService;
 import road.trip.persistence.daos.NotificationRepository;
 import road.trip.persistence.models.Notification;
 import road.trip.persistence.models.NotificationType;
+import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
 import java.time.LocalDate;
@@ -92,7 +93,11 @@ public class NotificationService {
     }
 
     public void deleteNotifications(Trip trip) {
-        notificationRepository.deleteAllByTrip(trip);
+        List<Notification> n = notificationRepository.findByTrip_Id(trip.getId());
+
+        for (int i = 0; i < n.size(); i++) {
+            notificationRepository.deleteById(n.get(i).getId());
+        }
     }
 
     /**
