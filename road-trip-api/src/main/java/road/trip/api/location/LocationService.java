@@ -13,10 +13,7 @@ import road.trip.clients.geoapify.GeoApifyClient;
 import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.daos.TripRepository;
-import road.trip.persistence.models.Location;
-import road.trip.persistence.models.PlacesAPI;
-import road.trip.persistence.models.Stop;
-import road.trip.persistence.models.Trip;
+import road.trip.persistence.models.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -129,6 +126,17 @@ public class LocationService {
             // TODO: add log message
             System.out.println("Error: no Trip found");
         }
-        return locations.stream().map(LocationResponse::new).collect(Collectors.toList());
+        return locations.stream()
+            .map(location -> {
+                location.setCategories(String.join(",", Arrays.stream(location.getCategories().split(","))
+                    .map(categoryService::getCategoryFromCategoryApiName)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .map(Category::getName)
+                    .toList()));
+                return location;
+            })
+            .map(LocationResponse::new)     // Location -> LocationResponse
+            .collect(Collectors.toList());  // stream -> List
     }
 }

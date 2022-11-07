@@ -3,6 +3,8 @@ package road.trip.clients.geoapify.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Properties {
     String name;
@@ -17,6 +19,7 @@ public class Properties {
     Contact contact;
     String website;
     String description;
+    List<String> categories;
 
     @Data
     static class Contact {

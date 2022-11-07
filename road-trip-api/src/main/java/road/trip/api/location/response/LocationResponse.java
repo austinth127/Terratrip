@@ -5,6 +5,8 @@ import lombok.Data;
 import road.trip.persistence.models.Location;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
 
 @Data
 public class LocationResponse {
@@ -17,6 +19,7 @@ public class LocationResponse {
         phoneContact = start.getPhoneContact();
         website = start.getWebsite();
         address = start.getAddress();
+        categories = Arrays.stream(start.getCategories().split(",")).toList();
     }
 
     @NotNull
@@ -33,4 +36,5 @@ public class LocationResponse {
     private String website;
     private String address;
     private Integer rating;
+    private List<String> categories;
 }
