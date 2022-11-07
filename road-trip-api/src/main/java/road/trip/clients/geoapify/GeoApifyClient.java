@@ -114,8 +114,8 @@ public class GeoApifyClient {
     /**
      * radius - radius of search circle in meters
      */
-    public List<Location> getRecommendedLocations(Double lon, Double lat, Double radius, List<String> categories, Integer limit) {
-        log.debug(lon + " " + lat + " " + radius + " " + categories + " " + limit);
+    public List<Location> getRecommendedLocations(Double lat, Double lon, Double radius, List<String> categories, Integer limit) {
+        log.debug(lat + " " + lon + " " + radius + " " + categories + " " + limit);
         URI placesUri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("categories", String.join(",", categories)),
             new BasicNameValuePair("filter", "circle:" + lat + "," + lon + "," + radius),

@@ -22,13 +22,19 @@ const RecStopList = () => {
         });
         setRecStops(res.data);
     };
-    console.log(recStops);
 
     return (
-        <div className="w-full h-1/2 px-4 pt-2">
+        <div className="w-full h-1/2 px-4 pt-2 text-slate-900">
             <div className="text-sm font-semibold text-green-600">
                 Recommended Stops
             </div>
+            {recStops && recStops.length > 0 ? (
+                <></>
+            ) : (
+                <h2 className="text-xs text-center p-4">
+                    No Recommended Stops
+                </h2>
+            )}
         </div>
     );
 };
