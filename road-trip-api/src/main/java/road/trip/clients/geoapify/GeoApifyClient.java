@@ -23,6 +23,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,7 +134,9 @@ public class GeoApifyClient {
             return null;
         }
 
-        return places.getFeatures().stream().map(Feature::buildLocation).toList();                   //
+        return places.getFeatures().stream()
+            .map(Feature::buildLocation)
+            .toList();
 
 //        // Uncomment for place details
 //        places.getFeatures().forEach(f -> log.info(f.getProperties().getPlaceId()));

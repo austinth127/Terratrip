@@ -32,6 +32,10 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public List<Category> getDefaultCategories() {
+        return categoryRepository.findAllByUseByDefault(true);
+    }
+
     public List<CategoryResponse> getCategoryResponses() {
         List<CategoryResponse> categories = new ArrayList<>();
 
@@ -68,7 +72,7 @@ public class CategoryService {
      */
     public List<String> getRecommendedCategories(Trip t){
         List<String> recommendedCategories = new ArrayList<>();
-        List<Category> categories = getCategories();
+        List<Category> categories = getDefaultCategories();
 
         for(Category c : categories){
             //Category is of appropriate adventure level
@@ -90,6 +94,13 @@ public class CategoryService {
             throw new NotFoundException(categoryName + " category not found in database");
         }
         return optCategory.get();
+    }
+
+    public Optional<Category> getCategoryFromCategoryApiName(String categoryApiName) {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+            .filter(c -> c.getApiCategories().contains(categoryApiName))
+            .findFirst();
     }
 
     /*Given a list of categories formatted for the frontend, generate a list of categories that the api can interpret*/

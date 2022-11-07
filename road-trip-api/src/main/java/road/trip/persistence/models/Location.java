@@ -37,6 +37,8 @@ public class Location {
     private String geoapifyId;      // geoapify id
     private String otmId;           // open trip map id
 
+    private String categories;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

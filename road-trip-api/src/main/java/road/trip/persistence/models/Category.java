@@ -25,6 +25,8 @@ public class Category {
 
     private AdventureLevel adventureLevel;
 
+    private Boolean useByDefault;
+
     private PlacesAPI api;
 
     @Override
