@@ -119,7 +119,7 @@ public class LocationService {
 
         log.info(tripId + " " + radius + " " + categories + " " + route);
         if(optTrip.isPresent()) {
-            if(categories.isEmpty()){
+            if(categories.isEmpty()){   
                 categories = categoryService.getRecommendedCategories(optTrip.get());
             }
             for(List<Double> point : route){

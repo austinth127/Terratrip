@@ -2,8 +2,8 @@ import { useAtom } from "jotai";
 import React, { useEffect } from "react";
 import ClientOnly from "../../components/general/ClientOnly";
 import Map from "../../components/map/Map";
-import StopDisplay from "../../components/map/StopDisplay";
-import StopSelector from "../../components/map/StopSelector";
+import StopDisplay from "../../components/map/tripStops/TripStopDisplay";
+import StopSelector from "../../components/map/stopFilters/StopSelector";
 import SaveModal from "../../components/trip/SaveModal";
 import { showSaveModalAtom } from "../../utils/atoms";
 

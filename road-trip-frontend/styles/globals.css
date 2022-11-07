@@ -11,3 +11,43 @@
 .mapboxgl-ctrl-geocoder {
     min-width: 100%;
 }
+
+.dark-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #64748b;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 100vh;
+    border: none;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #1e293b;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #e2e8f0;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 100vh;
+    border: none;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

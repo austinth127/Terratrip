@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { formatTitle } from "../../utils/stringUtils";
-import { Checkbox } from "../general/Buttons";
+import { formatTitle } from "../../../utils/stringUtils";
+import { Checkbox } from "../../general/Buttons";
 
 /**
  *
@@ -14,10 +14,13 @@ const FilterItem = ({ filter, onCheck }) => {
     const [isChecked, setIsChecked] = useState(false);
 
     return (
-        <div className="text-slate-600 grad-txt-rs-yllw font-hubballi w-fit h-fit hover:cursor-pointer">
+        <div className="text-slate-600 text-xs grad-txt-rs-yllw font-hubballi w-fit h-fit hover:cursor-pointer">
             <Checkbox
                 isChecked={isChecked}
-                onChange={(e) => setIsChecked(e.target.value)}
+                onChange={(e) => {
+                    setIsChecked(e.target.checked);
+                    onCheck(e.target.checked);
+                }}
             />
             {name}
         </div>
