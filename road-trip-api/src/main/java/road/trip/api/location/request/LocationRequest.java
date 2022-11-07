@@ -23,6 +23,7 @@ public class LocationRequest {
     @JsonProperty("geoapify_id")
     private String geoapifyId;
 
+    @JsonProperty("phone_contact")
     private String phoneContact;
     private String website;
     private String address;
@@ -30,7 +31,7 @@ public class LocationRequest {
 
     public Location buildLocation() {
         return Location.builder()
-            .categories(String.join(",", categories))
+            .categories(categories == null ? null : String.join(",", categories))
             .website(website)
             .description(description)
             .phoneContact(phoneContact)
