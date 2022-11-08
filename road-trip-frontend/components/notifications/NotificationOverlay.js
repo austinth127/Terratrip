@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { showNotifAtom } from "../../utils/atoms";
 import NotificationCard from "./NotificationCard";
 
+/** @todo Bug if you try to delete a trip, notifications dont refresh on frontend */
 const NotificationOverlay = () => {
     const [notifications, setNotifications] = useState(null);
     const maxLen = 3;

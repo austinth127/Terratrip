@@ -92,32 +92,26 @@ const TripCard = ({ trip, deleteCallback }) => {
                 </div>
             </div>
 
-            {rating != null ? (
-                <div className="absolute bottom-4 left-4">
-                    <ReactStars
-                        count={5}
-                        size={24}
-                        color2={colors.green600}
-                        half
-                        value={rating}
-                        edit={false}
-                        onChange={(newVal) => {
-                            axios.post(`/trip/${trip.id}/rate`, {
-                                rating: newVal,
-                            });
-                            setRating(rating);
-                        }}
-                    />
-                </div>
-            ) : (
-                <div className="text-sm text-slate-500 absolute bottom-4 left-4">
-                    Not yet rated.
-                </div>
-            )}
+            <div className="absolute bottom-4 left-4">
+                <ReactStars
+                    count={5}
+                    size={24}
+                    color2={colors.green600}
+                    half
+                    value={rating}
+                    edit={true}
+                    onChange={(newVal) => {
+                        axios.post(`/trip/${trip.id}/rate`, {
+                            rating: newVal,
+                        });
+                        setRating(rating);
+                    }}
+                />
+            </div>
 
             <div className="absolute bottom-4 right-4 flex flex-row gap-4">
                 <DarkOutlineButton onClick={handleRating}>
-                    Rate
+                    Rate Stops
                 </DarkOutlineButton>
                 <DarkOutlineButton onClick={handleViewTrip}>
                     View

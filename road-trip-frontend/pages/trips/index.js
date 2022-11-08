@@ -96,6 +96,8 @@ const Create = () => {
                     axios.post("/trip", tripToTripRequest(trip)).then(
                         (success) => {
                             setTripId(success.data);
+                            setRoute(null);
+
                             router.push("/trips/map");
                         },
                         (fail) => {

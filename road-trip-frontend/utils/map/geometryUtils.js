@@ -46,7 +46,7 @@ export const getRoute = async (start, end) => {
  * @returns
  */
 export const getRouteWithStops = async (stops) => {
-    if (!stops || stops.length < 2) return [null, null];
+    if (!stops || stops.length < 2) return null;
     const params = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
     const baseURL = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
     let fail = false;
