@@ -143,7 +143,7 @@ public class LocationService {
         if (!locationRepository.existsById(locationID)){
             throw new NotFoundException();
         }
-        LocationRating prevRating = locationRatingRepository.findByUserAndLocation(userService.user(),locationRepository.findById(locationID));
+        LocationRating prevRating = locationRatingRepository.findAllByRatedLocationAndAndRatingUser(userService.user(),locationRepository.findById(locationID));
         if(Objects.isNull(prevRating)){
             locationRatingRepository.save(LocationRating.builder()
                 .ratedLocation(locationRepository.findById(locationID).get()).rating(rating).ratingUser(userService.user())
@@ -157,7 +157,7 @@ public class LocationService {
     }
 
     public LocationRating getRatingByIDAndUser(Long id, User u ) {
-        LocationRating ret = locationRatingRepository.findByUserAndLocation(u,locationRepository.findById(id));
+        LocationRating ret = locationRatingRepository.findAllByRatedLocationAndAndRatingUser(u,locationRepository.findById(id));
         if(Objects.isNull(ret)){
             throw new NotFoundException();
         }
