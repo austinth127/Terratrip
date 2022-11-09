@@ -8,13 +8,11 @@ import road.trip.util.exceptions.NotFoundException;
 import road.trip.api.notification.response.NotificationResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.NotificationRepository;
-import road.trip.persistence.models.Notification;
-import road.trip.persistence.models.NotificationType;
-import road.trip.persistence.models.Stop;
-import road.trip.persistence.models.Trip;
+import road.trip.persistence.models.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,28 +26,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserService userService;
 
-    /**
-     * Creates a response object from the given Notification object
-     *
-     * @param notification the notification for which to generate a response
-     * @return the response object
-     */
-    private NotificationResponse getResponse(Notification notification) {
-        Trip trip = notification.getTrip();
-        NotificationResponse response = NotificationResponse.builder()
-            .id(notification.getId())
-            .type(notification.getType())
-            .notifiedAt(LocalDateTime.now())
-            .build();
-
-        switch (notification.getType()) {
-            case UPCOMING_TRIP -> response.setText(String.format("Your \"%s\" trip is coming up in %d days", trip.getName(), DAYS.between(LocalDate.now(), trip.getStartDate())));
-            case COMPLETED_TRIP -> response.setText(String.format("%s: Trip Complete!", trip.getName()));
-            default -> throw new IllegalStateException("Oops, not implemented");
-        }
-
-        return response;
-    }
 
     /**
      * Gets the list of notifications that should be sent to the authenticated user
@@ -58,31 +34,23 @@ public class NotificationService {
      */
     public List<NotificationResponse> getNotifications() {
         // Get the list of notifications that should be sent to the authenticated user
-        List<Notification> notifications = notificationRepository.getNotificationsByUserAndSendAtBefore(userService.user(), LocalDateTime.now());
+        List<Notification> notifications = notificationRepository.getNotificationsByUserAndSendAtBeforeAndExpireAtAfter(userService.user(), LocalDateTime.now(), LocalDateTime.now());
 
         // Convert the notification into a format that the frontend wants
         return notifications.stream()
-            .map(this::getResponse)
+            .map(NotificationResponse::new)
             .collect(Collectors.toList());
     }
 
-    public List<Notification> editNotifications(Trip trip) {
-        Optional<Notification> upcomingNotification = notificationRepository.findByTripAndType(trip, NotificationType.UPCOMING_TRIP);
-        Optional<Notification> completedNotification = notificationRepository.findByTripAndType(trip, NotificationType.COMPLETED_TRIP);
+    public void updateNotifications(Trip trip) {
+        List<Notification> notifs = notificationRepository.findByTrip_Id(trip.getId());
 
-        Notification un = createUpcomingTripNotification(trip);
-        Notification cn = createCompletedNotification(trip);
+        for(int i = 0; i < notifs.size(); i++) {
+            notifs.get(i).setSendAt(getSendAtTime(trip, notifs.get(i).getType()));
+            notifs.get(i).setExpireAt(getExpiresAtTime(trip, notifs.get(i).getType()));
 
-        upcomingNotification.ifPresent((n) -> {
-            notificationRepository.delete(n);
-            notificationRepository.save(un);
-        });
-        completedNotification.ifPresent((n) -> {
-            notificationRepository.delete(n);
-            notificationRepository.save(cn);
-        });
-
-        return List.of(un, cn);
+            notificationRepository.save(notifs.get(i));
+        }
     }
 
     public void deleteNotification(Long id) throws NotFoundException {
@@ -109,27 +77,63 @@ public class NotificationService {
      * @return the list of created notifications
      */
     public List<Notification> enqueueNotifications(Trip trip) {
-        Notification upcomingNotification = createUpcomingTripNotification(trip);
+        Notification upcomingWeekNotification = createUpcomingTripWeekNotification(trip);
+        Notification upcomingDayNotification = createUpcomingTripDayNotification(trip);
         Notification completedNotification = createCompletedNotification(trip);
 
-        notificationRepository.save(upcomingNotification);
-        notificationRepository.save(completedNotification);
+        List<Notification> nList = new ArrayList<>();
 
-        return List.of(upcomingNotification, completedNotification);
+        nList.add(notificationRepository.save(upcomingWeekNotification));
+        nList.add(notificationRepository.save(upcomingDayNotification));
+        nList.add(notificationRepository.save(completedNotification));
+
+        return nList;
     }
 
+    public List<Notification> enqueueNotifications(User user) {
+        Notification newAccountNotification = createNewAccountNotification(user);
+
+        List<Notification> nList = new ArrayList<>();
+
+        nList.add(notificationRepository.save(newAccountNotification));
+
+        return nList;
+    }
+
+
+
+    private Notification createNewAccountNotification(User user) {
+        return Notification.builder()
+            .user(user)
+            .sendAt(LocalDateTime.now())
+            .expireAt(LocalDateTime.now().plusYears(1))
+            .type(NotificationType.NEW_ACCOUNT)
+            .build();
+    }
 
     /**
      * Generates upcoming trip notification 5 days before the start date
      */
-    private Notification createUpcomingTripNotification(Trip trip) {
+    private Notification createUpcomingTripWeekNotification(Trip trip) {
         return Notification.builder()
             .trip(trip)
             .user(trip.getCreator())
-            .sendAt(trip.getStartDate().minusDays(5).atStartOfDay())
-            .type(NotificationType.UPCOMING_TRIP)
+            .sendAt(getSendAtTime(trip, NotificationType.UPCOMING_TRIP_WEEK))
+            .expireAt(getExpiresAtTime(trip, NotificationType.UPCOMING_TRIP_WEEK))
+            .type(NotificationType.UPCOMING_TRIP_WEEK)
             .build();
     }
+
+    private Notification createUpcomingTripDayNotification(Trip trip) {
+        return Notification.builder()
+            .trip(trip)
+            .user(trip.getCreator())
+            .sendAt(getSendAtTime(trip, NotificationType.UPCOMING_TRIP_DAY))
+            .expireAt(getExpiresAtTime(trip, NotificationType.UPCOMING_TRIP_DAY))
+            .type(NotificationType.UPCOMING_TRIP_DAY)
+            .build();
+    }
+
 
     /**
      * Generates trip completion notification at 8pm on the end date
@@ -138,8 +142,42 @@ public class NotificationService {
          return Notification.builder()
             .trip(trip)
             .user(trip.getCreator())
-            .sendAt(trip.getEndDate().atTime(20, 0))
+            .sendAt(getSendAtTime(trip, NotificationType.COMPLETED_TRIP))
+            .expireAt(getExpiresAtTime(trip, NotificationType.COMPLETED_TRIP))
             .type(NotificationType.COMPLETED_TRIP)
             .build();
+    }
+
+    private LocalDateTime getSendAtTime(Trip t, NotificationType type) {
+        switch(type) {
+            case NEW_ACCOUNT -> {
+                return LocalDateTime.now();
+            }
+            case UPCOMING_TRIP_WEEK -> {
+                return t.getStartDate().minusDays(7).atStartOfDay();
+            }
+            case UPCOMING_TRIP_DAY -> {
+                return t.getStartDate().minusDays(1).atStartOfDay();
+            }
+            case COMPLETED_TRIP -> {
+                return t.getEndDate().plusDays(1).atStartOfDay();
+            }
+            default -> throw new IllegalStateException("Oops, not implemented");
+        }
+    }
+
+    private LocalDateTime getExpiresAtTime(Trip t, NotificationType type) {
+        switch(type) {
+            case COMPLETED_TRIP -> {
+                return LocalDateTime.now().plusYears(1);
+            }
+            case UPCOMING_TRIP_WEEK -> {
+                return t.getStartDate().minusDays(1).atStartOfDay();
+            }
+            case UPCOMING_TRIP_DAY -> {
+                return t.getStartDate().atStartOfDay();
+            }
+            default -> throw new IllegalStateException("Oops, not implemented");
+        }
     }
 }

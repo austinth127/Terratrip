@@ -24,6 +24,7 @@ public class Notification {
     private NotificationType type;
 
     private LocalDateTime sendAt;
+    private LocalDateTime expireAt;
 
     @Override
     public boolean equals(Object o) {

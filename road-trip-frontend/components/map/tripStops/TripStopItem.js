@@ -22,15 +22,16 @@ const TripStopItem = ({ stop, order }) => {
         setStops([...stops]);
     };
 
-    if (!stop || !stops) {
+    if (!stop) {
         return null;
     }
 
+    const len = stops ? stops.length : 0;
     const start = false,
         end = false;
     if (order == 0) {
         start = true;
-    } else if (order == stops.length + 1) {
+    } else if (order == len + 1) {
         end = true;
     }
 

@@ -17,7 +17,7 @@ const MapNav = ({ ...props }) => {
 
     const handleCancel = () => {
         clearTrip();
-        router.back();
+        router.push("/trips/list/user");
     };
 
     return (

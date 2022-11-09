@@ -27,9 +27,8 @@ const TripCard = ({ trip, deleteCallback }) => {
     };
 
     const handleRating = () => {
-        if (rating == null) {
-            setRating(0);
-        }
+        makeTripActive(trip, setActiveTrip);
+        router.push("/trips/rate");
     };
 
     if (!hasMounted) return null;
@@ -45,11 +44,14 @@ const TripCard = ({ trip, deleteCallback }) => {
 
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-start gap-4">
                 <h2 className="font-semibold text-lg">{trip.name}</h2>
-                <div onClick={deleteCallback}>
-                    <i class="fa-solid fa-trash"></i>
-                </div>
+                <button
+                    onClick={deleteCallback}
+                    className="text-slate-400 hover:text-slate-500"
+                >
+                    <i className="fa-solid fa-trash"></i>
+                </button>
             </div>
             <div
                 className={`absolute top-4 right-4 text-sm italic ${
@@ -98,7 +100,7 @@ const TripCard = ({ trip, deleteCallback }) => {
                         color2={colors.green600}
                         half
                         value={rating}
-                        edit={true}
+                        edit={false}
                         onChange={(newVal) => {
                             axios.post(`/trip/${trip.id}/rate`, {
                                 rating: newVal,
@@ -112,14 +114,11 @@ const TripCard = ({ trip, deleteCallback }) => {
                     Not yet rated.
                 </div>
             )}
+
             <div className="absolute bottom-4 right-4 flex flex-row gap-4">
-                {rating == null ? (
-                    <DarkOutlineButton onClick={handleRating}>
-                        Rate
-                    </DarkOutlineButton>
-                ) : (
-                    <></>
-                )}
+                <DarkOutlineButton onClick={handleRating}>
+                    Rate
+                </DarkOutlineButton>
                 <DarkOutlineButton onClick={handleViewTrip}>
                     View
                 </DarkOutlineButton>

@@ -13,7 +13,6 @@ const StopDisplay = () => {
         return null;
     }
 
-    console.log(locs);
     return (
         <div
             className=" h-fit rounded-lg sm:w-1/4 max-h-[70vh] overflow-y-scroll dark-scrollbar
