@@ -12,6 +12,7 @@ import road.trip.api.location.request.RecommendRequest;
 import road.trip.api.location.response.LocationResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.LocationRatingRepository;
+import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.models.Location;
 import road.trip.persistence.models.LocationRating;
 
@@ -26,6 +27,7 @@ public class LocationController {
     final LocationService locationService;
     final LocationRatingRepository locationRatingRepository;
     final UserService userService;
+    final LocationRepository locationRepository;
 
     @Deprecated
     @PostMapping("/create-stop")
@@ -47,7 +49,7 @@ public class LocationController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/{location_id}")
-    public ResponseEntity<?> getLocationRating(@PathVariable("location_id") Long id){
-        return ResponseEntity.ok(locationService.getRatingByIDAndUser(id,userService.user()));
+    public ResponseEntity<LocationResponse> getLocationRating(@PathVariable("location_id") Long id){
+        return ResponseEntity.ok(new LocationResponse(locationRepository.findById(id).get(),userService.user(),locationService));
     }
 }
