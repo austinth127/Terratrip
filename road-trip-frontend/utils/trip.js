@@ -36,5 +36,6 @@ export const makeTripActive = (trip, setActiveTrip) => {
         startDate: trip.startDate,
         endDate: trip.endDate,
         stops: trip.stops,
+        rating: trip.rating,
     });
 };

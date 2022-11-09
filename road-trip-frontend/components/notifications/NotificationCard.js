@@ -11,7 +11,7 @@ const NotificationCard = ({ notification, removeNotif }) => {
             >
                 <i className="fa fa-x fa-solid text-gray-400 fa-xs"></i>
             </button>
-            <h3 className="text-green-600 pr-6">{notification.text}</h3>
+            <h3 className="text-green-600 pr-6">{notification.title}</h3>
             <p>{notification.body}</p>
             <p className="text-gray-400">{notification.notified_at}</p>
         </div>
