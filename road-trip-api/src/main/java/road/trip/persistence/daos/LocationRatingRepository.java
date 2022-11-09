@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LocationRatingRepository extends JpaRepository<LocationRating, Long>{
-    LocationRating  findAllByRatedLocationAndAndRatingUser(User user, Optional<Location> location);
+    LocationRating  findAllByRatingUserAndRatedLocation(User user, Optional<Location> location);
     Integer countAllByRatedLocation(Location location);
     List<LocationRating> findAllByRatedLocation(Location location);
 }
