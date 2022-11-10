@@ -80,3 +80,17 @@ export const getRouteWithStops = async (stops) => {
 
     return [route, geojson];
 };
+
+export const flyTo = (map, geoJson) => {
+    if (!map.current || !geoJson) return;
+    const coordinates = geoJson.geometry.coordinates;
+
+    const bounds = new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]);
+    for (const coord of coordinates) {
+        bounds.extend(coord);
+    }
+
+    map.current.fitBounds(bounds, {
+        padding: 200,
+    });
+};

@@ -49,11 +49,8 @@ public class LocationService {
 
     public Location createLocation(LocationRequest locationRequest) {
         Location l = findLocation(locationRequest);
-        if(l == null) {
-            log.info("trip Created: " + locationRequest.getName());
-
+        if (l == null) {
             Location location = locationRequest.buildLocation();
-//            location.setRating(locationRatingRepository.countAllByRatedLocation(location));
             return locationRepository.save(location);
         }
 
