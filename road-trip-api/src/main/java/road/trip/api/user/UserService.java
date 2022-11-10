@@ -58,4 +58,12 @@ public class UserService {
         }
         return user().getId();
     }
+
+    public void setSpotifyInfo(String accessToken, String refreshToken, String spotifyUserID) {
+        User user = user();
+        user.setSpotifyAccessToken(accessToken);
+        user.setSpotifyRefreshToken(refreshToken);
+        user.setSpotifyUserId(spotifyUserID);
+        userRepository.save(user);
+    }
 }

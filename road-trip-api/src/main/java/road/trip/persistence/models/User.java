@@ -39,6 +39,14 @@ public class User {
     @JsonIgnore
     List<User> notifications;
 
+    @Column(length = 4096)
+    String spotifyAccessToken;
+
+    @Column(length = 512)
+    String spotifyRefreshToken;
+
+    String spotifyUserId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
