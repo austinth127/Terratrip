@@ -11,10 +11,7 @@ import road.trip.api.location.request.LocationRequest;
 import road.trip.api.location.response.LocationResponse;
 import road.trip.api.user.UserService;
 import road.trip.clients.geoapify.GeoApifyClient;
-import road.trip.persistence.daos.LocationRatingRepository;
-import road.trip.persistence.daos.LocationRepository;
-import road.trip.persistence.daos.StopRepository;
-import road.trip.persistence.daos.TripRepository;
+import road.trip.persistence.daos.*;
 import road.trip.persistence.models.*;
 import road.trip.util.exceptions.NotFoundException;
 
@@ -124,8 +121,10 @@ public class LocationService {
         } else{
             log.error("Error: no Trip found");
         }
+
         return locations.stream()
             .map(location -> {
+                // Set the categories for the given location
                 location.setCategories(String.join(",", Arrays.stream(location.getCategories().split(","))
                     .map(categoryService::getCategoryFromCategoryApiName)
                     .filter(Optional::isPresent)
@@ -133,8 +132,15 @@ public class LocationService {
                     .map(Category::getName)
                     .toList()));
                 return location;
-            })
-            .map(e-> new LocationResponse(e,userService.user(),this))     // Location -> LocationResponse
+            }).map(e -> {
+                if(locationRatingRepository.findByRatedLocation(e)){
+                    return new LocationResponse(e, userService.user(),this );
+                }
+                else{
+                    return new LocationResponse(e);
+                }
+
+                })     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
     }
     public void addLocationRating(Long locationID, Double rating){

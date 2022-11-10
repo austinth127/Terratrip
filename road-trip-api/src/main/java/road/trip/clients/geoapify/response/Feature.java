@@ -22,6 +22,10 @@ public class Feature {
             .phoneContact(properties.getContact() == null ? null : properties.getContact().getPhone())
             .website(properties.getWebsite())
             .description(properties.getDescription())
+            .rating(0.0)
+                .mapboxId(null)
+                .geoapifyId(null)
+                .otmId(null)
             .build();
     }
 }
