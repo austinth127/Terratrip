@@ -2,19 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useAtom, useAtomValue } from "jotai";
-import {
-    getPoints,
-    getRoute,
-    getRouteWithStops,
-} from "../../utils/map/geometryUtils";
+import { flyTo, getRouteWithStops } from "../../utils/map/geometryUtils";
 import {
     allLocationsAtom,
     endAtom,
     routeAtom,
+    routeGeoJsonAtom,
     startAtom,
     stopsAtom,
 } from "../../utils/atoms";
 import { colors } from "../../utils/colors";
+import { getStopOrderText } from "../../utils/stringUtils";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -37,18 +35,26 @@ const Map = ({ ...props }) => {
     const [lat, setLat] = useState(31.55);
     const [zoom, setZoom] = useState(3.4);
 
+    const locs = useAtomValue(allLocationsAtom);
+    const stops = useAtomValue(stopsAtom);
     const [start, setStart] = useAtom(startAtom);
     const [end, setEnd] = useAtom(endAtom);
+
     const [route, setRoute] = useAtom(routeAtom);
-    const locs = useAtomValue(allLocationsAtom);
+    const [routeGeoJson, setRouteGeoJson] = useAtom(routeGeoJsonAtom);
+
+    /** @type {React.MutableRefObject<mapboxgl.Layer>} */
+    const routerLayer = useRef(null);
+
     const [markers, setMarkers] = useState([]);
 
     async function addRoute() {
-        if (!map.current) return;
-        if (!locs || locs.length < 2) return;
+        if (!map.current || !locs || locs.length < 2) return;
         const [route, geojson] = await getRouteWithStops(locs);
 
         setRoute(route);
+        setRouteGeoJson(geojson);
+
         if (!locs || !route) {
             return;
         }
@@ -69,7 +75,7 @@ const Map = ({ ...props }) => {
                     "line-cap": "round",
                 },
                 paint: {
-                    "line-color": colors.green600,
+                    "line-color": colors.green700,
                     "line-width": 5,
                     "line-opacity": 0.5,
                 },
@@ -79,26 +85,27 @@ const Map = ({ ...props }) => {
         markers.forEach((marker) => marker.remove());
         setMarkers([]);
 
-        locs.forEach((location) => {
+        locs.forEach((location, index) => {
             // var popup = new mapboxgl.Popup().setText(
             //     marker.properties.title
             // );
 
-            // const el = document.createElement("div");
-            // const width = marker.properties.iconSize[0];
-            // const height = marker.properties.iconSize[1];
-            // el.className = "marker";
-            // el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
-            // el.style.width = `${width}px`;
-            // el.style.height = `${height}px`;
-            // el.style.backgroundSize = "100%";
+            const el = document.createElement("div");
+            const width = 30;
+            const height = 30;
+            el.className = "trip-marker";
+            el.style.width = `${width}px`;
+            el.style.height = `${height}px`;
+            el.textContent = getStopOrderText(stops, index);
+            el.style.fontSize = "10px";
+            el.style.lineHeight = "14px";
 
             // el.addEventListener("click", () => {
             //     window.alert(marker.properties.message);
             // });
 
             // Add markers to the map.
-            const marker = new mapboxgl.Marker()
+            const marker = new mapboxgl.Marker(el)
                 .setLngLat(location.center)
                 .addTo(map.current);
 
@@ -131,6 +138,14 @@ const Map = ({ ...props }) => {
         addRoute();
     }, [locs]);
 
+    useEffect(() => {
+        if (!routeGeoJson || !map.current) return;
+
+        /* add a button for this as well */
+        flyTo(map, routeGeoJson);
+        // Calculate Appropriate Default Zoom
+    }, [routeGeoJson]);
+
     // onMove
     // Update longitude/lattitude/zoom as the user moves around
     useEffect(() => {
@@ -147,6 +162,7 @@ const Map = ({ ...props }) => {
             <div className="bg-slate-800 bg-opacity-80 py-1.5 px-3 font-mono text-xs z-[1] absolute top-12 right-0 m-3 rounded-lg">
                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
+
             {/* Map */}
             <div ref={mapContainer} className="h-[100vh]"></div>
         </div>

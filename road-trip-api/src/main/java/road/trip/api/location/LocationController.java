@@ -29,9 +29,8 @@ public class LocationController {
     final UserService userService;
     final LocationRepository locationRepository;
 
-    @Deprecated
-    @PostMapping("/create-stop")
-    public ResponseEntity<Location> saveStop(@RequestBody LocationRequest locationRequest) {
+    @PostMapping("/create-location")
+    public ResponseEntity<Location> createLocation(@RequestBody LocationRequest locationRequest) {
         return ResponseEntity.ok(locationService.createLocation(locationRequest));
     }
 

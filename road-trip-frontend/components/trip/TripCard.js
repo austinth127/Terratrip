@@ -104,15 +104,27 @@ const TripCard = ({ trip, deleteCallback }) => {
                         axios.post(`/trip/${trip.id}/rate`, {
                             rating: newVal,
                         });
-                        setRating(rating);
+                        setRating(newVal);
                     }}
                 />
+                {rating == null ? (
+                    <p className="italic text-xs font-light text-slate-400 -mt-1">
+                        Unrated
+                    </p>
+                ) : (
+                    <></>
+                )}
             </div>
 
             <div className="absolute bottom-4 right-4 flex flex-row gap-4">
-                <DarkOutlineButton onClick={handleRating}>
-                    Rate Stops
-                </DarkOutlineButton>
+                {trip.stops && trip.stops.length > 0 ? (
+                    <DarkOutlineButton onClick={handleRating}>
+                        Rate Stops
+                    </DarkOutlineButton>
+                ) : (
+                    <></>
+                )}
+
                 <DarkOutlineButton onClick={handleViewTrip}>
                     View
                 </DarkOutlineButton>

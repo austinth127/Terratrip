@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Geocoder from "../Geocoder";
 import TextInput from "../../general/TextInput";
 import StopFilters from "../stopFilters/StopFilters";
 import RecStopList from "../stopRecs/RecStopList";
+import { useAtom } from "jotai";
+import { stopsAtom } from "../../../utils/atoms";
 
 const StopSelector = () => {
+    const [mapboxStop, setMapboxStop] = useState();
     const [stop, setStop] = useState();
+
+    const [stops, setStops] = useAtom(stopsAtom);
+
+    useEffect(() => {
+        if (!mapboxStop) return;
+        console.log(mapboxStop);
+    }, [mapboxStop]);
+
     return (
         <div
             className="bg-gray-50 border border-gray-100 rounded-lg sm:w-1/4 h-[85vh]
@@ -15,7 +26,7 @@ const StopSelector = () => {
                 <h1 className="mb-2 font-semibold text-green-600 text-sm">
                     Add Stop
                 </h1>
-                <Geocoder callback={setStop} InputComponent={TextInput} />
+                <Geocoder callback={setMapboxStop} InputComponent={TextInput} />
             </div>
             <RecStopList />
             <StopFilters />
