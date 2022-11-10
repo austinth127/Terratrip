@@ -12,6 +12,7 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.specification.*;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.browse.GetRecommendationsRequest;
@@ -22,6 +23,7 @@ import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfi
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Data
@@ -78,13 +80,14 @@ public class SpotifyClient {
         return new SpotifyClient(api);
     }
 
-    public static String getAuthorizationCodeURI() {
+    public static String getAuthorizationCodeURI(String state) {
         SpotifyApi api = new SpotifyApi.Builder()
             .setClientId(CLIENT_ID)
             .setRedirectUri(SpotifyHttpManager.makeUri(REDIRECT_URI))
             .build();
         AuthorizationCodeUriRequest request = api.authorizationCodeUri()
             .scope(SCOPE)
+            .state(state)
             .build();
         URI uri = request.execute();
         return uri.toString();
@@ -94,9 +97,20 @@ public class SpotifyClient {
         SpotifyApi api = new SpotifyApi.Builder()
             .setClientId(CLIENT_ID)
             .setClientSecret(CLIENT_SECRET)
+            .setRedirectUri(SpotifyHttpManager.makeUri(REDIRECT_URI))
             .build();
         AuthorizationCodeRequest request = api.authorizationCode(code).build();
         return request.execute();
+    }
+
+    public String refreshTokens(String refreshToken) throws IOException, ParseException, SpotifyWebApiException {
+        SpotifyApi api = new SpotifyApi.Builder()
+            .setClientId(CLIENT_ID)
+            .setClientSecret(CLIENT_SECRET)
+            .setRefreshToken(refreshToken)
+            .build();
+        AuthorizationCodeRefreshRequest request = api.authorizationCodeRefresh().build();
+        return request.execute().getAccessToken();
     }
 
     public Playlist createPlaylist(String spotifyUserID, String name) throws IOException, ParseException, SpotifyWebApiException {

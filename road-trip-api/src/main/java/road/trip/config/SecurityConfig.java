@@ -21,9 +21,7 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_ROUTES = {
         "/user/register",
-        "/user/profile/{id}",
-        "/create-stop",
-        "/create-trip"
+        "/spotify/auth-callback"
     };
 
     @Bean
@@ -43,7 +41,7 @@ public class SecurityConfig {
             .cors().configurationSource(request -> corsConfig)
             .and()
 
-            // TODO: Unsafe, fix for milestone 3
+            // TODO: Unsafe, fix for milestone 4
             .csrf().disable();
 
         return http.build();

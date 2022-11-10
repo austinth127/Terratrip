@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import road.trip.clients.spotify.SpotifyClient;
 
 @RestController
 @RequestMapping("/spotify")
@@ -20,13 +19,13 @@ public class SpotifyController {
 
     @GetMapping("/auth-uri")
     public ResponseEntity<String> getAuthURI() {
-        return ResponseEntity.ok(SpotifyClient.getAuthorizationCodeURI());
+        return ResponseEntity.ok(spotifyService.getAuthCodeURI());
     }
 
     @GetMapping("auth-callback")
-    public ResponseEntity<?> authCallback(@RequestParam String code, @RequestParam String error) {
+    public ResponseEntity<?> authCallback(@RequestParam(required = false) String code, @RequestParam String state, @RequestParam(required = false) String error) {
         if (error == null) {
-            spotifyService.handleAuthCode(code);
+            spotifyService.handleAuthCode(code, state);
         } else {
             log.error("Unsuccessful Spotify OAuth Flow: {}", error);
         }
