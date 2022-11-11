@@ -6,6 +6,7 @@ import { flyTo, getRouteWithStops } from "../../utils/map/geometryUtils";
 import {
     allLocationsAtom,
     endAtom,
+    recStopAtom,
     routeAtom,
     routeGeoJsonAtom,
     startAtom,
@@ -13,6 +14,9 @@ import {
 } from "../../utils/atoms";
 import { colors } from "../../utils/colors";
 import { getStopOrderText } from "../../utils/stringUtils";
+import ReactDOMServer from "react-dom/server";
+import RecStopItem from "./stopRecs/RecStopItem";
+import RecStopPopup from "./stopRecs/RecStopPopup";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -42,11 +46,13 @@ const Map = ({ ...props }) => {
 
     const [route, setRoute] = useAtom(routeAtom);
     const [routeGeoJson, setRouteGeoJson] = useAtom(routeGeoJsonAtom);
+    const recStops = useAtomValue(recStopAtom);
 
     /** @type {React.MutableRefObject<mapboxgl.Layer>} */
     const routerLayer = useRef(null);
 
     const [markers, setMarkers] = useState([]);
+    const [recStopMarkers, setRecStopMarkers] = useState([]);
 
     async function addRoute() {
         if (!map.current || !locs || locs.length < 2) return;
@@ -146,6 +152,38 @@ const Map = ({ ...props }) => {
         // Calculate Appropriate Default Zoom
     }, [routeGeoJson]);
 
+    useEffect(() => {
+        if (!map.current || !recStops) return;
+
+        async function addMarkers() {
+            recStopMarkers.forEach((marker) => marker.remove());
+            setMarkers([]);
+
+            recStops.forEach((stop, index) => {
+                const popupElement = ReactDOMServer.renderToStaticMarkup(
+                    <RecStopPopup stop={stop} />
+                );
+
+                const popup = new mapboxgl.Popup({
+                    closeButton: false,
+                }).setHTML(popupElement);
+
+                // Add markers to the map.
+                const marker = new mapboxgl.Marker({
+                    color: colors.slate800,
+                    scale: ".65",
+                })
+                    .setLngLat(stop.center)
+                    .setPopup(popup)
+                    .addTo(map.current);
+
+                recStopMarkers.push(marker);
+            });
+            setRecStopMarkers([...recStopMarkers]);
+        }
+        addMarkers();
+    }, [recStops, stops]);
+
     // onMove
     // Update longitude/lattitude/zoom as the user moves around
     useEffect(() => {
@@ -170,23 +208,3 @@ const Map = ({ ...props }) => {
 };
 
 export default Map;
-
-//INCOMPLETE: this would add a marker at each point. (a marker can have text associated, hover etc.)
-// stops.features.forEach(function(marker){
-//     var popup = new mapboxgl.Popup()
-//         .setText(marker.properties.title);
-//     new mapboxgl.Marker().setLng(marker.geometry.coordinates[1]).setLat(marker.geometry.coordinates[0]).addTo(map.current);
-// });
-
-// // Create a new marker.
-// const marker = new mapboxgl.Marker()
-//     .setLngLat([30.5, 50.5])
-//     .addTo(map.current);
-
-// var popup = new mapboxgl.Popup()
-// .setText('Description')
-// .addTo(map.current);
-// marker = new mapboxgl.Marker()
-//     .setLngLat(points)
-//     .addTo(map.current)
-//     .setPopup(popup);
