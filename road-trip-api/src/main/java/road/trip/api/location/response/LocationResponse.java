@@ -35,8 +35,10 @@ public class LocationResponse {
         name = location.getName();
         center = new Double[]{location.getCoordX(), location.getCoordY()};
         description = location.getDescription();
-        rating = locationService.getAverageRating(location);
-        userRating = locationService.getRatingByIDAndUser(id,user).getRating();
+        if (id != null) {
+            rating = locationService.getAverageRating(location);
+            userRating = locationService.getRatingByIDAndUser(id,user).getRating();
+        }
         phoneContact = location.getPhoneContact();
         website = location.getWebsite();
         address = location.getAddress();
