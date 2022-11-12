@@ -86,6 +86,7 @@ public class LocationService {
         }
         else if (locs.size() > 1) {
             log.error("Duplicate Data in Database");
+            return locs.get(0);
         }
         else {
             log.info("No Stop found");
