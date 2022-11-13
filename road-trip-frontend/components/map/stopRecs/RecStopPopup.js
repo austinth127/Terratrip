@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React from "react";
 import { stopsAtom } from "../../../utils/atoms";
 
-const RecStopItem = ({ stop }) => {
+const RecStopPopup = ({ stop }) => {
     const [stops, setStops] = useAtom(stopsAtom);
     const handleAddStop = () => {
         if (!stops) {
@@ -13,7 +13,7 @@ const RecStopItem = ({ stop }) => {
 
     return (
         <button
-            className="text-left p-1 w-full h-fit text-slate-800 text-xs hover:bg-slate-200 hover:cursor-pointer duration-200 rounded-lg my-1"
+            className="text-left p-1 w-full h-fit text-slate-800 text-xs hover:bg-slate-200 hover:cursor-pointer duration-200 rounded-lg z-[5] isolate"
             onClick={handleAddStop}
         >
             <p className="text-green-600 font-semibold  ">{stop.place_name}</p>
@@ -38,4 +38,4 @@ const RecStopItem = ({ stop }) => {
     );
 };
 
-export default RecStopItem;
+export default RecStopPopup;

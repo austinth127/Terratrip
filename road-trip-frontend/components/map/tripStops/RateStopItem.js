@@ -32,39 +32,41 @@ const RateStopItem = ({ stop, order }) => {
 
     return (
         <div
-            className={`bg-slate-900 bg-opacity-80 rounded-lg flex flex-row items-center p-2 gap-4`}
+            className={`bg-slate-900 bg-opacity-80 rounded-lg flex flex-row justify-between items-center px-8 py-4 gap-4`}
         >
-            <div
-                className={`bg-green-600 text-white rounded-full font-bold font-lg h-10 w-10 text-center shrink-0 flex flex-col items-center justify-center
+            <div className="flex flex-row gap-4 items-start ">
+                <div
+                    className={`bg-green-600 text-white rounded-full font-bold font-lg h-10 w-10 text-center shrink-0 flex flex-col items-center justify-center
                    
                 `}
-            >
-                {order}
-            </div>
-            <div className="text-slate-100 text-xs font-light">
-                <p className="text-green-600 font-semibold text-sm">
-                    {stop.place_name}
-                </p>
-                {stop.categories ? (
-                    <p className="text-slate-300 font-light">
-                        Types:{" "}
-                        {stop.categories
-                            .map((cat) => {
-                                let words = cat.split(".");
-                                return words[words.length - 1];
-                            })
-                            .join(", ")}
+                >
+                    {order}
+                </div>
+                <div className="text-slate-100 text-xs font-light">
+                    <p className="text-green-600 font-semibold text-sm">
+                        {stop.place_name}
                     </p>
-                ) : (
-                    <></>
-                )}
-                <p className="">{stop.address ?? ""}</p>
-                <p className="text-slate-400 font-light">
-                    {stop.phone_contact ?? ""}
-                </p>
+                    {stop.categories ? (
+                        <p className="text-slate-300 font-light">
+                            Types:{" "}
+                            {stop.categories
+                                .map((cat) => {
+                                    let words = cat.split(".");
+                                    return words[words.length - 1];
+                                })
+                                .join(", ")}
+                        </p>
+                    ) : (
+                        <></>
+                    )}
+                    <p className="">{stop.address ?? ""}</p>
+                    <p className="text-slate-400 font-light">
+                        {stop.phone_contact ?? ""}
+                    </p>
+                </div>
             </div>
 
-            <div className="relative w-96 flex flex-row justify-end pr-10 justify-self-end">
+            <div className="relative w-fit">
                 <ClientOnly>
                     <ReactStars
                         count={5}

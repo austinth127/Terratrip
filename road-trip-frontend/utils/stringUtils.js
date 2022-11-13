@@ -7,3 +7,14 @@ export const formatTitle = (name) => {
 
     return words.join(" ");
 };
+
+export const getStopOrderText = (stops, order) => {
+    console.log(stops, order);
+    const len = stops ? stops.length : 0;
+    if (order == 0) {
+        return "Start";
+    } else if (order == len + 1) {
+        return "End";
+    }
+    return order;
+};

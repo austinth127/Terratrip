@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import useGeocodeSuggestions from "../../hooks/useGeocodeSuggestions";
-import useHasMounted from "../../hooks/useHasMounted";
 
 /**
  * An input box powered by mapbox geocode autocomplete to provide search
@@ -31,7 +30,7 @@ const Geocoder = ({ callback, InputComponent, ...props }) => {
                         props.dark
                             ? `bg-slate-900 bg-opacity-100`
                             : `bg-white border-y `
-                    } absolute w-80 px-2 py-3 rounded-lg`}
+                    } absolute w-80 px-2 py-3 rounded-lg isolate z-40`}
                 >
                     {address.suggestions.map((suggestion, index) => {
                         return (

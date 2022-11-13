@@ -51,6 +51,7 @@ export const startAtom = atomWithStorage("startLoc", null);
 export const endAtom = atomWithStorage("endLoc", null);
 
 export const routeAtom = atomWithStorage("route", null);
+export const routeGeoJsonAtom = atomWithStorage("routeGeoJson", null);
 export const tripNameAtom = atomWithStorage("tripName", null);
 
 // Map
@@ -66,6 +67,8 @@ export const allLocationsAtom = atom((get) => {
 });
 
 export const editModeAtom = atom((get) => get(tripIdAtom) != null);
+
+export const recStopAtom = atom(null);
 
 // Notifications
 // This would only work if add other wrapper code to avoid hydration errors

@@ -123,7 +123,7 @@ public class GeoApifyClient {
             new BasicNameValuePair("limit", limit + ""),
             new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115"))); //API_KEY
 
-        log.info(placesUri);
+        log.debug(placesUri);
         FeatureCollection places;
         try {
             String jsonBody = doGet(placesUri);

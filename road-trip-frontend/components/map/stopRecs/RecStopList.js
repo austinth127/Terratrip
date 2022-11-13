@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { filtersAtom, tripAtom } from "../../../utils/atoms";
+import { filtersAtom, recStopAtom, tripAtom } from "../../../utils/atoms";
 import LoadingSpinner from "../../general/LoadingSpinner";
 import RecStopDisplay from "./RecStopItem";
 
@@ -10,7 +10,8 @@ import RecStopDisplay from "./RecStopItem";
  *  @todo refresh
  */
 const RecStopList = () => {
-    const [recStops, setRecStops] = useState();
+    const [recStops, setRecStops] = useAtom(recStopAtom);
+    const [sent, setSent] = useState(false);
     const [trip, setTrip] = useAtom(tripAtom);
     const [waiting, setWaiting] = useState(true);
     const [filters, setFilters] = useAtom(filtersAtom);
@@ -22,7 +23,8 @@ const RecStopList = () => {
     }, [filters]);
 
     useEffect(() => {
-        if (recStops) return;
+        if (recStops || sent) return;
+        setSent(true);
         getData();
     }, [trip.route]);
 

@@ -49,11 +49,8 @@ public class LocationService {
 
     public Location createLocation(LocationRequest locationRequest) {
         Location l = findLocation(locationRequest);
-        if(l == null) {
-            log.info("trip Created: " + locationRequest.getName());
-
+        if (l == null) {
             Location location = locationRequest.buildLocation();
-//            location.setRating(locationRatingRepository.countAllByRatedLocation(location));
             return locationRepository.save(location);
         }
 
@@ -89,6 +86,7 @@ public class LocationService {
         }
         else if (locs.size() > 1) {
             log.error("Duplicate Data in Database");
+            return locs.get(0);
         }
         else {
             log.info("No Stop found");
@@ -104,16 +102,16 @@ public class LocationService {
     public List<LocationResponse> getRecommendedLocations(Long tripId, Double radius, List<String> frontendCategories, List<List<Double>> route) {
         //The approximate number of total results the function returns
         final Integer desiredResultSize = 30;
+
         //The limit per request to meet the desired result size
-//        Integer limit = desiredResultSize / route.size();
         Integer limit = 1;
-//        if(limit == 0){ limit = 1; } //Special case where there are more points along the route than the desired result size
 
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         Set<Location> locations = new HashSet<>();
         List<String> categories = categoryService.getCategoriesByApi(frontendCategories, PlacesAPI.GEOAPIFY);
 
-        log.info(tripId + " " + radius + " " + categories + " " + route);
+        log.debug(tripId + " " + radius + " " + categories + " " + route);
+        log.info("Get Recommended Locations");
         if(optTrip.isPresent()) {
             if(categories.isEmpty()){   
                 categories = categoryService.getRecommendedCategories(optTrip.get());
@@ -137,8 +135,8 @@ public class LocationService {
             .map(e-> new LocationResponse(e,userService.user(),this))     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
     }
+
     public void addLocationRating(Long locationID, Double rating){
-        //locaiton exists
         //rating exists for that user.
         if (!locationRepository.existsById(locationID)){
             throw new NotFoundException();

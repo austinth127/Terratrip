@@ -4,7 +4,6 @@ import {
     Button,
     darkOutlineBtnStyle,
     DarkOutlineButton,
-    OutlineButton,
     stdBtnStyle,
 } from "../../components/general/Buttons";
 import { DarkTextInput } from "../../components/general/TextInput";
@@ -54,6 +53,10 @@ const Create = () => {
             setAlert("Start and end locations should be set below.");
             return;
         }
+        if (!(startDate || !endDate)) {
+            setAlert("Start and End Date cannot be empty.");
+            return;
+        }
         if (startDate > endDate) {
             setAlert("Start date cannot be after end date.");
             return;
@@ -69,18 +72,14 @@ const Create = () => {
                 setRoute(success[0]);
                 trip.route = success[0];
 
-                let neededDays = Math.ceil(trip.route["duration"] / 86400.0);
-                let requestedDays = Math.ceil(
-                    (new Date(endDate).getTime() -
-                        new Date(startDate).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                );
+                let drivingDays = Math.ceil(trip.route.duration / 86400.0);
+                let requestedTime =
+                    new Date(endDate).getTime() - new Date(startDate).getTime();
+                let requestedDays = requestedTime / (1000 * 3600 * 24) + 1;
 
-                /** @todo add this back */
-                // if (neededDays < requestedDays) {
-                //     setAlert("Trip not completable within time frame.");
-                // } else
-                if (editMode) {
+                if (drivingDays > requestedDays) {
+                    setAlert("Trip not completable within time frame.");
+                } else if (editMode) {
                     axios
                         .patch(`/trip/${trip.id}`, tripToTripRequest(trip))
                         .then(
@@ -97,7 +96,6 @@ const Create = () => {
                         (success) => {
                             setTripId(success.data);
                             setRoute(null);
-
                             router.push("/trips/map");
                         },
                         (fail) => {
@@ -117,22 +115,24 @@ const Create = () => {
     return (
         <div className="w-full h-full flex flex-row sm:ml-16 ml-8 pt-12">
             <form className="h-3/4 w-1/2 text-gray-50" onSubmit={handleSubmit}>
-                <h1 className="text-2xl font-semibold mb-2">
-                    {editMode ? "Edit your Trip" : "Plan your Trip."}
-                </h1>
-                {editMode ? (
-                    <></>
-                ) : (
-                    <h4 className="text-base font-light text-gray-100">
-                        We just need a bit of info from you to tailor your
-                        experience.
-                    </h4>
-                )}
+                <ClientOnly>
+                    <h1 className="text-2xl font-semibold mb-2">
+                        {editMode ? "Edit your Trip" : "Plan your Trip."}
+                    </h1>
+                    {editMode ? (
+                        <></>
+                    ) : (
+                        <h4 className="text-base font-light text-gray-100">
+                            We just need a bit of info from you to tailor your
+                            experience.
+                        </h4>
+                    )}
 
-                <Alert
-                    message={alert}
-                    className="text-left text-red-400 mt-4 -mb-5 w-full"
-                />
+                    <Alert
+                        message={alert}
+                        className="text-left text-red-400 mt-4 -mb-5 w-full"
+                    />
+                </ClientOnly>
 
                 {/* Start and End boxes */}
                 <ClientOnly>
@@ -220,27 +220,29 @@ const Create = () => {
                             />
                         </h2>
                     </div>
-                    <div className="mt-16 mb-20">
-                        {editMode ? (
-                            <div className="flex flex-row gap-4">
+                    <ClientOnly>
+                        <div className="mt-16 mb-20">
+                            {editMode ? (
+                                <div className="flex flex-row gap-4">
+                                    <DarkOutlineButton type="submit">
+                                        Save
+                                    </DarkOutlineButton>
+                                    <DarkOutlineButton
+                                        onClick={() => {
+                                            clearTrip();
+                                            router.back();
+                                        }}
+                                    >
+                                        Cancel
+                                    </DarkOutlineButton>
+                                </div>
+                            ) : (
                                 <DarkOutlineButton type="submit">
-                                    Save
+                                    Let's Go &nbsp;&nbsp;&rarr;
                                 </DarkOutlineButton>
-                                <DarkOutlineButton
-                                    onClick={() => {
-                                        clearTrip();
-                                        router.back();
-                                    }}
-                                >
-                                    Cancel
-                                </DarkOutlineButton>
-                            </div>
-                        ) : (
-                            <DarkOutlineButton type="submit">
-                                Let's Go &nbsp;&nbsp;&rarr;
-                            </DarkOutlineButton>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </ClientOnly>
                 </div>
             </form>
         </div>
