@@ -32,13 +32,15 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedMethods(List.of("POST", "GET", "PUT", "PATCH", "DELETE"));
         corsConfig.setAllowedHeaders(List.of("*"));
-        corsConfig.setAllowedOrigins(List.of("http://localhost", "http://localhost:3000", "http://127.0.0.1:3000", "https://terratrip.gq"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost", "http://127.0.0.1", "http://localhost:3000", "http://127.0.0.1:3000", "https://terratrip.gq"));
         http.cors().configurationSource(request -> corsConfig);
 
         // Protect against Cross-Site Request Forgery attacks
+        // Expects X-XSRF-Token header
         http.csrf()
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .ignoringAntMatchers(PUBLIC_ROUTES);
+            .disable();
+//            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .ignoringAntMatchers(PUBLIC_ROUTES);
 
         // Set up user authentication
         http.authorizeRequests()
