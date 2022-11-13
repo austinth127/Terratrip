@@ -31,7 +31,7 @@ const RecStopList = () => {
     const getData = async () => {
         if (!trip.route) return;
         setWaiting(true);
-        const res = await axios.post("/location/recommend", {
+        const res = await axios.post("/api/location/recommend", {
             tripId: trip.id,
             range: 5000,
             categories: filters,

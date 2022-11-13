@@ -76,7 +76,7 @@ const RateStopItem = ({ stop, order }) => {
                         value={rating}
                         edit={true}
                         onChange={(newVal) => {
-                            // axios.post(`/location/${stop.id}`, {
+                            // axios.post(`/api/location/${stop.id}`, {
                             //     rating: newVal,
                             // });
                             setRating(rating);

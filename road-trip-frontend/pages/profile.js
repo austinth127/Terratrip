@@ -19,9 +19,9 @@ const Profile = () => {
     useEffect(() => {
         /** @TODO better error handling */
         const getData = async () => {
-            const res = await axios.get(`/user`);
+            const res = await axios.get(`/api/user`);
             setUser(res.data);
-            res = await axios.get("/trip");
+            res = await axios.get("/api/trip");
             setTrips(res.data);
         };
 

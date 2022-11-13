@@ -25,7 +25,7 @@ const SaveModal = () => {
         event.preventDefault();
         setAlert("");
 
-        axios.patch(`/trip/${trip.id}`, tripToTripRequest(trip)).then(
+        axios.patch(`/api/trip/${trip.id}`, tripToTripRequest(trip)).then(
             (success) => {
                 setShow(false);
             },

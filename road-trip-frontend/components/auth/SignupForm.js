@@ -50,7 +50,7 @@ const SignUpForm = () => {
                 const { username, userId, email, name } = Userfront.user;
                 if (userId) {
                     axios
-                        .post("/user/register", {
+                        .post("/api/user/register", {
                             username,
                             userId,
                             name,
