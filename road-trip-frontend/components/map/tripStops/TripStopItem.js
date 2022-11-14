@@ -107,7 +107,7 @@ const TripStopItem = ({ stop, order, leg }) => {
                         <></>
                     )}
                 </div>
-                <div className="w-full h-fit relative text-sm">
+                <div className="w-full h-fit relative text-sm my-2 mx-1">
                     {leg && (
                         <Accordion
                             darkBorder={true}
