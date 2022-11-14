@@ -154,21 +154,25 @@ public class LocationService {
 
     }
 
-    public LocationRating getRatingByIDAndUser(Long id, User u ) {
+    public Double getRatingByIDAndUser(Long id, User u ) {
         LocationRating ret = locationRatingRepository.findAllByRatingUserAndRatedLocation(u,locationRepository.findById(id));
         if(Objects.isNull(ret)){
-            throw new NotFoundException();
+//            throw new NotFoundException();
+            return null;
         }
-        return ret;
+        return ret.getRating();
     }
 
     public Double getAverageRating(Location location) {
         Double ratingsValue = 0.0;
-        Double count = 0.0;
-        count = Double.valueOf(locationRatingRepository.countAllByRatedLocation(location));
+        int count = 0;
         List<LocationRating> ratings = locationRatingRepository.findAllByRatedLocation(location);
         for(int i = 0; i < ratings.size();i++){
             ratingsValue+= ratings.get(i).getRating();
+            count++;
+        }
+        if (count == 0) {
+            return null;
         }
         return ratingsValue/count;
     }

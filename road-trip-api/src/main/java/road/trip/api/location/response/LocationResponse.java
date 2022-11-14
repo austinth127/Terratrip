@@ -22,6 +22,7 @@ public class LocationResponse {
         website = location.getWebsite();
         address = location.getAddress();
         geoapifyId = location.getGeoapifyId();
+        userRating = null;
 
         if (location.getCategories() != null) {
             categories = Arrays.stream(location.getCategories().split(",")).toList();
@@ -37,7 +38,8 @@ public class LocationResponse {
         description = location.getDescription();
         if (id != null) {
             rating = locationService.getAverageRating(location);
-            userRating = locationService.getRatingByIDAndUser(id,user).getRating();
+
+            userRating = locationService.getRatingByIDAndUser(id,user);
         }
         phoneContact = location.getPhoneContact();
         website = location.getWebsite();
