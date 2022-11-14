@@ -1,21 +1,32 @@
 import { useAtom } from "jotai";
-import React from "react";
-import { stopsAtom } from "../../../utils/atoms";
+import React, { useState } from "react";
+import { popupStopAtom, stopsAtom } from "../../../utils/atoms";
+import { Button, SmallButton } from "../../general/Buttons";
 
-const RecStopPopup = ({ stop }) => {
+const Popup = () => {
+    const [stop, setStop] = useAtom(popupStopAtom);
     const [stops, setStops] = useAtom(stopsAtom);
+
     const handleAddStop = () => {
         if (!stops) {
             stops = [];
         }
         setStops([...stops, stop]);
+        setStop(null);
     };
 
+    if (!stop) {
+        return <></>;
+    }
+
     return (
-        <button
-            className="text-left p-1 w-full h-fit text-slate-800 text-xs hover:bg-slate-200 hover:cursor-pointer duration-200 rounded-lg z-[5] isolate"
-            onClick={handleAddStop}
-        >
+        <div className="text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute top-16 left-[27%] bg-white bg-opacity-90 max-w-[30rem]">
+            <button
+                className="absolute top-2 right-4 w-fit h-fit "
+                onClick={() => setStop(null)}
+            >
+                <i className="fa fa-x fa-solid text-gray-500 fa-xs"></i>
+            </button>
             <p className="text-green-600 font-semibold  ">{stop.place_name}</p>
             {stop.categories ? (
                 <p className="text-slate-600 font-light">
@@ -31,11 +42,12 @@ const RecStopPopup = ({ stop }) => {
                 <></>
             )}
             <p className="">{stop.address ?? ""}</p>
-            <p className="text-slate-700 font-light">
+            <p className="text-slate-700 font-light mb-2">
                 {stop.phone_contact ?? ""}
             </p>
-        </button>
+            <SmallButton onClick={handleAddStop}>Add to Trip</SmallButton>
+        </div>
     );
 };
 
-export default RecStopPopup;
+export default Popup;

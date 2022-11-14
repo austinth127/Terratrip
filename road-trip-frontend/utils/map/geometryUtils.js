@@ -62,6 +62,7 @@ export const getRouteWithStops = async (stops) => {
 
     if (fail) {
         console.error("Failed to get route");
+        console.log(stops);
         return [null, null];
     }
 
@@ -93,4 +94,24 @@ export const flyTo = (map, geoJson) => {
     map.current.fitBounds(bounds, {
         padding: 200,
     });
+};
+
+export const metersToMileString = (meters) => {
+    const miles = meters * 0.000621371;
+    return miles.toFixed(1) + " mi";
+};
+
+export const secondsToTimeString = (seconds) => {
+    let hours = seconds / 3600;
+    let minutes = seconds / 60;
+
+    if (hours < 1) {
+        return Math.ceil(minutes) + " min";
+    }
+
+    minutes = hours - Math.floor(hours);
+    minutes *= 60;
+    hours = Math.floor(hours);
+
+    return hours + " hr, " + Math.ceil(minutes) + " min";
 };
