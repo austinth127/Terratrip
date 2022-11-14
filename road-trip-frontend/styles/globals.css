@@ -17,9 +17,11 @@
 
 .mapboxgl-popup-content {
     /* idk i struggling with this */
+    z-index: 10;
 }
 
 .mapboxgl-popup-tip {
+    z-index: 10;
 }
 
 .dark-scrollbar::-webkit-scrollbar {

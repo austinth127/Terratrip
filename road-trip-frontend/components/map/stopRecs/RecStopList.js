@@ -17,16 +17,8 @@ const RecStopList = () => {
     const [filters, setFilters] = useAtom(filtersAtom);
 
     useEffect(() => {
-        const abortController = new AbortController();
         getData();
-        return () => abortController.abort();
     }, [filters]);
-
-    useEffect(() => {
-        if (recStops || sent) return;
-        setSent(true);
-        getData();
-    }, [trip.route]);
 
     const getData = async () => {
         if (!trip.route) return;
@@ -41,6 +33,10 @@ const RecStopList = () => {
         setRecStops(res.data);
     };
 
+    useEffect(() => {
+        setWaiting(recStops == null);
+    }, [recStops]);
+
     return (
         <div className="h-3/4 w-full pr-2 pt-1 overflow-hidden">
             <div className="w-full max-h-full px-2 pt-2 text-slate-900 overflow-y-scroll scrollbar overflow-x-clip">
@@ -50,7 +46,7 @@ const RecStopList = () => {
                         Click to add a stop!
                     </div>
                 </div>
-                {waiting ? (
+                {waiting || !recStops ? (
                     <LoadingSpinner />
                 ) : recStops && recStops.length > 0 ? (
                     recStops.map((stop, index) => (
