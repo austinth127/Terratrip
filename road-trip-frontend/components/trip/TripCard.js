@@ -101,7 +101,7 @@ const TripCard = ({ trip, deleteCallback }) => {
                     value={rating}
                     edit={true}
                     onChange={(newVal) => {
-                        axios.post(`/trip/${trip.id}/rate`, {
+                        axios.post(`/api/trip/${trip.id}/rate`, {
                             rating: newVal,
                         });
                         setRating(newVal);

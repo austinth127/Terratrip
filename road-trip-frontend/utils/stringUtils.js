@@ -9,7 +9,6 @@ export const formatTitle = (name) => {
 };
 
 export const getStopOrderText = (stops, order) => {
-    console.log(stops, order);
     const len = stops ? stops.length : 0;
     if (order == 0) {
         return "Start";

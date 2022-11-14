@@ -15,6 +15,16 @@ const StopSelector = () => {
     useEffect(() => {
         if (!mapboxStop) return;
         console.log(mapboxStop);
+        const stop = {
+            place_name: mapboxStop.text,
+            address: mapboxStop.place_name,
+            center: mapboxStop.center,
+        };
+        if (!stops) {
+            stops = [];
+        }
+        setStops([...stops, stop]);
+        setStop(null);
     }, [mapboxStop]);
 
     return (

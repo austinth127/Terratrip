@@ -39,6 +39,9 @@ export const clearTripAtom = atom(null, (get, set) => {
     set(stopsAtom, null);
     set(tripIdAtom, null);
     set(filtersAtom, []);
+    set(recStopAtom, null);
+    set(popupStopAtom, null);
+    set(routeGeoJsonAtom, null);
 });
 
 // Create Trip
@@ -56,6 +59,7 @@ export const tripNameAtom = atomWithStorage("tripName", null);
 
 // Map
 export const showSaveModalAtom = atom(false);
+export const popupStopAtom = atom(null);
 export const tripIdAtom = atomWithStorage("tripId", null);
 export const stopsAtom = atomWithStorage("stops", []);
 export const allLocationsAtom = atom((get) => {
@@ -67,6 +71,8 @@ export const allLocationsAtom = atom((get) => {
 });
 
 export const editModeAtom = atom((get) => get(tripIdAtom) != null);
+
+export const recStopAtom = atom(null);
 
 // Notifications
 // This would only work if add other wrapper code to avoid hydration errors

@@ -5,6 +5,13 @@ import NotificationOverlay from "../notifications/NotificationOverlay";
 import { useSetAtom } from "jotai";
 import { clearTripAtom } from "../../utils/atoms";
 
+import Userfront from "@userfront/core";
+import Logger from "js-logger";
+import { useRouter } from "next/router";
+import { publicRoutes } from "../../utils/tabs";
+
+Userfront.init("wbmrp64n");
+
 /**
  * This is a layout for all pages, included in _app.js. Nextjs will auto-route
  * pages from appjs and this layout will wrap them so that they include anything in this
@@ -15,6 +22,7 @@ import { clearTripAtom } from "../../utils/atoms";
  */
 const Layout = ({ children, ...props }) => {
     const clearTrip = useSetAtom(clearTripAtom);
+
     useEffect(() => {
         clearTrip();
     });
@@ -27,7 +35,7 @@ const Layout = ({ children, ...props }) => {
 
                 <div className="h-fit text-gray-50 overflow-x-clip bg-slate-900 bg-opacity-50">
                     <Navbar />
-                    <NotificationOverlay />
+                    {Userfront.user.userId && <NotificationOverlay />}
                     <main className="relative min-h-screen lg:ml-16">
                         {children}
                         {/* Footer Padding */}

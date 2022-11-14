@@ -92,7 +92,7 @@ const Create = () => {
                             }
                         );
                 } else {
-                    axios.post("/trip", tripToTripRequest(trip)).then(
+                    axios.post("/api/trip", tripToTripRequest(trip)).then(
                         (success) => {
                             setTripId(success.data);
                             setRoute(null);

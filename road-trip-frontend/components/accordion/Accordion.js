@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 
-const Accordion = ({ defaultToExpanded, header, ...props }) => {
+const Accordion = ({ defaultToExpanded, header, darkBorder, ...props }) => {
     const [expanded, setExpanded] = useState(defaultToExpanded ?? true);
     return (
         <div>
-            <div className="border-b relative pr-4">
+            <div
+                className={`border-b relative pr-4 ${
+                    darkBorder ? `border-slate-700 border-opacity-50` : ``
+                }`}
+            >
                 {header}
                 <div className="absolute top-0 right-2">
                     <button
@@ -20,7 +24,9 @@ const Accordion = ({ defaultToExpanded, header, ...props }) => {
             <div
                 className={`${
                     expanded ? `max-h-96` : `max-h-0`
-                } duration-300 overflow-clip bg-inherit `}
+                } duration-300 overflow-clip bg-inherit ${
+                    darkBorder ? `overflow-y-scroll dark-scrollbar` : ``
+                }`}
             >
                 {props.children}
             </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { filtersAtom, tripAtom } from "../../../utils/atoms";
+import { filtersAtom, recStopAtom, tripAtom } from "../../../utils/atoms";
 import LoadingSpinner from "../../general/LoadingSpinner";
 import RecStopDisplay from "./RecStopItem";
 
@@ -10,26 +10,20 @@ import RecStopDisplay from "./RecStopItem";
  *  @todo refresh
  */
 const RecStopList = () => {
-    const [recStops, setRecStops] = useState();
+    const [recStops, setRecStops] = useAtom(recStopAtom);
+    const [sent, setSent] = useState(false);
     const [trip, setTrip] = useAtom(tripAtom);
     const [waiting, setWaiting] = useState(true);
     const [filters, setFilters] = useAtom(filtersAtom);
 
     useEffect(() => {
-        const abortController = new AbortController();
         getData();
-        return () => abortController.abort();
     }, [filters]);
-
-    useEffect(() => {
-        if (recStops) return;
-        getData();
-    }, [trip.route]);
 
     const getData = async () => {
         if (!trip.route) return;
         setWaiting(true);
-        const res = await axios.post("/location/recommend", {
+        const res = await axios.post("/api/location/recommend", {
             tripId: trip.id,
             range: 5000,
             categories: filters,
@@ -38,6 +32,10 @@ const RecStopList = () => {
         setWaiting(false);
         setRecStops(res.data);
     };
+
+    useEffect(() => {
+        setWaiting(recStops == null);
+    }, [recStops]);
 
     return (
         <div className="h-3/4 w-full pr-2 pt-1 overflow-hidden">
@@ -48,7 +46,7 @@ const RecStopList = () => {
                         Click to add a stop!
                     </div>
                 </div>
-                {waiting ? (
+                {waiting || !recStops ? (
                     <LoadingSpinner />
                 ) : recStops && recStops.length > 0 ? (
                     recStops.map((stop, index) => (

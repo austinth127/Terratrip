@@ -63,6 +63,7 @@ axios.interceptors.request.use(
 
 export const setupAxios = () => {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
     axios.defaults.headers.common["Content-Type"] = "application/json";
     if (Userfront.tokens.accessToken) {
         axios.defaults.headers.common[

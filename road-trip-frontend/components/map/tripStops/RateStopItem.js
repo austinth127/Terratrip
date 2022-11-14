@@ -66,7 +66,7 @@ const RateStopItem = ({ stop, order }) => {
                 </div>
             </div>
 
-            <div className="relative w-fit">
+            <div className="relative w-fit shrink-0 flex-nowrap">
                 <ClientOnly>
                     <ReactStars
                         count={5}
@@ -76,10 +76,10 @@ const RateStopItem = ({ stop, order }) => {
                         value={rating}
                         edit={true}
                         onChange={(newVal) => {
-                            // axios.post(`/location/${stop.id}`, {
+                            // axios.post(`/api/location/${stop.id}`, {
                             //     rating: newVal,
                             // });
-                            setRating(rating);
+                            setRating(newVal);
                         }}
                     />
                 </ClientOnly>

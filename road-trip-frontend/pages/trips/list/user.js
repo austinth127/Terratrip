@@ -15,12 +15,12 @@ const UserTrips = () => {
     }, []);
 
     const getData = async () => {
-        const res = await axios.get("/trip");
+        const res = await axios.get("/api/trip");
         setTrips(res.data);
     };
 
     const handleDeleteTrip = (id) => {
-        axios.delete(`/trip/${id}`).then(
+        axios.delete(`/api/trip/${id}`).then(
             (success) => {
                 getData();
             },

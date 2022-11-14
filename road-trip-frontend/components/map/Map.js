@@ -6,13 +6,19 @@ import { flyTo, getRouteWithStops } from "../../utils/map/geometryUtils";
 import {
     allLocationsAtom,
     endAtom,
+    filtersAtom,
+    popupStopAtom,
+    recStopAtom,
     routeAtom,
     routeGeoJsonAtom,
     startAtom,
     stopsAtom,
+    tripIdAtom,
 } from "../../utils/atoms";
 import { colors } from "../../utils/colors";
 import { getStopOrderText } from "../../utils/stringUtils";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -42,11 +48,19 @@ const Map = ({ ...props }) => {
 
     const [route, setRoute] = useAtom(routeAtom);
     const [routeGeoJson, setRouteGeoJson] = useAtom(routeGeoJsonAtom);
+    const [recStops, setRecStops] = useAtom(recStopAtom);
 
     /** @type {React.MutableRefObject<mapboxgl.Layer>} */
     const routerLayer = useRef(null);
 
     const [markers, setMarkers] = useState([]);
+    const popupRef = useRef(new mapboxgl.Popup());
+    const [recStopMarkers, setRecStopMarkers] = useState([]);
+    const [popupStop, setPopupStop] = useAtom(popupStopAtom);
+    const tripId = useAtomValue(tripIdAtom);
+    const filters = useAtomValue(filtersAtom);
+
+    const router = useRouter();
 
     async function addRoute() {
         if (!map.current || !locs || locs.length < 2) return;
@@ -100,25 +114,22 @@ const Map = ({ ...props }) => {
             el.style.fontSize = "10px";
             el.style.lineHeight = "14px";
 
-            // el.addEventListener("click", () => {
-            //     window.alert(marker.properties.message);
-            // });
-
             // Add markers to the map.
             const marker = new mapboxgl.Marker(el)
                 .setLngLat(location.center)
                 .addTo(map.current);
 
-            const popup = new mapboxgl.Popup();
-            popup.addTo(map.current);
-            popup.setLngLat(location.center);
             markers.push(marker);
         });
         setMarkers([...markers]);
+
+        return route;
     }
+
     // Initialize mapbox map
     useEffect(() => {
         if (map.current) return;
+
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: "mapbox://styles/mapbox/outdoors-v11",
@@ -129,7 +140,19 @@ const Map = ({ ...props }) => {
         map.current.on("load", () => {
             // Add the route to the map between start and end locations
             setisLoaded(true);
-            addRoute();
+            addRoute().then((route) => {
+                if (!route?.geometry?.coordinates) return;
+                axios
+                    .post("/api/location/recommend", {
+                        tripId: tripId,
+                        range: 5000,
+                        categories: filters,
+                        route: route.geometry.coordinates,
+                    })
+                    .then((res) => {
+                        setRecStops(res.data);
+                    });
+            });
         });
     });
 
@@ -146,6 +169,44 @@ const Map = ({ ...props }) => {
         // Calculate Appropriate Default Zoom
     }, [routeGeoJson]);
 
+    useEffect(() => {
+        if (!map.current) return;
+        if (!recStops && recStopMarkers) {
+            recStopMarkers.forEach((marker) => marker.remove());
+            setRecStopMarkers([]);
+            return;
+        }
+
+        async function addMarkers() {
+            recStopMarkers.forEach((marker) => marker.remove());
+            setRecStopMarkers([]);
+
+            recStops.forEach((stop, index) => {
+                // Add markers to the map.
+                const marker = new mapboxgl.Marker({
+                    color: colors.slate800,
+                    scale: ".65",
+                    style: { cursor: "pointer" },
+                })
+                    .setLngLat(stop.center)
+                    .addTo(map.current);
+
+                marker.getElement().addEventListener("click", () => {
+                    setPopupStop(stop);
+                });
+
+                recStopMarkers.push(marker);
+            });
+            setRecStopMarkers([...recStopMarkers]);
+        }
+        addMarkers();
+
+        return () => {
+            recStopMarkers.forEach((marker) => marker.remove());
+            setRecStopMarkers([]);
+        };
+    }, [recStops, stops]);
+
     // onMove
     // Update longitude/lattitude/zoom as the user moves around
     useEffect(() => {
@@ -155,6 +216,27 @@ const Map = ({ ...props }) => {
             setLat(map.current.getCenter().lat.toFixed(4));
             setZoom(map.current.getZoom().toFixed(2));
         });
+    });
+
+    // prompt the user if they try and leave with unsaved changes
+    useEffect(() => {
+        const handleWindowClose = (e) => {
+            if (markers) {
+                markers.forEach((marker) => marker.remove());
+            }
+            setMarkers([]);
+            if (recStopMarkers) {
+                recStopMarkers.forEach((marker) => marker.remove());
+            }
+            setRecStopMarkers([]);
+            setPopupStop(null);
+            map.current.remove();
+        };
+
+        window.addEventListener("beforeunload", handleWindowClose);
+        return () => {
+            window.removeEventListener("beforeunload", handleWindowClose);
+        };
     });
 
     return (
@@ -170,23 +252,3 @@ const Map = ({ ...props }) => {
 };
 
 export default Map;
-
-//INCOMPLETE: this would add a marker at each point. (a marker can have text associated, hover etc.)
-// stops.features.forEach(function(marker){
-//     var popup = new mapboxgl.Popup()
-//         .setText(marker.properties.title);
-//     new mapboxgl.Marker().setLng(marker.geometry.coordinates[1]).setLat(marker.geometry.coordinates[0]).addTo(map.current);
-// });
-
-// // Create a new marker.
-// const marker = new mapboxgl.Marker()
-//     .setLngLat([30.5, 50.5])
-//     .addTo(map.current);
-
-// var popup = new mapboxgl.Popup()
-// .setText('Description')
-// .addTo(map.current);
-// marker = new mapboxgl.Marker()
-//     .setLngLat(points)
-//     .addTo(map.current)
-//     .setPopup(popup);

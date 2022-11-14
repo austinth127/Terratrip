@@ -15,7 +15,7 @@ const NotificationOverlay = () => {
         const abortController = new AbortController();
         /** @TODO better error handling */
         const getData = async () => {
-            const res = await axios.get(`/notification`);
+            const res = await axios.get(`/api/notification`);
             notifications = res.data;
             setNotifications(notifications);
             setShortNotifs(
