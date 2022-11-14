@@ -43,7 +43,7 @@ const TripStopItem = ({ stop, order, leg }) => {
     return (
         <>
             <div className={`bg-slate-900 bg-opacity-80 rounded-lg p-2`}>
-                <div className="flex gap-4 flex-row items-center">
+                <div className="flex gap-4 flex-row items-center w-full">
                     <div
                         className={`bg-green-600 text-white rounded-full font-bold font-lg h-10 w-10 text-center shrink-0 flex flex-col items-center justify-center ${
                             start || end ? "text-xs" : ""
