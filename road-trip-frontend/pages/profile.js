@@ -7,6 +7,7 @@ import Link from "next/link";
 import { makeTripActive } from "../utils/trip";
 import { useSetAtom } from "jotai";
 import { tripAtom } from "../utils/atoms";
+import LoadingSpinner from "../components/general/LoadingSpinner";
 
 const Profile = () => {
     // Get the id from the dynamic route segment
@@ -29,7 +30,7 @@ const Profile = () => {
     }, [id]);
 
     if (!user || typeof trips == "undefined") {
-        return <></>;
+        return <LoadingSpinner></LoadingSpinner>;
     }
 
     const handleViewTrip = (trip) => {

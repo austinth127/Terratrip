@@ -53,7 +53,7 @@ const Create = () => {
             setAlert("Start and end locations should be set below.");
             return;
         }
-        if (!(startDate || !endDate)) {
+        if (!startDate || !endDate) {
             setAlert("Start and End Date cannot be empty.");
             return;
         }

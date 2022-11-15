@@ -6,10 +6,6 @@ import { useSetAtom } from "jotai";
 import { clearTripAtom } from "../../utils/atoms";
 
 import Userfront from "@userfront/core";
-import Logger from "js-logger";
-import { useRouter } from "next/router";
-import { publicRoutes } from "../../utils/tabs";
-
 Userfront.init("wbmrp64n");
 
 /**
