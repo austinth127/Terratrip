@@ -22,7 +22,7 @@ public class SpotifyController {
         return ResponseEntity.ok(spotifyService.getAuthCodeURI());
     }
 
-    @GetMapping("auth-callback")
+    @GetMapping("/auth-callback")
     public ResponseEntity<?> authCallback(@RequestParam(required = false) String code, @RequestParam String state, @RequestParam(required = false) String error) {
         if (error == null) {
             spotifyService.handleAuthCode(code, state);

@@ -81,7 +81,7 @@ const Create = () => {
                     setAlert("Trip not completable within time frame.");
                 } else if (editMode) {
                     axios
-                        .patch(`/trip/${trip.id}`, tripToTripRequest(trip))
+                        .patch(`/api/trip/${trip.id}`, tripToTripRequest(trip))
                         .then(
                             (success) => {
                                 clearTrip();
