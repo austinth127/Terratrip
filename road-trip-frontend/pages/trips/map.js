@@ -9,6 +9,8 @@ import { showSaveModalAtom, tripIdAtom } from "../../utils/atoms";
 import Popup from "../../components/map/popup/Popup";
 import { useRouter } from "next/router";
 
+import Userfront from "@userfront/core";
+
 const TripMapper = () => {
     const [showModal, setShowModal] = useAtom(showSaveModalAtom);
     const tripId = useAtomValue(tripIdAtom);
@@ -16,6 +18,10 @@ const TripMapper = () => {
 
     useEffect(() => {
         if (!tripId) {
+            if (!Userfront.user.userId) {
+                router.push("/auth/signin");
+                return;
+            }
             router.push("/trips/list/user");
         }
         setShowModal(false);
