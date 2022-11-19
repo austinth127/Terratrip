@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { Button, DarkOutlineButton } from "../../../components/general/Buttons";
+import LoadingSpinner from "../../../components/general/LoadingSpinner";
 import TripCard from "../../../components/trip/TripCard";
 
 const UserTrips = () => {
@@ -30,12 +32,25 @@ const UserTrips = () => {
         );
     };
 
-    if (!trips) {
+    if (!trips || trips.length == 0) {
         return (
             <div className="py-10">
-                <h1 className="text-2xl font-semibold mb-12 text-white text-center">
-                    Your Trips Will Appear Here
-                </h1>
+                {trips && trips.length == 0 ? (
+                    <>
+                        <h1 className="text-2xl font-semibold mb-12 text-white text-center">
+                            Your Trips Will Appear Here
+                        </h1>
+                        <div className="flex flex-row justify-center">
+                            <DarkOutlineButton
+                                onClick={() => router.push("/trips")}
+                            >
+                                Create your first trip
+                            </DarkOutlineButton>
+                        </div>
+                    </>
+                ) : (
+                    <LoadingSpinner></LoadingSpinner>
+                )}
             </div>
         );
     }
