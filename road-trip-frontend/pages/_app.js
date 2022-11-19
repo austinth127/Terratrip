@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/globals.css";
 
 import Script from "next/script";
@@ -18,9 +18,14 @@ import MapLayout from "../components/map/MapLayout";
 
 import { setupAxios, setupLogger } from "../utils/axiosSetup";
 
-import Userfront from "@userfront/core";
 import { Provider } from "jotai";
 import ReducedLayout from "../components/general/ReducedLayout";
+
+import Userfront from "@userfront/core";
+import { useRouter } from "next/router";
+import { publicRoutes } from "../utils/tabs";
+import Logger from "js-logger";
+
 Userfront.init("wbmrp64n");
 
 /**
@@ -32,10 +37,20 @@ Userfront.init("wbmrp64n");
  * @param {any} props.pageProps Props to be passed to the page
  * @returns {React.Component} The page to be rendered
  */
+
 function MyApp({ Component, pageProps }) {
+    const router = useRouter();
     useEffect(() => {
         setupAxios();
         setupLogger();
+
+        if (!Userfront.user?.userId) {
+            console.log(router.asPath);
+            if (!publicRoutes.find((item) => item === router.asPath)) {
+                Logger.warn("Not logged in, redirecting");
+                router.push("/auth/signin");
+            }
+        }
     }, []);
 
     return (

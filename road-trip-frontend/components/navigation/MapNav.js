@@ -1,38 +1,23 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
-import {
-    advLevelAtom,
-    editModeAtom,
-    locAtom,
-    showSaveModalAtom,
-    tripDateAtom,
-    tripIdAtom,
-    tripNameAtom,
-} from "../../utils/atoms";
+import React, { useEffect } from "react";
+import { clearTripAtom, showSaveModalAtom, tripAtom } from "../../utils/atoms";
 import { Button, OutlineButton } from "../general/Buttons";
 import TextLogo from "../general/TextLogo";
 
 const MapNav = ({ ...props }) => {
     const router = useRouter();
     const [showModal, setShowModal] = useAtom(showSaveModalAtom);
-    const [loc, setLoc] = useAtom(locAtom);
-    const [date, setDate] = useAtom(tripDateAtom);
-    const [name, setName] = useAtom(tripNameAtom);
-    const [advLevel, setAdvLevel] = useAtom(advLevelAtom);
-    const [editMode, setEditMode] = useAtom(editModeAtom);
-    const [tripId, setTripId] = useAtom(tripIdAtom);
+    const clearTrip = useSetAtom(clearTripAtom);
+
+    useEffect(() => {
+        setShowModal(false);
+    }, []);
 
     const handleCancel = () => {
-        setAdvLevel("");
-        setLoc({ start: null, end: null });
-        setDate({ start: null, end: null });
-        setName("");
-        setShowModal(false);
-        setTripId(null);
-        setEditMode(false);
-        router.push("/");
+        clearTrip();
+        router.push("/trips/list/user");
     };
 
     return (
@@ -55,7 +40,7 @@ const MapNav = ({ ...props }) => {
             </div>
             <div className="flex flex-row justify-evenly gap-2">
                 <Button onClick={() => setShowModal(!showModal)}>Save</Button>
-                <OutlineButton onClick={handleCancel}>Cancel</OutlineButton>
+                <OutlineButton onClick={handleCancel}>Exit</OutlineButton>
             </div>
         </div>
     );

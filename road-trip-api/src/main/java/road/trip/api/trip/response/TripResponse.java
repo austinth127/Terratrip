@@ -3,18 +3,16 @@ package road.trip.api.trip.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import road.trip.api.location.response.LocationResponse;
-import road.trip.api.trip.response.ReducedTripResponse;
 import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @Data
-public class TripResponse extends ReducedTripResponse {
+public class TripResponse {
     public TripResponse(Trip t) {
         name = t.getName();
         distance = t.getDistance();

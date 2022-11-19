@@ -10,7 +10,6 @@ import road.trip.api.notification.NotificationService;
 import road.trip.api.trip.request.TripCreateRequest;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
-import road.trip.api.trip.response.ReducedTripResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.StopRepository;
 import road.trip.persistence.daos.TripRepository;
@@ -123,7 +122,7 @@ public class TripService {
             if(request.getStops() != null){
                 List<LocationRequest> stops = request.getStops();
 
-                // Remove Stops in trip
+//                 Remove Stops in trip
                 List<Stop> oldStops = stopRepository.findByTrip_Id(id);
                 for (int i = 0; i < oldStops.size(); i++) {
                     stopRepository.deleteById(oldStops.get(i).getStopId());
@@ -143,7 +142,8 @@ public class TripService {
 
             tripRepository.save(t);
 
-            notificationService.editNotifications(t);
+            notificationService.updateNotifications(t);
+
             return t.getId();
         } else {
             log.error("Trip not owned by user.");
@@ -172,8 +172,15 @@ public class TripService {
         if (t.isEmpty()) {
             log.error("No trip found.");
         } else if (userService.user() == t.get().getCreator()) {
-            tripRepository.deleteById(id);
+            List<Stop> s = stopRepository.findByTrip_Id(id);
+
+            for (int i = 0; i < s.size(); i++) {
+                stopRepository.deleteById(s.get(i).getStopId());
+            }
+
             notificationService.deleteNotifications(t.get());
+
+            tripRepository.deleteById(id);
         } else {
             log.error("Trip not owned by user.");
         }
@@ -182,9 +189,9 @@ public class TripService {
     /**
      * Gets all the trips created by the user making the request
      */
-    public List<ReducedTripResponse> getTrips() {
+    public List<TripResponse> getTrips() {
         List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
-        return trips.stream().map(ReducedTripResponse::new).collect(Collectors.toList());
+        return trips.stream().map(TripResponse::new).collect(Collectors.toList());
     }
 
 }

@@ -19,7 +19,6 @@ export default function Home({ ...props }) {
     const setEnd = useSetAtom(endAtom);
     const router = useRouter();
 
-    console.log(Userfront.tokens.accessToken);
     return (
         <div className="flex flex-col items-center">
             {/* First section */}
@@ -59,9 +58,7 @@ export default function Home({ ...props }) {
                             />
                         </div>
                         <div className="p-4 flex items-end">
-                            <Button
-                                onClick={() => router.push("/trips/create")}
-                            >
+                            <Button onClick={() => router.push("/trips")}>
                                 Submit
                             </Button>
                         </div>

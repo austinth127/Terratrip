@@ -50,7 +50,7 @@ const SignUpForm = () => {
                 const { username, userId, email, name } = Userfront.user;
                 if (userId) {
                     axios
-                        .post("/user/register", {
+                        .post("/api/user/register", {
                             username,
                             userId,
                             name,
@@ -70,7 +70,6 @@ const SignUpForm = () => {
                             setAlert(
                                 "Failed to access the server, try again later"
                             );
-                            /** @TODO Handle user being in userfront but not in backend */
                         });
                 }
             },

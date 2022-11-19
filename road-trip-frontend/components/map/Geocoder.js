@@ -13,6 +13,7 @@ import useGeocodeSuggestions from "../../hooks/useGeocodeSuggestions";
  */
 const Geocoder = ({ callback, InputComponent, ...props }) => {
     const address = useGeocodeSuggestions(props.initialValue ?? "");
+
     return (
         <div className="text-sm font-light">
             <InputComponent
@@ -29,7 +30,7 @@ const Geocoder = ({ callback, InputComponent, ...props }) => {
                         props.dark
                             ? `bg-slate-900 bg-opacity-100`
                             : `bg-white border-y `
-                    } absolute w-80 px-2 py-3 rounded-lg`}
+                    } absolute w-80 px-2 py-3 rounded-lg isolate z-40`}
                 >
                     {address.suggestions.map((suggestion, index) => {
                         return (

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
+@Deprecated
 @Component
 public class LocationMapper {
     public List<Location> getLocationsFromJSON(String json) {
@@ -52,7 +53,10 @@ public class LocationMapper {
         List<LocationResponse> locationResponses = new ArrayList<>();
         List<Location> locations = getLocationsFromJSON(json);
         for(Location l : locations){
-            locationResponses.add(new LocationResponse(l));
+            LocationResponse locRes = new LocationResponse(l);
+            if(locRes.getName() != null) { //Some responses have no name
+                locationResponses.add(locRes);
+            }
         }
         return locationResponses;
     }

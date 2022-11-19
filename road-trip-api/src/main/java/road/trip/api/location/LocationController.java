@@ -6,10 +6,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import road.trip.api.location.request.LocationRatingRequest;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.api.location.request.RecommendRequest;
 import road.trip.api.location.response.LocationResponse;
+import road.trip.api.user.UserService;
+import road.trip.persistence.daos.LocationRatingRepository;
+import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.models.Location;
+import road.trip.persistence.models.LocationRating;
 
 import java.util.List;
 
@@ -20,10 +25,12 @@ import java.util.List;
 public class LocationController {
 
     final LocationService locationService;
+    final LocationRatingRepository locationRatingRepository;
+    final UserService userService;
+    final LocationRepository locationRepository;
 
-    @Deprecated
-    @PostMapping("/create-stop")
-    public ResponseEntity<Location> saveStop(@RequestBody LocationRequest locationRequest) {
+    @PostMapping("/create-location")
+    public ResponseEntity<Location> createLocation(@RequestBody LocationRequest locationRequest) {
         return ResponseEntity.ok(locationService.createLocation(locationRequest));
     }
 
@@ -33,5 +40,15 @@ public class LocationController {
         log.info(recommendRequest.getRoute());
         return ResponseEntity.ok(locationService.getRecommendedLocations(recommendRequest.getTripId(), recommendRequest.getRange(), recommendRequest.getCategories(), recommendRequest.getRoute()));
 
+    }
+
+    @PostMapping("/{location_id}")
+    public ResponseEntity<?> rateLocation(@PathVariable("location_id") Long id, @RequestBody LocationRatingRequest ratingRequest){
+        locationService.addLocationRating(id, ratingRequest.getRating());
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/{location_id}")
+    public ResponseEntity<LocationResponse> getLocationRating(@PathVariable("location_id") Long id){
+        return ResponseEntity.ok(new LocationResponse(locationRepository.findById(id).get(),userService.user(),locationService));
     }
 }

@@ -37,7 +37,15 @@ public class User {
     @OneToMany(mappedBy = "user", targetEntity = Notification.class)
     @ToString.Exclude
     @JsonIgnore
-    List<User> notifications;
+    List<Notification> notifications;
+
+    @Column(length = 4096)
+    String spotifyAccessToken;
+
+    @Column(length = 512)
+    String spotifyRefreshToken;
+
+    String spotifyUserId;
 
     @Override
     public boolean equals(Object o) {
