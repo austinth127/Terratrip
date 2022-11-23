@@ -32,4 +32,6 @@ public class TripEditRequest {
     private LocationRequest end;
 
     private List<LocationRequest> stops;
+
+    private String playlistId;
 }
