@@ -23,9 +23,10 @@ public class RegistrationService {
             .emailAddress(request.getEmail())
             .build();
 
+        user = userRepository.save(user);
         notificationService.enqueueNotifications(user);
 
-        return userRepository.save(user);
+        return user;
     }
 
 }

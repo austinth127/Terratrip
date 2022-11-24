@@ -4,6 +4,8 @@ server:
     contextPath: /api
   port: 8080
 spring:
+  jackson:
+    parser.ALLOW_COMMENTS: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,8 +20,8 @@ dev-mode: true
 spotify:
   client-id: 1aeeb16afb1944e19a21464aee4e0143
   client-secret: af0dbca1fa53401889a89fe8999b0349
-  redirect-uri: http://localhost:8080/spotify/auth-callback
-  scope: playlist-read-private,playlist-modify-private,playlist-modify-private,user-read-private,user-read-email
+  redirect-uri: http://localhost:8080/api/spotify/auth-callback
+  scope: playlist-read-private,playlist-modify-private,playlist-modify-public,user-read-private,user-read-email
 logging:
   level:
     road.trip: INFO

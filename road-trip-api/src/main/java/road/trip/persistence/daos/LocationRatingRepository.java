@@ -12,4 +12,6 @@ public interface LocationRatingRepository extends JpaRepository<LocationRating, 
     LocationRating  findAllByRatingUserAndRatedLocation(User user, Optional<Location> location);
     Integer countAllByRatedLocation(Location location);
     List<LocationRating> findAllByRatedLocation(Location location);
+    Boolean findByRatedLocation(Location e);
+
 }

@@ -111,6 +111,9 @@ public class TripService {
             if (request.getEndDate() != null) {
                 t.setEndDate(request.getEndDate());
             }
+            if (request.getPlaylistId() != null) {
+                t.setPlaylistId(request.getPlaylistId());
+            }
             if (request.getStart() != null) {
                 Location l = locationService.createLocation(request.getStart());
                 t.setStart(l);

@@ -30,6 +30,7 @@ public class TripResponse {
             .map(LocationResponse::new)
             .collect(Collectors.toList());
         rating = t.getRating();
+        playlistId = t.getPlaylistId();
     }
 
     public TripResponse(Trip t, User user, LocationService locationService) {
@@ -75,4 +76,6 @@ public class TripResponse {
     private LocationResponse end;
 
     private List<LocationResponse> stops;
+
+    private String playlistId;
 }

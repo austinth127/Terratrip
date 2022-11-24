@@ -53,7 +53,7 @@ const Create = () => {
             setAlert("Start and end locations should be set below.");
             return;
         }
-        if (!(startDate || !endDate)) {
+        if (!startDate || !endDate) {
             setAlert("Start and End Date cannot be empty.");
             return;
         }
@@ -81,7 +81,7 @@ const Create = () => {
                     setAlert("Trip not completable within time frame.");
                 } else if (editMode) {
                     axios
-                        .patch(`/trip/${trip.id}`, tripToTripRequest(trip))
+                        .patch(`/api/trip/${trip.id}`, tripToTripRequest(trip))
                         .then(
                             (success) => {
                                 clearTrip();

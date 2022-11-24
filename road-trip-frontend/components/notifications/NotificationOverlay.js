@@ -64,7 +64,7 @@ const NotificationOverlay = () => {
                             key={notification.id}
                             removeNotif={() => {
                                 axios.delete(
-                                    `/notification/${notification.id}`
+                                    `/api/notification/${notification.id}`
                                 );
                                 const toRemove = notifications.findIndex(
                                     (item) => item.id == notification.id
