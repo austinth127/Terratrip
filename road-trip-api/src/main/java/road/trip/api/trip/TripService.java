@@ -158,11 +158,13 @@ public class TripService {
     public void rateTrip(long id, double rating) {
         Optional<Trip> t = tripRepository.findById(id);
         if (t.isEmpty()) {
-            log.error("Bro this is not your trip");
-        } else {
+            log.error("No trip found.");
+        } else if (userService.user() == t.get().getCreator()) {
             Trip trip = t.get();
             trip.setRating(rating);
             tripRepository.save(trip);
+        } else {
+            log.error("Trip not owned by user.");
         }
     }
 

@@ -54,10 +54,17 @@ public class NotificationService {
     }
 
     public void deleteNotification(Long id) throws NotFoundException {
-        if (!notificationRepository.existsById(id)) {
+        Optional<Notification> optNotif = notificationRepository.findById(id);
+
+        if (optNotif.isEmpty()) {
             throw new NotFoundException();
         }
-        notificationRepository.deleteById(id);
+        else if (userService.user() == optNotif.get().getUser()) {
+            notificationRepository.deleteById(id);
+        }
+        else {
+            log.error("Notification not owned by user");
+        }
     }
 
     public void deleteNotifications(Trip trip) {
@@ -66,6 +73,7 @@ public class NotificationService {
         for (int i = 0; i < n.size(); i++) {
             notificationRepository.deleteById(n.get(i).getId());
         }
+
     }
 
     /**

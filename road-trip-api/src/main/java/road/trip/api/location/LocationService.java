@@ -33,7 +33,8 @@ public class LocationService {
     private final LocationRatingRepository locationRatingRepository;
     private final UserService userService;
 
-    public Stop createStop(Trip trip, Location location, int order){
+    public Stop createStop(Trip trip, Location location, int order) {
+
 
         Stop stop = Stop.builder()
                 .location(location)
@@ -55,21 +56,32 @@ public class LocationService {
     }
 
     public List<Location> getLocationsForTrip(Long tripId) {
-        List<Stop> stops = stopRepository.findByTrip_Id(tripId).stream()
+        Optional<Trip> optTrip = tripRepository.findById(tripId);
+
+        if (optTrip.isEmpty()) {
+            log.error("No Trip found.");
+        }
+        else if (userService.user() == optTrip.get().getCreator()) {
+            List<Stop> stops = stopRepository.findByTrip_Id(tripId).stream()
                 .sorted(Comparator.comparingInt(Stop::getOrder)).toList();
 
-        List<Location> locs = new ArrayList<>();
+            List<Location> locs = new ArrayList<>();
 
-        for (int i = 0; i < stops.size(); i++) {
-            Optional<Location> optLoc = locationRepository.findById(stops.get(i).getLocation().getId());
-            if(optLoc.isPresent()) {
-                locs.add(optLoc.get());
+            for (int i = 0; i < stops.size(); i++) {
+                Optional<Location> optLoc = locationRepository.findById(stops.get(i).getLocation().getId());
+                if(optLoc.isPresent()) {
+                    locs.add(optLoc.get());
+                }
+                else{
+                    log.error("Error: no Location found");
+                }
             }
-            else{
-                log.error("Error: no Location found");
-            }
+            return locs;
         }
-        return locs;
+        else {
+            log.error("Trip not owned by user.");
+        }
+        return null;
     }
 
     public Optional<Location> getLocationById(Long locId) {
