@@ -18,6 +18,8 @@ import road.trip.util.exceptions.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static road.trip.util.UtilityFunctions.generateRefinedRoute;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -118,14 +120,15 @@ public class LocationService {
         Optional<Trip> optTrip = tripRepository.findById(tripId);
         Set<Location> locations = new HashSet<>();
         List<String> categories = categoryService.getCategoriesByApi(frontendCategories, PlacesAPI.GEOAPIFY);
+        List<List<Double>> RefinedRoute = generateRefinedRoute(route, radius);
 
-        log.debug(tripId + " " + radius + " " + categories + " " + route);
+        log.debug(tripId + " " + radius + " " + categories + " " + RefinedRoute);
         log.info("Get Recommended Locations");
         if(optTrip.isPresent()) {
             if(categories.isEmpty()){   
                 categories = categoryService.getRecommendedCategories(optTrip.get());
             }
-            for(List<Double> point : route){
+            for(List<Double> point : RefinedRoute){
                 locations.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
             }
         } else{

@@ -2,11 +2,15 @@ package road.trip.util;
 
 import org.springframework.boot.SpringApplication;
 import road.trip.RoadTripApplication;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.lang.Math;
 
 public class UtilityFunctions {
 
@@ -37,10 +41,64 @@ public class UtilityFunctions {
         return !tripTimeFrame.isEmpty();
     }
 
+    public static List<List<Double>> generateRefinedRoute(List<List<Double>> route, Double radius){
+        Double curDistance = radius * 2;
+        List<List<Double>> refinedRoute = new ArrayList<>();
+        Double x1, x2, y1, y2, dist;
+
+        //For each point except for the last one
+        for(int i = 0; i < route.size() - 1; i++){
+            x1 = route.get(i).get(0);
+            y1 = route.get(i).get(1);
+            x2 = route.get(i+1).get(0);
+            y2 = route.get(i+1).get(1);
+            dist = calcDist(x1, y1, x2, y2);
+            while(dist >= curDistance){
+                List<Double> newPoint = calcPointAlongLine(x1, y1, x2, y2, curDistance);
+                refinedRoute.add(newPoint);
+                x1 = newPoint.get(0);
+                y1 = newPoint.get(1);
+                dist = calcDist(x1, y1, x2, y2);
+            }
+            curDistance-=dist;
+        }
+
+        return refinedRoute;
+    }
+
+    private static Double calcDist(Double x1, Double y1, Double x2, Double y2){
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
+    private static List<Double> calcPointAlongLine(Double x1, Double y1, Double x2, Double y2, Double dist){
+        Vector2D p1 = new Vector2D(x1, y1);
+        Vector2D p2 = new Vector2D(x2, y2);
+        Vector2D v = p2;
+        v = v.subtract(p1);
+        System.out.println("Original V: " + v.getX() + " " + v.getY());
+
+        v = v.normalize();
+        System.out.println("Normalize V: " + v.getX() + " " + v.getY());
+
+        v = v.scalarMultiply(dist);
+        System.out.println("Scaled V: " + v.getX() + " " + v.getY());
+        v = v.add(p1);
+        System.out.println("Final V: " + v.getX() + " " + v.getY());
+
+        return List.of(v.getX(), v.getY());
+    }
+
     public static void main(String[] args) {
+        /*
         Month categoryStart = Month.JUNE, categoryEnd = Month.JUNE;
         LocalDate tripStart = LocalDate.of(2020, 7, 7), tripEnd = LocalDate.of(2020, 7, 8);
 
         boolean intersects = fallsWithinTimeframe(categoryStart, categoryEnd, tripStart, tripEnd);
+         */
+        List<List<Double>> myList =  List.of(List.of(0d, 0d), List.of(0d, 5d), List.of(3d, 9d), List.of(5.5d, 9d), List.of(6.75d, 9d), List.of(8d, 9d));
+        Double radius = 1.25d;
+
+        List<List<Double>> point = generateRefinedRoute(myList, radius);
+        System.out.println(point);
     }
 }
