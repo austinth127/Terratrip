@@ -25,15 +25,15 @@ public class NotificationResponse {
             }
             case UPCOMING_TRIP_WEEK -> {
                 title = "Upcoming Trip!";
-                body = "Your trip " + n.getTrip().getName() + " is coming up in one week!";
+                body = "Your trip \"" + n.getTrip().getName() + "\" is coming up in one week!";
             }
             case UPCOMING_TRIP_DAY -> {
                 title = "Upcoming Trip!";
-                body = "Your trip " + n.getTrip().getName() + " is coming up tomorrow!";
+                body = "Your trip \"" + n.getTrip().getName() + "\" is coming up tomorrow!";
             }
             case COMPLETED_TRIP -> {
                 title = "Completed Trip!";
-                body = "Make sure to rate your trip " + n.getTrip().getName() + "!";
+                body = "Make sure to rate your trip: \"" + n.getTrip().getName() + "\"!";
             }
             default -> throw new IllegalStateException("Oops, not implemented");
         }
