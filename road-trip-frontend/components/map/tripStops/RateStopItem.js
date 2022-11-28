@@ -4,10 +4,11 @@ import ReactStars from "react-stars";
 import { stopsAtom } from "../../../utils/atoms";
 import { colors } from "../../../utils/colors";
 import ClientOnly from "../../general/ClientOnly";
+import axios from "axios";
 
 const RateStopItem = ({ stop, order }) => {
     const [stops, setStops] = useAtom(stopsAtom);
-    const [rating, setRating] = useState(stop ? stop.rating ?? 0 : 0);
+    const [rating, setRating] = useState(stop ? stop.userRating ?? 0 : 0);
 
     const handleMoveUp = () => {
         const thisIndex = order - 1;
@@ -76,10 +77,11 @@ const RateStopItem = ({ stop, order }) => {
                         value={rating}
                         edit={true}
                         onChange={(newVal) => {
-                            // axios.post(`/api/location/${stop.id}`, {
-                            //     rating: newVal,
-                            // });
+                            axios.post(`/api/location/${stop.id}`, {
+                                rating: newVal
+                            });
                             setRating(newVal);
+
                         }}
                     />
                 </ClientOnly>

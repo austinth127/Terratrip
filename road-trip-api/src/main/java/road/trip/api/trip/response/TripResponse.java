@@ -2,9 +2,11 @@ package road.trip.api.trip.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import road.trip.api.location.LocationService;
 import road.trip.api.location.response.LocationResponse;
 import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
+import road.trip.persistence.models.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +32,24 @@ public class TripResponse {
         rating = t.getRating();
         playlistId = t.getPlaylistId();
     }
+
+    public TripResponse(Trip t, User user, LocationService locationService) {
+        name = t.getName();
+        distance = t.getDistance();
+        duration = t.getDriveDuration();
+        advLevel = t.getAdventureLevel().toString();
+        startDate = t.getStartDate();
+        endDate = t.getEndDate();
+        id = t.getId();
+        start = t.getStart() == null ? null : new LocationResponse(t.getStart(), user, locationService);
+        end = t.getEnd() == null ? null : new LocationResponse(t.getEnd(), user, locationService);
+        stops = t.getStops().stream()
+            .map(Stop::getLocation)
+            .map(l -> new LocationResponse(l, user, locationService))
+            .collect(Collectors.toList());
+        rating = t.getRating();
+    }
+
 
     @NonNull
     private Long id;

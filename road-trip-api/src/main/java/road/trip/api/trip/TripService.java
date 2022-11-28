@@ -45,7 +45,7 @@ public class TripService {
             log.error("No trip found.");
         } else if (userService.user() == optionalTrip.get().getCreator()) {
             Trip t = optionalTrip.get();
-            tr = new TripResponse(t);
+            tr = new TripResponse(t, optionalTrip.get().getCreator(), locationService);
 
         } else {
             log.error("Trip not owned by user.");
@@ -158,11 +158,13 @@ public class TripService {
     public void rateTrip(long id, double rating) {
         Optional<Trip> t = tripRepository.findById(id);
         if (t.isEmpty()) {
-            log.error("Bro this is not your trip");
-        } else {
+            log.error("No trip found.");
+        } else if (userService.user() == t.get().getCreator()) {
             Trip trip = t.get();
             trip.setRating(rating);
             tripRepository.save(trip);
+        } else {
+            log.error("Trip not owned by user.");
         }
     }
 
@@ -194,7 +196,7 @@ public class TripService {
      */
     public List<TripResponse> getTrips() {
         List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
-        return trips.stream().map(TripResponse::new).collect(Collectors.toList());
+        return trips.stream().map(t -> new TripResponse(t, t.getCreator(), locationService)).collect(Collectors.toList());
     }
 
 }

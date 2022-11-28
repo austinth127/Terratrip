@@ -72,17 +72,20 @@ const Rate = () => {
                     </div>
                 </ClientOnly>
 
-                <div className="mt-16 mb-20 flex flex-row gap-4">
-                    <Button type="submit">Save</Button>
-                    <DarkOutlineButton
-                        onClick={() => {
-                            clearTrip();
-                            router.back();
-                        }}
-                    >
-                        Cancel
-                    </DarkOutlineButton>
-                </div>
+                <ClientOnly>
+                    <div className="mt-16 mb-20 flex flex-row gap-4">
+                        <DarkOutlineButton type="submit">Back</DarkOutlineButton>
+                        {/* <DarkOutlineButton
+                            onClick={() => {
+                                clearTrip();
+                                router.back();
+                            }}
+                        >
+                            Cancel
+                        </DarkOutlineButton> */}
+                    </div>
+                </ClientOnly>
+                
             </form>
         </div>
     );
