@@ -44,6 +44,10 @@ public class UtilityFunctions {
     public static List<List<Double>> generateRefinedRoute(List<List<Double>> route, Double radius){
         Double curDistance = radius * 2;
         List<List<Double>> refinedRoute = new ArrayList<>();
+        //Add start and end to refined route
+        refinedRoute.add(route.get(0));
+        refinedRoute.add(route.get(route.size() - 1));
+
         Double x1, x2, y1, y2, dist;
 
         //For each point except for the last one

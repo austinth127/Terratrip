@@ -23,8 +23,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -115,13 +114,13 @@ public class GeoApifyClient {
     /**
      * radius - radius of search circle in meters
      */
-    public List<Location> getRecommendedLocations(Double lat, Double lon, Double radius, List<String> categories, Integer limit) {
+    public Set<LocationResponse> getRecommendedLocations(Double lat, Double lon, Double radius, List<String> categories, Integer limit) {
         log.debug(lat + " " + lon + " " + radius + " " + categories + " " + limit);
         URI placesUri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("categories", String.join(",", categories)),
             new BasicNameValuePair("filter", "circle:" + lat + "," + lon + "," + radius),
             new BasicNameValuePair("limit", limit + ""),
-            new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115"))); //API_KEY
+            new BasicNameValuePair("apiKey", API_KEY)));
 
         log.debug(placesUri);
         FeatureCollection places;
@@ -134,9 +133,21 @@ public class GeoApifyClient {
             return null;
         }
 
+        //For each returned feature, generate a location response
+        Set<LocationResponse> locationResponses = new HashSet<>();
+        for(Feature feature : places.getFeatures()){
+            locationResponses.add(new LocationResponse(feature.getProperties()));
+        }
+
+        return locationResponses;
+
+        //TODO: Delete if code works
+        /*
         return places.getFeatures().stream()
-            .map(Feature::buildLocation)
+            .map(Feature::buildLocationResponse)
             .toList();
+
+         */
 
 //        // Uncomment for place details
 //        places.getFeatures().forEach(f -> log.info(f.getProperties().getPlaceId()));
@@ -160,10 +171,4 @@ public class GeoApifyClient {
 //            .collect(Collectors.toList());
     }
 
-    public static void main(String args[]){
-        System.out.println("Hello World");
-        GeoApifyClient g = new GeoApifyClient(new LocationMapper());
-        List<Location> r = g.getRecommendedLocations(-74.0060,40.7128, 1000.0, List.of("accommodation", "activity"), 20);
-        System.out.print("Done");
-    }
 }

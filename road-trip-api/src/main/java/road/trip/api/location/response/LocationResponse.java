@@ -1,8 +1,12 @@
 package road.trip.api.location.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import road.trip.api.location.LocationService;
+import road.trip.clients.geoapify.response.Feature;
+import road.trip.clients.geoapify.response.Properties;
+
 import road.trip.persistence.models.Location;
 import road.trip.persistence.models.User;
 
@@ -52,6 +56,20 @@ public class LocationResponse {
         else {
             categories = null;
         }
+    }
+
+    //TODO:Fails to account for wrong category type and problem with phone contact
+    public LocationResponse(Properties properties){
+        address = properties.getAddress();
+        name = properties.getName();
+        geoapifyId = properties.getPlaceId();
+        center = new Double[]{properties.getCoordX(), properties.getCoordY()};
+        //categories = properties.getCategories();
+        //TODO: Why this no work?
+        //phoneContact(properties.getContact() == null ? null : properties.getContact().getPhone());
+        website = properties.getWebsite();
+        description = properties.getDescription();
+        rating = 0.0;
     }
 
     @NotNull

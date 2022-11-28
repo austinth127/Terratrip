@@ -118,23 +118,32 @@ public class LocationService {
         Integer limit = 1;
 
         Optional<Trip> optTrip = tripRepository.findById(tripId);
-        Set<Location> locations = new HashSet<>();
+        //The recommended locations
+        Set<LocationResponse> locationResponses = new HashSet<>();
+        //The categories used to determine the recommended locations
         List<String> categories = categoryService.getCategoriesByApi(frontendCategories, PlacesAPI.GEOAPIFY);
-        List<List<Double>> RefinedRoute = generateRefinedRoute(route, radius);
+        //The refined route used to determine the recommended locations
+        List<List<Double>> refinedRoute = generateRefinedRoute(route, radius);
 
-        log.debug(tripId + " " + radius + " " + categories + " " + RefinedRoute);
-        log.info("Get Recommended Locations");
+        log.info("In getRecommendedLocations: " + tripId + " " + radius + " " + categories + " " + refinedRoute);
+        //If the corresponding trip was found
         if(optTrip.isPresent()) {
+            //Generate a list of categories if none were given
             if(categories.isEmpty()){   
                 categories = categoryService.getRecommendedCategories(optTrip.get());
             }
-            for(List<Double> point : RefinedRoute){
-                locations.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
+            //For each point in the refined route, get a set of recommended locations and add it to the collection
+            for(List<Double> point : refinedRoute){
+                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
             }
         } else{
             log.error("Error: no Trip found");
         }
 
+        return locationResponses.stream().toList();
+
+        //TODO: Remove this if code works
+        /*
         return locations.stream()
             .map(location -> {
                 // Set the categories for the given location
@@ -155,6 +164,7 @@ public class LocationService {
 
                 })     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
+         */
     }
 
     public void addLocationRating(Long locationID, Double rating){
