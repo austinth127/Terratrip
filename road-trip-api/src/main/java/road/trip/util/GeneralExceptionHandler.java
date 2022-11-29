@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import road.trip.util.exceptions.ForbiddenException;
 import road.trip.util.exceptions.NotFoundException;
 
 /**
@@ -52,6 +53,13 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ExceptionUtils.getStackTrace(e));
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    protected ResponseEntity<?> handle403ForbiddenException(ForbiddenException e) {
+        log.error(ExceptionUtils.getStackTrace(e));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
 
     /**
      * Method to handle any exception.

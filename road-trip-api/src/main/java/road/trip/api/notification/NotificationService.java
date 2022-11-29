@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import road.trip.util.exceptions.ForbiddenException;
 import road.trip.util.exceptions.NotFoundException;
 import road.trip.api.notification.response.NotificationResponse;
 import road.trip.api.user.UserService;
@@ -63,7 +64,7 @@ public class NotificationService {
             notificationRepository.deleteById(id);
         }
         else {
-            log.error("Notification not owned by user");
+            throw new ForbiddenException("Notification not owned by user.");
         }
     }
 
