@@ -23,6 +23,7 @@
         "next": "12.2.5",
         "react": "18.2.0",
         "react-dom": "18.2.0",
+        "react-spotify-embed": "^1.0.4",
         "react-stars": "^2.2.5",
         "uuidv4": "^6.2.13"
     },

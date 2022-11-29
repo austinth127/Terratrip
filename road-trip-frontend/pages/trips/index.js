@@ -28,6 +28,7 @@ import { getRoute } from "../../utils/map/geometryUtils";
 import ClientOnly from "../../components/general/ClientOnly";
 import axios from "axios";
 import { tripToTripRequest } from "../../utils/trip";
+import RadioSelector from "../../components/general/RadioSelector";
 
 const Create = () => {
     const [start, setStart] = useAtom(startAtom);
@@ -179,24 +180,11 @@ const Create = () => {
                         Help us tailor your trip by selecting how strenuous of
                         outdoor activities that you want to be recommended.
                     </p>
-                    <ClientOnly>
-                        <div className="sm:flex flex-row gap-4 mt-4 grid grid-rows-2 grid-cols-2 -mr-20 lg:mr-0">
-                            {levels.map((level) => (
-                                <Button
-                                    onClick={() => setActiveLevel(level)}
-                                    key={level}
-                                    className={
-                                        activeLevel.toLowerCase() ==
-                                        level.toLowerCase()
-                                            ? stdBtnStyle
-                                            : darkOutlineBtnStyle
-                                    }
-                                >
-                                    {level}
-                                </Button>
-                            ))}
-                        </div>
-                    </ClientOnly>
+                    <RadioSelector
+                        active={activeLevel}
+                        setActive={setActiveLevel}
+                        options={levels}
+                    />
                     {/* Start and End boxes */}
                     <div className="mt-12 flex sm:flex-row sm:gap-20 flex-col">
                         <h2 className="text-lg font-semibold w-64 ">
