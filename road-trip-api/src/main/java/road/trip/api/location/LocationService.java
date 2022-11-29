@@ -154,15 +154,7 @@ public class LocationService {
                     .map(Category::getName)
                     .toList()));
                 return location;
-            }).map(e -> {
-                if(locationRatingRepository.findByRatedLocation(e)){
-                    return new LocationResponse(e, userService.user(),this );
-                }
-                else{
-                    return new LocationResponse(e);
-                }
-
-                })     // Location -> LocationResponse
+            }).map(LocationResponse::new)     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
          */
     }
