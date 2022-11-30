@@ -17,6 +17,8 @@ import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;
 import road.trip.persistence.models.Stop;
 import road.trip.persistence.models.Trip;
+import road.trip.util.exceptions.ForbiddenException;
+import road.trip.util.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,13 +44,12 @@ public class TripService {
         TripResponse tr = null;
 
         if (optionalTrip.isEmpty()) {
-            log.error("No trip found.");
-        } else if (userService.user() == optionalTrip.get().getCreator()) {
+            throw new NotFoundException("Trip not found.");
+        } else if (userService.user().equals(optionalTrip.get().getCreator())) {
             Trip t = optionalTrip.get();
             tr = new TripResponse(t, optionalTrip.get().getCreator(), locationService);
-
         } else {
-            log.error("Trip not owned by user.");
+            throw new ForbiddenException("Trip not owned by user.");
         }
         return tr;
     }
@@ -90,7 +91,7 @@ public class TripService {
         Optional<Trip> optTrip = tripRepository.findById(id);
 
         if (optTrip.isEmpty()) {
-            log.error("No trip found.");
+            throw new NotFoundException("Trip not found.");
         } else if (userService.user() == optTrip.get().getCreator()) {
             Trip t = optTrip.get();
             if (request.getName() != null) {
@@ -149,22 +150,21 @@ public class TripService {
 
             return t.getId();
         } else {
-            log.error("Trip not owned by user.");
+            throw new ForbiddenException("Trip not owned by user.");
         }
 
-        return null;
     }
 
     public void rateTrip(long id, double rating) {
         Optional<Trip> t = tripRepository.findById(id);
         if (t.isEmpty()) {
-            log.error("No trip found.");
+            throw new NotFoundException("Trip not found.");
         } else if (userService.user() == t.get().getCreator()) {
             Trip trip = t.get();
             trip.setRating(rating);
             tripRepository.save(trip);
         } else {
-            log.error("Trip not owned by user.");
+            throw new ForbiddenException("Trip not owned by user.");
         }
     }
 
@@ -175,7 +175,7 @@ public class TripService {
     public void deleteTrip(Long id) {
         Optional<Trip> t = tripRepository.findById(id);
         if (t.isEmpty()) {
-            log.error("No trip found.");
+            throw new NotFoundException("Trip not found.");
         } else if (userService.user() == t.get().getCreator()) {
             List<Stop> s = stopRepository.findByTrip_Id(id);
 
@@ -187,7 +187,7 @@ public class TripService {
 
             tripRepository.deleteById(id);
         } else {
-            log.error("Trip not owned by user.");
+            throw new ForbiddenException("Trip not owned by user.");
         }
     }
 
