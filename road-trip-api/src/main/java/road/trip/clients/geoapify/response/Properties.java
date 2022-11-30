@@ -22,7 +22,7 @@ public class Properties {
     List<String> categories;
 
     @Data
-    static class Contact {
+    public static class Contact {
         String phone;
         String email;
     }

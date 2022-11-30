@@ -13,6 +13,7 @@ import road.trip.persistence.models.User;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class LocationResponse {
@@ -58,18 +59,17 @@ public class LocationResponse {
         }
     }
 
-    //TODO:Fails to account for wrong category type and problem with phone contact
-    public LocationResponse(Properties properties){
+    public LocationResponse(Properties properties) {
         address = properties.getAddress();
         name = properties.getName();
         geoapifyId = properties.getPlaceId();
         center = new Double[]{properties.getCoordX(), properties.getCoordY()};
-        //categories = properties.getCategories();
-        //TODO: Why this no work?
-        //phoneContact(properties.getContact() == null ? null : properties.getContact().getPhone());
+        categories = properties.getCategories();
+        phoneContact = properties.getContact() == null ? null : properties.getContact().getPhone();
         website = properties.getWebsite();
         description = properties.getDescription();
-        rating = 0.0;
+        rating = null;
+        userRating = null;
     }
 
     @NotNull
@@ -91,4 +91,17 @@ public class LocationResponse {
 
     @JsonProperty("geoapify_id")
     private String geoapifyId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LocationResponse that = (LocationResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(geoapifyId, that.geoapifyId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, geoapifyId);
+    }
 }
