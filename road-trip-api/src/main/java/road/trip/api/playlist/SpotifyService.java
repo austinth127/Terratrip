@@ -19,9 +19,8 @@ import road.trip.persistence.models.Trip;
 import road.trip.persistence.models.User;
 import road.trip.util.exceptions.BadRequestException;
 import road.trip.util.exceptions.NotFoundException;
-import se.michaelthelin.spotify.SpotifyApi;
+import road.trip.util.exceptions.UnauthorizedException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
 import java.util.List;
@@ -104,7 +103,7 @@ public class SpotifyService {
         }
         Trip trip = optTrip.get();
         if (trip.getCreator() != userService.user()) {
-            // TODO: throw new UnauthorizedException();
+            throw new UnauthorizedException();
         }
 
         // Make sure we have a clean playlist to work with
