@@ -45,10 +45,9 @@ public class TripService {
 
         if (optionalTrip.isEmpty()) {
             throw new NotFoundException("Trip not found.");
-        } else if (userService.user() == optionalTrip.get().getCreator()) {
+        } else if (userService.user().equals(optionalTrip.get().getCreator())) {
             Trip t = optionalTrip.get();
             tr = new TripResponse(t, optionalTrip.get().getCreator(), locationService);
-
         } else {
             throw new ForbiddenException("Trip not owned by user.");
         }
