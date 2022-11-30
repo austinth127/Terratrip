@@ -55,39 +55,6 @@ public class LocationService {
         return l;
     }
 
-    public List<Location> getLocationsForTrip(Long tripId) {
-        Optional<Trip> optTrip = tripRepository.findById(tripId);
-
-        if (optTrip.isEmpty()) {
-            log.error("No Trip found.");
-        }
-        else if (userService.user() == optTrip.get().getCreator()) {
-            List<Stop> stops = stopRepository.findByTrip_Id(tripId).stream()
-                .sorted(Comparator.comparingInt(Stop::getOrder)).toList();
-
-            List<Location> locs = new ArrayList<>();
-
-            for (int i = 0; i < stops.size(); i++) {
-                Optional<Location> optLoc = locationRepository.findById(stops.get(i).getLocation().getId());
-                if(optLoc.isPresent()) {
-                    locs.add(optLoc.get());
-                }
-                else{
-                    log.error("Error: no Location found");
-                }
-            }
-            return locs;
-        }
-        else {
-            log.error("Trip not owned by user.");
-        }
-        return null;
-    }
-
-    public Optional<Location> getLocationById(Long locId) {
-        return locationRepository.findById(locId);
-    }
-
     public Location findLocation(LocationRequest request) {
         List<Location> locs = locationRepository.findByNameAndCoordXAndCoordY(request.getName(), request.getCoordX(), request.getCoordY());
         if(locs.size() == 1) {
