@@ -10,6 +10,7 @@ import road.trip.api.user.UserService;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.Trip;
 import road.trip.util.exceptions.NotFoundException;
+import road.trip.util.exceptions.UnauthorizedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class PlaylistService {
         }
         Trip trip = optTrip.get();
         if (trip.getCreator() != userService.user()) {
-            // TODO: throw new UnauthorizedException();
+            throw new UnauthorizedException();
         }
 
         String playlistId = trip.getPlaylistId();

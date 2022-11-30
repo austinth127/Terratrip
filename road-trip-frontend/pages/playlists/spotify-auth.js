@@ -11,12 +11,14 @@ const SpotifyAuth = () => {
             return;
         }
         if (!query || !query.code) {
-            console.log("No query");
+            console.error("No query");
+            router.push("/playlists/edit");
             return;
         }
         const getData = async () => {
             const userRes = await axios.get("/api/user");
             const userId = userRes.data.id;
+            /** @TODO error handling? */
             const res = await axios.get(
                 "/api/spotify/auth-callback/?code=" +
                     query.code +

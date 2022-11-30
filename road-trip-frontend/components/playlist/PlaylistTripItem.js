@@ -4,7 +4,7 @@ import { Button } from "../general/Buttons";
 const PlaylistTripItem = ({ trip, isSelected, callback }) => {
     return (
         <div
-            className={`w-[35rem] bg-slate-900 rounded-lg my-3 hover:cursor-pointer p-4 bg-opacity-80 ${
+            className={`w-full bg-slate-900 rounded-lg my-3 hover:cursor-pointer p-4 bg-opacity-80 ${
                 isSelected && `ring ring-green-600`
             }`}
             onClick={() => callback(trip)}
