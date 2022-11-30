@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @Log4j2
 public class TripServiceTests {
     @Autowired TripRepository tripRepository;
