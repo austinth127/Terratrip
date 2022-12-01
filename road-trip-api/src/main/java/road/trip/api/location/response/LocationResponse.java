@@ -27,6 +27,8 @@ public class LocationResponse {
         website = location.getWebsite();
         address = location.getAddress();
         geoapifyId = location.getGeoapifyId();
+        osmId = location.getOsmId();
+        otmId = location.getOtmId();
         userRating = null;
 
         if (location.getCategories() != null) {
@@ -50,6 +52,8 @@ public class LocationResponse {
         website = location.getWebsite();
         address = location.getAddress();
         geoapifyId = location.getGeoapifyId();
+        osmId = location.getOsmId();
+        otmId = location.getOtmId();
 
         if (location.getCategories() != null) {
             categories = Arrays.stream(location.getCategories().split(",")).toList();
@@ -63,6 +67,12 @@ public class LocationResponse {
         address = properties.getAddress();
         name = properties.getName();
         geoapifyId = properties.getPlaceId();
+        try {
+            osmId = properties.getDatasource().getRaw().getOsmId();
+        } catch (NullPointerException e) {
+            osmId = null;
+        }
+        otmId = null;
         center = new Double[]{properties.getCoordX(), properties.getCoordY()};
         categories = properties.getCategories();
         phoneContact = properties.getContact() == null ? null : properties.getContact().getPhone();
@@ -88,7 +98,10 @@ public class LocationResponse {
     private Double rating;
     private List<String> categories;
     private Double userRating;
-
+    @JsonProperty("osm_id")
+    private Long osmId;
+    @JsonProperty("otm_id")
+    private String otmId;
     @JsonProperty("geoapify_id")
     private String geoapifyId;
 

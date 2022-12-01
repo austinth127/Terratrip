@@ -1,9 +1,14 @@
 package road.trip.util;
 
+import java.net.http.HttpClient;
 import org.springframework.boot.SpringApplication;
 import road.trip.RoadTripApplication;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import road.trip.util.exceptions.UnauthorizedException;
 
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -39,6 +44,20 @@ public class UtilityFunctions {
         }
         tripTimeFrame.retainAll(categoryTimeFrame);
         return !tripTimeFrame.isEmpty();
+    }
+
+    public static String doGet(HttpClient httpClient, URI uri) throws Exception {
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+            .uri(uri)
+            .GET()
+            .build();
+        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        if(httpResponse.statusCode() == 401){
+            throw new UnauthorizedException();
+        }
+
+        return httpResponse.body();
     }
 
     public static List<List<Double>> generateRefinedRoute(List<List<Double>> route, Double radius){

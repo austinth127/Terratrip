@@ -28,6 +28,8 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static road.trip.util.UtilityFunctions.doGet;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -43,17 +45,6 @@ public class GeoApifyClient {
     private final ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final List<Callable<Set<LocationResponse>>> futures = new ArrayList<>();
 
-    private URI buildUri(String path) {
-        try {
-            return new URIBuilder(BASE_URL)
-                .setPath(path)
-                .build();
-        } catch (URISyntaxException e) {
-            log.error(e);
-            return null;
-        }
-    }
-
     private URI buildUri(String path, List<NameValuePair> queryParams) {
         try {
             return new URIBuilder(BASE_URL)
@@ -64,20 +55,6 @@ public class GeoApifyClient {
             log.error(e);
             return null;
         }
-    }
-
-    private String doGet(URI uri) throws Exception {
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-            .uri(uri)
-            .GET()
-            .build();
-        HttpResponse<String> httpResponse = client.send(httpRequest, BodyHandlers.ofString());
-
-        if(httpResponse.statusCode() == 401){
-            throw new UnauthorizedException();
-        }
-
-        return httpResponse.body();
     }
 
     public Set<LocationResponse> executeAsync() throws InterruptedException {
@@ -127,7 +104,7 @@ public class GeoApifyClient {
         log.debug(placesUri);
         FeatureCollection places;
         try {
-            String jsonBody = doGet(placesUri);
+            String jsonBody = doGet(client, placesUri);
             log.debug(jsonBody);
             places = mapper.readValue(jsonBody, FeatureCollection.class);
         } catch (Exception e) {

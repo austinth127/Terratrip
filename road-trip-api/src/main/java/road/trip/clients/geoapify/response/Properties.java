@@ -20,10 +20,21 @@ public class Properties {
     String website;
     String description;
     List<String> categories;
+    Datasource datasource;
 
     @Data
     public static class Contact {
         String phone;
         String email;
+    }
+
+    @Data
+    public static class Datasource {
+        Raw raw;
+        @Data
+        public static class Raw {
+            @JsonProperty("osm_id")
+            Long osmId;
+        }
     }
 }

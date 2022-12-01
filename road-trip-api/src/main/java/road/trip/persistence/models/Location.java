@@ -36,6 +36,7 @@ public class Location {
     private String mapboxId;        // mapbox id
     private String geoapifyId;      // geoapify id
     private String otmId;           // open trip map id
+    private Long osmId;             // open street map id
 
     private String categories;
 

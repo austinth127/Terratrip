@@ -22,6 +22,10 @@ public class LocationRequest {
 
     @JsonProperty("geoapify_id")
     private String geoapifyId;
+    @JsonProperty("otm_id")
+    private String otmId;
+    @JsonProperty("osm_id")
+    private Long osmId;
 
     @JsonProperty("phone_contact")
     private String phoneContact;
@@ -41,6 +45,8 @@ public class LocationRequest {
             .name(name)
             .rating(rating == null ? 0 : rating)
             .address(address)
+            .osmId(osmId)
+            .otmId(otmId)
             .build();
     }
 
