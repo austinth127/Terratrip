@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TripService {
-
     private final TripRepository tripRepository;
     private final LocationService locationService;
     private final UserService userService;
