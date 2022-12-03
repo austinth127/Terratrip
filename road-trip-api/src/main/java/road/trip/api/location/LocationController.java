@@ -8,15 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.location.request.LocationRatingRequest;
 import road.trip.api.location.request.LocationRequest;
-import road.trip.api.location.request.RecommendRequest;
+import road.trip.api.location.request.RecommendationRequest;
 import road.trip.api.location.response.LocationResponse;
+import road.trip.api.location.response.RecommendationResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.LocationRatingRepository;
 import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.models.Location;
-import road.trip.persistence.models.LocationRating;
-
-import java.util.List;
 
 @RestController
 @Log4j2
@@ -28,27 +26,23 @@ public class LocationController {
     final LocationRatingRepository locationRatingRepository;
     final UserService userService;
     final LocationRepository locationRepository;
-
-    @PostMapping("/create-location")
-    public ResponseEntity<Location> createLocation(@RequestBody LocationRequest locationRequest) {
-        return ResponseEntity.ok(locationService.createLocation(locationRequest));
-    }
+    final RecommendationService recommendationService;
 
     @PostMapping("/recommend")
-    public ResponseEntity<List<LocationResponse>> getRecommendedLocations(@RequestBody RecommendRequest recommendRequest) {
-        log.info(recommendRequest);
-        //log.info(recommendRequest.getRoute());
-        return ResponseEntity.ok(locationService.getRecommendedLocations(recommendRequest.getTripId(), recommendRequest.getRange(), recommendRequest.getCategories(), recommendRequest.getRoute()));
+    public ResponseEntity<?> startRecommendedLocationRequests(@RequestBody RecommendationRequest recommendationRequest) {
+        log.debug(recommendationRequest);
+        recommendationService.startRecommendationRequests(recommendationRequest.getTripId(), recommendationRequest.getRange(), recommendationRequest.getCategories(), recommendationRequest.getRoute(), recommendationRequest.getLimit());
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/recommend")
+    public ResponseEntity<RecommendationResponse> getRecommendedLocations(Integer limit) {
+        return ResponseEntity.ok(recommendationService.getRecommendedLocations(limit));
     }
 
     @PostMapping("/{location_id}")
     public ResponseEntity<?> rateLocation(@PathVariable("location_id") Long id, @RequestBody LocationRatingRequest ratingRequest){
         locationService.addLocationRating(id, ratingRequest.getRating());
         return ResponseEntity.ok().build();
-    }
-    @GetMapping("/{location_id}")
-    public ResponseEntity<LocationResponse> getLocationRating(@PathVariable("location_id") Long id){
-        return ResponseEntity.ok(new LocationResponse(locationRepository.findById(id).get(),userService.user(),locationService));
     }
 }

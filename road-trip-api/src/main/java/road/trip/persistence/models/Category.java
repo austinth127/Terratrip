@@ -16,9 +16,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true)
-    private String name;
+    @Column(nullable = false, name = "name")
+    private String uiName;
     private String apiCategories;
     private Month seasonStart;
     private Month seasonEnd;

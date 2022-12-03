@@ -10,6 +10,7 @@ public class OTMFullResponse {
     String name;
     Address address;
     String rate;
+    String osm;
     @JsonProperty("kinds")
     String categories;
     OTMPoint point;
@@ -23,6 +24,10 @@ public class OTMFullResponse {
     @Data
     public static class Description {
         String text;
+        @Override
+        public String toString() {
+            return text;
+        }
     }
 
     @Data
@@ -30,6 +35,10 @@ public class OTMFullResponse {
         String url;
         Integer height;
         Integer width;
+        @Override
+        public String toString() {
+            return url;
+        }
     }
 
     @Data
@@ -45,5 +54,10 @@ public class OTMFullResponse {
         @JsonProperty("house_number")
         Integer houseNumber;
         String neighbourhood;
+
+        @Override
+        public String toString() {
+            return road + " " + city + ", " + countryCode + " " + postcode;
+        }
     }
 }

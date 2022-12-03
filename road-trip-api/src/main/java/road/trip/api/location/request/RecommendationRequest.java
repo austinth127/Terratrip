@@ -6,10 +6,11 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
-public class RecommendRequest {
+public class RecommendationRequest {
 
     @NotNull
     @JsonProperty("tripId")
@@ -17,8 +18,9 @@ public class RecommendRequest {
     @NotNull @JsonProperty("range")
     private double range;
     @NotNull @JsonProperty("categories")
-    private List<String> categories;
+    private Set<String> categories;
     @NotNull @JsonProperty("route")
     private List<List<Double>> route;
+    private Integer limit;
 
 }

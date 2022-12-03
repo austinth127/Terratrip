@@ -1,10 +1,10 @@
 package road.trip.api.location.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import road.trip.api.location.LocationService;
-import road.trip.clients.geoapify.response.Feature;
 import road.trip.clients.geoapify.response.Properties;
 
 import road.trip.persistence.models.Location;
@@ -13,10 +13,9 @@ import road.trip.persistence.models.User;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-@Data
-public class LocationResponse {
+@Data @Builder @AllArgsConstructor
+public class LocationResponse implements Comparable<LocationResponse> {
     public LocationResponse(Location location) {
         id = location.getId();
         name = location.getName();
@@ -45,8 +44,7 @@ public class LocationResponse {
         description = location.getDescription();
         if (id != null) {
             rating = locationService.getAverageRating(location);
-
-            userRating = locationService.getRatingByIDAndUser(id,user);
+            userRating = locationService.getRatingByLocationAndUser(location, user);
         }
         phoneContact = location.getPhoneContact();
         website = location.getWebsite();
@@ -94,6 +92,7 @@ public class LocationResponse {
     private String description;
     private String phoneContact;
     private String website;
+    private String image;
     private String address;
     private Double rating;
     private List<String> categories;
@@ -106,15 +105,14 @@ public class LocationResponse {
     private String geoapifyId;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LocationResponse that = (LocationResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(geoapifyId, that.geoapifyId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, geoapifyId);
+    public int compareTo(LocationResponse o) {
+        // TODO
+        if (otmId != null && o.otmId == null) {
+            return 1;
+        }
+        if (otmId == null && o.otmId != null) {
+            return 0;
+        }
+        return 0;
     }
 }

@@ -8,17 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import road.trip.api.category.CategoryService;
 import road.trip.api.location.request.LocationRequest;
-import road.trip.api.location.response.LocationResponse;
 import road.trip.api.user.UserService;
 import road.trip.clients.geoapify.GeoApifyClient;
 import road.trip.persistence.daos.*;
 import road.trip.persistence.models.*;
-import road.trip.util.exceptions.NotFoundException;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static road.trip.util.UtilityFunctions.generateRefinedRoute;
 
 @Service
 @Log4j2
@@ -72,69 +67,14 @@ public class LocationService {
         return null;
     }
 
-    //TODO: Limit number of stops per request dynamically (based on route points)
-    /**
-     * Gets a recommended list of stops for the given trip. Searches in the given range around the
-     * route, and recommends outdoors activities and sleep locations.
-     */
-    public List<LocationResponse> getRecommendedLocations(Long tripId, Double radius, List<String> frontendCategories, List<List<Double>> route) {
-        //The approximate number of total results the function returns
-        final Integer desiredResultSize = 30;
-
-        //The limit per request to meet the desired result size
-        Integer limit = 1;
-
-        Optional<Trip> optTrip = tripRepository.findById(tripId);
-        //The recommended locations
-        Set<LocationResponse> locationResponses = new HashSet<>();
-        //The categories used to determine the recommended locations
-        List<String> categories = categoryService.getCategoriesByApi(frontendCategories, PlacesAPI.GEOAPIFY);
-        //The refined route used to determine the recommended locations
-        List<List<Double>> refinedRoute = generateRefinedRoute(route, radius);
-
-        log.info("In getRecommendedLocations: " + tripId + " " + radius + " " + categories + " " + refinedRoute);
-        //If the corresponding trip was found
-        if(optTrip.isPresent()) {
-            //Generate a list of categories if none were given
-            if(categories.isEmpty()){   
-                categories = categoryService.getRecommendedCategories(optTrip.get());
-            }
-            //For each point in the refined route, get a set of recommended locations and add it to the collection
-            for(List<Double> point : refinedRoute){
-                locationResponses.addAll(geoApifyClient.getRecommendedLocations(point.get(0), point.get(1), radius, categories, limit));
-            }
-        } else{
-            log.error("Error: no Trip found");
-        }
-
-        return locationResponses.stream().toList();
-
-        //TODO: Remove this if code works
-        /*
-        return locations.stream()
-            .map(location -> {
-                // Set the categories for the given location
-                location.setCategories(String.join(",", Arrays.stream(location.getCategories().split(","))
-                    .map(categoryService::getCategoryFromCategoryApiName)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(Category::getName)
-                    .toList()));
-                return location;
-            }).map(LocationResponse::new)     // Location -> LocationResponse
-            .collect(Collectors.toList());  // stream -> List
-         */
-    }
-
     public void addLocationRating(Long locationID, Double rating){
         //rating exists for that user.
-        if (!locationRepository.existsById(locationID)){
-            throw new NotFoundException();
-        }
-        LocationRating prevRating = locationRatingRepository.findAllByRatingUserAndRatedLocation(userService.user(),locationRepository.findById(locationID));
+        Location location = locationRepository.findById(locationID).orElseThrow();
+        LocationRating prevRating = locationRatingRepository.findByUserAndLocation(userService.user(), location)
+            .orElse(null);
         if(Objects.isNull(prevRating)){
             locationRatingRepository.save(LocationRating.builder()
-                .ratedLocation(locationRepository.findById(locationID).get()).rating(rating).ratingUser(userService.user())
+                .location(locationRepository.findById(locationID).get()).rating(rating).user(userService.user())
                 .build());
         }
         else{
@@ -144,19 +84,16 @@ public class LocationService {
 
     }
 
-    public Double getRatingByIDAndUser(Long id, User u ) {
-        LocationRating ret = locationRatingRepository.findAllByRatingUserAndRatedLocation(u,locationRepository.findById(id));
-        if(Objects.isNull(ret)){
-//            throw new NotFoundException();
-            return null;
-        }
+    public Double getRatingByLocationAndUser(Location location, User user) {
+        LocationRating ret = locationRatingRepository.findByUserAndLocation(user, location)
+            .orElseThrow();
         return ret.getRating();
     }
 
     public Double getAverageRating(Location location) {
         Double ratingsValue = 0.0;
         int count = 0;
-        List<LocationRating> ratings = locationRatingRepository.findAllByRatedLocation(location);
+        List<LocationRating> ratings = locationRatingRepository.findAllByLocation(location);
         for(int i = 0; i < ratings.size();i++){
             ratingsValue+= ratings.get(i).getRating();
             count++;

@@ -8,10 +8,12 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import road.trip.api.location.response.LocationResponse;
+import road.trip.clients.LocationRecommendationClient;
 import road.trip.clients.geoapify.response.Feature;
 import road.trip.clients.geoapify.response.FeatureCollection;
 import road.trip.persistence.models.Location;
@@ -32,8 +34,9 @@ import static road.trip.util.UtilityFunctions.doGet;
 
 @Log4j2
 @Service
+@Qualifier("geoapify")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class GeoApifyClient {
+public class GeoApifyClient implements LocationRecommendationClient {
 
     private static final String BASE_URL = "https://api.geoapify.com";
     private static final Integer THREAD_POOL_SIZE = 25;
@@ -84,20 +87,37 @@ public class GeoApifyClient {
         return locations;
     }
 
-    public void getRecommendedLocationsAsync(Double lat, Double lon, Double radius, List<String> categories, Integer limit) {
+    public void getRecommendedLocationsAsync(Double lat, Double lon, Double radius, Set<String> categories, Integer limit) {
         futures.add(() -> getRecommendedLocations(lat, lon, radius, categories, limit));
     }
 
-    //https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect%3A10.716463143326969%2C48.755151258420966%2C10.835314015356737%2C48.680903341613316&limit=20&apiKey=a9b12a2a2ae0491cb7874bbf0fab7115
+    @Override
+    public LocationResponse getLocationDetails(LocationResponse location) {
+        try {
+            URI placeDetailsUri = buildUri("/v2/place-details", List.of(
+                new BasicNameValuePair("features", "details"),
+                new BasicNameValuePair("id", location.getGeoapifyId()),
+                new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")
+            ));
+            String jsonBody = doGet(client, placeDetailsUri);
+            Feature feature = mapper.readValue(jsonBody, FeatureCollection.class).getFeatures().get(0);
+            return new LocationResponse(feature.getProperties());
+        } catch (Exception e) {
+            log.error(e);
+            return null;
+        }
+    }
+
     /**
      * radius - radius of search circle in meters
      * lat and lon are flipped...
      */
-    public Set<LocationResponse> getRecommendedLocations(Double lat, Double lon, Double radius, List<String> categories, Integer limit) {
+    @Override
+    public Set<LocationResponse> getRecommendedLocations(Double lon, Double lat, Double radius, Set<String> categories, Integer limit) {
         log.debug(lat + " " + lon + " " + radius + " " + categories + " " + limit);
         URI placesUri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("categories", String.join(",", categories)),
-            new BasicNameValuePair("filter", "circle:" + lat + "," + lon + "," + radius),
+            new BasicNameValuePair("filter", "circle:" + lon + "," + lat + "," + radius),
             new BasicNameValuePair("limit", limit + ""),
             new BasicNameValuePair("apiKey", API_KEY)));
 
@@ -112,42 +132,13 @@ public class GeoApifyClient {
             return null;
         }
 
-        //For each returned feature, generate a location response
+        // For each returned feature, generate a location response
         Set<LocationResponse> locationResponses = new HashSet<>();
         for(Feature feature : places.getFeatures()){
             locationResponses.add(new LocationResponse(feature.getProperties()));
         }
 
         return locationResponses;
-
-        //TODO: Delete if code works
-        /*
-        return places.getFeatures().stream()
-            .map(Feature::buildLocationResponse)
-            .toList();
-
-         */
-
-//        // Uncomment for place details
-//        places.getFeatures().forEach(f -> log.info(f.getProperties().getPlaceId()));
-//
-//        return places.getFeatures().parallelStream()
-//            .map(feature -> {
-//                try {
-//                    URI placeDetailsUri = buildUri("/v2/place-details", List.of(
-//                        new BasicNameValuePair("features", "details"),
-//                        new BasicNameValuePair("id", feature.getProperties().getPlaceId()),
-//                        new BasicNameValuePair("apiKey", "a9b12a2a2ae0491cb7874bbf0fab7115")
-//                    ));
-//                    String jsonBody = doGet(placeDetailsUri);
-//                    return mapper.readValue(jsonBody, FeatureCollection.class).getFeatures().get(0);
-//                } catch (Exception e) {
-//                    log.error(e);
-//                    return feature;
-//                }
-//            })
-//            .map(Feature::buildLocation)
-//            .collect(Collectors.toList());
     }
 
 }

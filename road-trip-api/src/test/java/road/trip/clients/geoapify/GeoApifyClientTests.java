@@ -24,7 +24,7 @@ public class GeoApifyClientTests {
         final int limit = 15;
 
         // Colorado ski search
-        Set<LocationResponse> responses = client.getRecommendedLocations(-104.8758, 39.762, 140000.0, List.of("ski.lift"), limit);
+        Set<LocationResponse> responses = client.getRecommendedLocations(-104.8758, 39.762, 140000.0, Set.of("ski.lift"), limit);
         responses.forEach(r -> {
             assertNotNull(r);
             assertNotNull(r.getAddress());
@@ -46,7 +46,7 @@ public class GeoApifyClientTests {
 
         // Make the requests
         for (int i = 0; i < numRequests; i++) {
-            client.getRecommendedLocationsAsync(-104.8758, 39.762, 140000.0, List.of("ski.lift"), limit);
+            client.getRecommendedLocationsAsync(-104.8758, 39.762, 140000.0, Set.of("ski.lift"), limit);
         }
 
         // Get the results

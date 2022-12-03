@@ -20,8 +20,8 @@ public class LocationRating {
     private Long id;
     private Double rating;
     @ManyToOne(targetEntity = Location.class)
-    private Location ratedLocation;
+    private Location location;
     @ManyToOne(targetEntity = User.class)
-    private User ratingUser;
+    private User user;
 
 }
