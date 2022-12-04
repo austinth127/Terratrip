@@ -59,6 +59,7 @@ export const tripNameAtom = atomWithStorage("tripName", null);
 
 // Map
 export const showSaveModalAtom = atom(false);
+export const showAdvChangeAtom = atom(false)
 export const popupStopAtom = atom(null);
 export const tripIdAtom = atomWithStorage("tripId", null);
 export const stopsAtom = atomWithStorage("stops", []);
