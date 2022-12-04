@@ -166,10 +166,10 @@ public class LocationService {
         String[] categories = location.getCategories().split(",");
 
         for(int i = 0; i < categories.length; i++) {
-            Optional<Category> c = categoryRepository.findByName(categories[i]);
-            if(c.isPresent()) {
-                if(advLevel == null || advLevel.ordinal() > c.get().getAdventureLevel().ordinal()) {
-                    advLevel = c.get().getAdventureLevel();
+            List<Category> c = categoryRepository.findAllByName(categories[i]);
+            if(c.size() > 0) {
+                if(advLevel == null || advLevel.ordinal() > c.get(0).getAdventureLevel().ordinal()) {
+                    advLevel = c.get(0).getAdventureLevel();
                 }
             }
         }
