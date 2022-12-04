@@ -33,6 +33,8 @@ public class LocationService {
     private final LocationRatingRepository locationRatingRepository;
     private final UserService userService;
 
+    private final CategoryRepository categoryRepository;
+
     public Stop createStop(Trip trip, Location location, int order) {
 
 
@@ -109,7 +111,7 @@ public class LocationService {
                     .map(Category::getName)
                     .toList()));
                 return location;
-            }).map(LocationResponse::new)     // Location -> LocationResponse
+            }).map(l -> new LocationResponse(l, userService.user(), this))     // Location -> LocationResponse
             .collect(Collectors.toList());  // stream -> List
     }
 
@@ -152,5 +154,21 @@ public class LocationService {
             return null;
         }
         return ratingsValue/count;
+    }
+
+    public AdventureLevel getAdventureLevel(Location location) {
+        AdventureLevel advLevel = null;
+
+        String[] categories = location.getCategories().split(",");
+
+        for(int i = 0; i < categories.length; i++) {
+            Optional<Category> c = categoryRepository.findByName(categories[i]);
+            if(c.isPresent()) {
+                if(advLevel == null || advLevel.ordinal() > c.get().getAdventureLevel().ordinal()) {
+                    advLevel = c.get().getAdventureLevel();
+                }
+            }
+        }
+        return advLevel;
     }
 }

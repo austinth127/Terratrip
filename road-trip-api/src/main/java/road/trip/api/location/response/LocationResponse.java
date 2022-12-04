@@ -3,6 +3,7 @@ package road.trip.api.location.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import road.trip.api.location.LocationService;
+import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;
 import road.trip.persistence.models.User;
 
@@ -52,6 +53,8 @@ public class LocationResponse {
         else {
             categories = null;
         }
+
+        adventureLevel = locationService.getAdventureLevel(location);
     }
 
     @NotNull
@@ -70,6 +73,7 @@ public class LocationResponse {
     private Double rating;
     private List<String> categories;
     private Double userRating;
+    private AdventureLevel adventureLevel;
 
     @JsonProperty("geoapify_id")
     private String geoapifyId;
