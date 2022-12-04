@@ -23,6 +23,7 @@ import road.trip.util.exceptions.UnauthorizedException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -61,13 +62,16 @@ public class SpotifyService {
     }
 
     public List<String> getAvailableGenres() {
+        String[] popularGenres = {"road-trip", "pop", "rock", "edm", "electro",
+            "electronic", "alternative", "lounge", "house", "indie-pop", "electronic", "techno",
+        "r-n-b", "metal", "hard-rock", "hip-hop", "dance", "classical"};
         try {
             return client().getAvailableGenres().stream().sorted((o1, o2) -> {
                 if (!o1.equals(o2)) {
-                    if (o1.equals("road-trip")) {
+                    if (Arrays.asList(popularGenres).contains(o1)) {
                         return -1;
                     }
-                    if (o2.equals("road-trip")) {
+                    if (Arrays.asList(popularGenres).contains(o2)) {
                         return 1;
                     }
                 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { filtersAtom, recStopAtom, tripAtom } from "../../../utils/atoms";
+import { delay } from "../../../utils/delay";
 import LoadingSpinner from "../../general/LoadingSpinner";
 import RecStopDisplay from "./RecStopItem";
 
@@ -13,8 +14,8 @@ const RecStopList = () => {
     const [recStops, setRecStops] = useAtom(recStopAtom);
     const [sent, setSent] = useState(false);
     const [trip, setTrip] = useAtom(tripAtom);
-    const [waiting, setWaiting] = useState(true);
     const [filters, setFilters] = useAtom(filtersAtom);
+    const [done, setDone] = useState(false);
 
     useEffect(() => {
         getData();
@@ -22,20 +23,34 @@ const RecStopList = () => {
 
     const getData = async () => {
         if (!trip.route) return;
-        setWaiting(true);
-        const res = await axios.post("/api/location/recommend", {
-            tripId: trip.id,
-            range: 5000,
-            categories: filters,
-            route: trip.route.geometry.coordinates,
-        });
-        setWaiting(false);
-        setRecStops(res.data);
+        axios
+            .post("/api/location/recommend", {
+                tripId: trip.id,
+                range: 10000,
+                categories: filters,
+                route: trip.route.geometry.coordinates,
+                limit: 100,
+            })
+            .then(async () => {
+                while (!done) {
+                    console.log("here");
+                    await delay(1000);
+                    axios.get("/api/location/recommend?limit=100").then(
+                        (res) => {
+                            let newRec = res.data.locations.filter(
+                                (loc) =>
+                                    loc.place_name && loc.center && loc.address
+                            );
+                            setRecStops([...newRec]);
+                            done = res.data.isDone;
+                            console.log(res.data);
+                            setDone(done);
+                        },
+                        (err) => console.log(err)
+                    );
+                }
+            });
     };
-
-    useEffect(() => {
-        setWaiting(recStops == null);
-    }, [recStops]);
 
     return (
         <div className="h-3/4 w-full pr-2 pt-1 overflow-hidden">
@@ -46,7 +61,7 @@ const RecStopList = () => {
                         Click to add a stop!
                     </div>
                 </div>
-                {waiting || !recStops ? (
+                {!recStops ? (
                     <LoadingSpinner />
                 ) : recStops && recStops.length > 0 ? (
                     recStops.map((stop, index) => (

@@ -39,7 +39,7 @@ const StopFilterChecklist = () => {
     const [selectedFilters, setSelectedFilters] = useState(new Set());
 
     return (
-        <div className="w-full h-1/4 pr-2">
+        <div className="w-full h-1/3 pr-2">
             <div className="overflow-y-scroll scrollbar overflow-x-hidden px-2 text-slate-800 mt-2 relative h-full">
                 <div className="font-semibold mb-1 text-sm">Filters</div>
 
@@ -85,6 +85,7 @@ const StopFilterChecklist = () => {
                         </Accordion>
                     </div>
                 ))}
+                <div className="h-8 invisible"></div>
             </div>
             <div className="absolute bottom-2 right-6">
                 <SmallButton

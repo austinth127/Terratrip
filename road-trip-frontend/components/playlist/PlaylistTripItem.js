@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../general/Buttons";
+import SpotifyEmbed, { SpotifyEmbedById } from "./SpotifyEmbed";
 
 const PlaylistTripItem = ({ trip, isSelected, callback }) => {
     return (
@@ -18,10 +19,24 @@ const PlaylistTripItem = ({ trip, isSelected, callback }) => {
                         <p>{trip.end?.place_name ?? ""}</p>
                     </div>
                 </h3>
-                <div className="font-light text-gray-300">
+                <div
+                    className={
+                        trip.playlistId
+                            ? `font-semibold text-green-500`
+                            : `font-light text-gray-300`
+                    }
+                >
                     {trip.playlistId ? "Has Playlist" : "No Playlist"}
                 </div>
             </div>
+            {trip.playlistId && (
+                <div className="my-2 relative">
+                    <SpotifyEmbedById
+                        id={trip.playlistId}
+                        wide
+                    ></SpotifyEmbedById>
+                </div>
+            )}
         </div>
     );
 };

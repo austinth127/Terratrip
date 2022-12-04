@@ -181,22 +181,24 @@ const Map = ({ ...props }) => {
             recStopMarkers.forEach((marker) => marker.remove());
             setRecStopMarkers([]);
 
-            recStops.forEach((stop, index) => {
-                // Add markers to the map.
-                const marker = new mapboxgl.Marker({
-                    color: colors.slate800,
-                    scale: ".65",
-                    style: { cursor: "pointer" },
-                })
-                    .setLngLat(stop.center)
-                    .addTo(map.current);
+            recStops
+                .filter((stop) => stop.center != null)
+                .forEach((stop, index) => {
+                    // Add markers to the map.
+                    const marker = new mapboxgl.Marker({
+                        color: colors.slate800,
+                        scale: ".65",
+                        style: { cursor: "pointer" },
+                    })
+                        .setLngLat(stop.center)
+                        .addTo(map.current);
 
-                marker.getElement().addEventListener("click", () => {
-                    setPopupStop(stop);
+                    marker.getElement().addEventListener("click", () => {
+                        setPopupStop(stop);
+                    });
+
+                    recStopMarkers.push(marker);
                 });
-
-                recStopMarkers.push(marker);
-            });
             setRecStopMarkers([...recStopMarkers]);
         }
         addMarkers();

@@ -13,6 +13,7 @@ export const tripAtom = atom(
             route: get(routeAtom),
             stops: get(stopsAtom),
             id: get(tripIdAtom),
+            playlistId: get(playlistIdAtom),
         };
     },
     (get, set, newTrip) => {
@@ -25,6 +26,7 @@ export const tripAtom = atom(
         set(routeAtom, newTrip.route);
         set(stopsAtom, newTrip.stops);
         set(tripIdAtom, newTrip.id);
+        set(playlistIdAtom, newTrip.playlistId);
     }
 );
 
@@ -42,6 +44,7 @@ export const clearTripAtom = atom(null, (get, set) => {
     set(recStopAtom, null);
     set(popupStopAtom, null);
     set(routeGeoJsonAtom, null);
+    set(playlistIdAtom, null);
 });
 
 // Create Trip
@@ -56,6 +59,8 @@ export const endAtom = atomWithStorage("endLoc", null);
 export const routeAtom = atomWithStorage("route", null);
 export const routeGeoJsonAtom = atomWithStorage("routeGeoJson", null);
 export const tripNameAtom = atomWithStorage("tripName", null);
+
+export const playlistIdAtom = atomWithStorage("playlist", null);
 
 // Map
 export const showSaveModalAtom = atom(false);
