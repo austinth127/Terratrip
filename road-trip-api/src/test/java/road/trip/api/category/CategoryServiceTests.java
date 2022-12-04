@@ -1,9 +1,15 @@
 package road.trip.api.category;
 
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import road.trip.persistence.models.PlacesAPI;
 
 import java.util.HashSet;
@@ -12,10 +18,24 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
+@Log4j2
 public class CategoryServiceTests {
 
     @Autowired
     CategoryService categoryService;
+
+    @Test
+    void testGetCategoriesByApi_200(){
+
+    }
+
+    @Test
+    void getRecommendedCategories_200(){
+
+    }
 
     @Test
     public void getCategoriesByApiTest(){

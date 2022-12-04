@@ -60,6 +60,7 @@ public class CategoryService {
      * The first list contains the recommended ones which the user might be more interested in.
      * The second contains the rest of the categories.
      */
+    @Deprecated
     public List<List<String>> getFilterCategories(Trip t){
         List<String> primary = getRecommendedCategories(t);
         List<String> secondary = getCategories().stream().map(Category::getName).collect(Collectors.toList());
@@ -88,6 +89,7 @@ public class CategoryService {
         return recommendedCategories;
     }
 
+    @Deprecated
     public Category getCategory(String categoryName) {
         Optional<Category> optCategory = categoryRepository.findByName(categoryName);
         if (optCategory.isEmpty()) {
@@ -96,6 +98,7 @@ public class CategoryService {
         return optCategory.get();
     }
 
+    @Deprecated
     public Optional<Category> getCategoryFromCategoryApiName(String categoryApiName) {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
