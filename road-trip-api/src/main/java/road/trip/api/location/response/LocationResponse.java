@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import road.trip.api.location.LocationService;
 import road.trip.clients.geoapify.response.Properties;
 
+import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;
 import road.trip.persistence.models.User;
 
@@ -67,6 +68,8 @@ public class LocationResponse implements Comparable<LocationResponse> {
         else {
             categories = null;
         }
+
+        adventureLevel = locationService.getAdventureLevel(location);
     }
 
     public LocationResponse(Properties properties) {
@@ -111,6 +114,8 @@ public class LocationResponse implements Comparable<LocationResponse> {
     private Double rating;
     private Double userRating;
     private List<String> categories;
+    private AdventureLevel adventureLevel;
+
     @JsonProperty("osm_id")
     private Long osmId;
     @JsonProperty("otm_id")

@@ -33,6 +33,7 @@ public class TripResponse {
         playlistId = t.getPlaylistId();
     }
 
+    // TODO this is slow
     public TripResponse(Trip t, User user, LocationService locationService) {
         name = t.getName();
         distance = t.getDistance();
