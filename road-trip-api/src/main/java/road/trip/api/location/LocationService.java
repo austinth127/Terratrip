@@ -116,7 +116,7 @@ public class LocationService {
         String[] categories = location.getCategories().split(",");
 
         for(int i = 0; i < categories.length; i++) {
-            List<Category> c = categoryRepository.findAllByName(categories[i]);
+            List<Category> c = categoryRepository.findAllByUiName(categories[i]);
             if(c.size() > 0) {
                 if(advLevel == null || advLevel.ordinal() > c.get(0).getAdventureLevel().ordinal()) {
                     advLevel = c.get(0).getAdventureLevel();

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findAllByUiName(String uiName);
     Optional<Category> findFirstByUiNameAndApi(String categoryName, PlacesAPI api);
     List<Category> findAllByUseByDefault(Boolean useByDefault);
 }
