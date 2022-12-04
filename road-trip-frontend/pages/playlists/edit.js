@@ -2,15 +2,19 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button } from "../../components/general/Buttons";
 import LoadingSpinner from "../../components/general/LoadingSpinner";
+import PlaylistDisplay from "../../components/playlist/PlaylistDisplay";
 
 const Edit = () => {
     const [uri, setUri] = useState();
     const [user, setUser] = useState();
+    const [playlists, setPlaylists] = useState();
 
     useEffect(() => {
         const getData = async () => {
             let user = await axios.get("/api/user");
             setUser(user.data);
+            let playlists = await axios.get("/api/playlist");
+            setPlaylists(playlists.data);
         };
         getData();
         setUri(process.env.NEXT_PUBLIC_SPOTIFY_AUTH_URI);
@@ -22,7 +26,17 @@ const Edit = () => {
 
     return (
         <div className="pt-20">
-            <div className="flex flex-row justify-center">
+            <div className="flex flex-col items-center">
+                {playlists &&
+                    playlists.map((playlist) => (
+                        <PlaylistDisplay
+                            key={playlist.id}
+                            playlist={playlist}
+                        ></PlaylistDisplay>
+                    ))}
+            </div>
+
+            <div className="flex flex-row justify-center my-16">
                 {user.spotifyUserId ? (
                     <div className="text-gray-300">
                         You are connected to Spotify

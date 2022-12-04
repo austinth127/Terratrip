@@ -22,7 +22,7 @@ public class CategoryRequest {
 
     public Category buildCategory() {
         return Category.builder()
-            .name(name)
+            .uiName(name)
             .seasonStart(seasonStart)
             .seasonEnd(seasonEnd)
             .api(api)

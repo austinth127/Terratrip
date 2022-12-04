@@ -7,6 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import road.trip.api.trip.response.TripResponse;
 import road.trip.api.user.UserService;
 import road.trip.persistence.daos.TripRepository;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Log4j2
+@ActiveProfiles("test")
 public class TripServiceTests {
     @Autowired TripRepository tripRepository;
     @Autowired UserRepository userRepository;

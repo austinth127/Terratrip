@@ -8,6 +8,7 @@ public class OTMReducedResponse {
     @JsonProperty("xid")
     String otmId;
     String name;
+    String osm;
     OTMPoint point;
     @JsonProperty("kinds")
     String categories;

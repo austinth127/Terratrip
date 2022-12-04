@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TripService {
-
     private final TripRepository tripRepository;
     private final LocationService locationService;
     private final UserService userService;
@@ -131,6 +130,7 @@ public class TripService {
                 for (int i = 0; i < oldStops.size(); i++) {
                     stopRepository.deleteById(oldStops.get(i).getStopId());
                 }
+                t.getStops().clear();
 
 
                 oldStops = stopRepository.findByTrip_Id(id);
@@ -139,7 +139,7 @@ public class TripService {
                     // Re-add stops
                     for (int i = 0; i < stops.size(); i++) {
                         Location l = locationService.createLocation(stops.get(i));
-                        locationService.createStop(t, l, i);
+                        t.getStops().add(locationService.createStop(t, l, i));
                     }
                 }
             }

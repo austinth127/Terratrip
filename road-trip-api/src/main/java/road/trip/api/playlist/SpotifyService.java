@@ -165,6 +165,7 @@ public class SpotifyService {
         }
 
         try {
+            // @TODO this can throw index out of bounds exception
             List<TrackSimplified> tracks = client.recommendTracks(request.getGenres(), af, new Range<>(popularity.get(0), popularity.get(1)), numSongs);
             List<String> trackUris = tracks.stream().map(TrackSimplified::getUri).collect(Collectors.toList());
             client.addTracksToPlaylist(playlistId, trackUris);

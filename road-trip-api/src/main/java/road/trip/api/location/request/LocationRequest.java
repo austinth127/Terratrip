@@ -26,6 +26,9 @@ public class LocationRequest {
     private String otmId;
     @JsonProperty("osm_id")
     private Long osmId;
+    @JsonProperty("wikidata_id")
+    private String wikidataId;
+    private String image;
 
     @JsonProperty("phone_contact")
     private String phoneContact;
@@ -47,6 +50,8 @@ public class LocationRequest {
             .address(address)
             .osmId(osmId)
             .otmId(otmId)
+            .wikidataId(wikidataId)
+            .imageUrl(image)
             .build();
     }
 

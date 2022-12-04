@@ -1,9 +1,13 @@
 package road.trip.util;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import org.springframework.boot.SpringApplication;
 import road.trip.RoadTripApplication;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import road.trip.util.exceptions.BadRequestException;
+import road.trip.util.exceptions.TooManyRequestsException;
 import road.trip.util.exceptions.UnauthorizedException;
 
 import java.net.URI;
@@ -46,18 +50,34 @@ public class UtilityFunctions {
         return !tripTimeFrame.isEmpty();
     }
 
-    public static String doGet(HttpClient httpClient, URI uri) throws Exception {
+    public static String doGet(HttpClient httpClient, URI uri) throws IOException, InterruptedException {
         HttpRequest httpRequest = HttpRequest.newBuilder()
             .uri(uri)
             .GET()
             .build();
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        if(httpResponse.statusCode() == 401){
-            throw new UnauthorizedException();
+        switch (httpResponse.statusCode()) {
+            case 400:
+                throw new BadRequestException(httpResponse.body());
+            case 401:
+                throw new UnauthorizedException();
+            case 429:
+                throw new TooManyRequestsException();
         }
 
         return httpResponse.body();
+    }
+
+    public static String bestString(String a, String b) {
+        return a != null && !a.isBlank() ? a : b;
+    }
+
+    public static <T> List<T> combineLists(List<T> a, List<T> b) {
+        Set<T> combined = new HashSet<>();
+        if (a != null) combined.addAll(a);
+        if (b != null) combined.addAll(b);
+        return new ArrayList<>(combined);
     }
 
     public static List<List<Double>> generateRefinedRoute(List<List<Double>> route, Double radius){

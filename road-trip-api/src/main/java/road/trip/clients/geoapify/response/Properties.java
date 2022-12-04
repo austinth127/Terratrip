@@ -35,6 +35,9 @@ public class Properties {
         public static class Raw {
             @JsonProperty("osm_id")
             Long osmId;
+            @JsonProperty("wikidata")
+            String wikidataId;
+            String image;
         }
     }
 }

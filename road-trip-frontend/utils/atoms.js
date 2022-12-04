@@ -62,6 +62,7 @@ export const showSaveModalAtom = atom(false);
 export const popupStopAtom = atom(null);
 export const tripIdAtom = atomWithStorage("tripId", null);
 export const stopsAtom = atomWithStorage("stops", []);
+
 export const allLocationsAtom = atom((get) => {
     if (!get(stopsAtom) || get(stopsAtom).length < 1) {
         return [get(startAtom), get(endAtom)];

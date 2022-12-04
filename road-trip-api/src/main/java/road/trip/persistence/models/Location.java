@@ -29,6 +29,7 @@ public class Location {
     private String website;
     private String address;
     private Double rating;
+    private String imageUrl;
 
     private double coordX;
     private double coordY;
@@ -37,6 +38,7 @@ public class Location {
     private String geoapifyId;      // geoapify id
     private String otmId;           // open trip map id
     private Long osmId;             // open street map id
+    private String wikidataId;
 
     private String categories;
 

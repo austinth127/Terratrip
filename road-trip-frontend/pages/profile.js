@@ -14,6 +14,7 @@ const Profile = () => {
     const id = Userfront.user.userId;
     const [user, setUser] = useState();
     const [trips, setTrips] = useState();
+    const [playlists, setPlaylists] = useState();
     const setActiveTrip = useSetAtom(tripAtom);
     const router = useRouter();
 
@@ -24,6 +25,8 @@ const Profile = () => {
             setUser(res.data);
             res = await axios.get("/api/trip");
             setTrips(res.data);
+            let playlists = await axios.get("/api/playlist");
+            setPlaylists(playlists.data);
         };
 
         getData();
@@ -79,13 +82,28 @@ const Profile = () => {
                         <p> This user has no trips.</p>
                     )}
                 </div>
-                <p className="mt-8 text-left font-light text-base">
+                <div className="mt-8 text-left font-light text-base">
                     <label className="font-semibold grad-txt-rs-yllw text-green-600">
-                        <a href="/trips/edit"> My Playlists:</a>
+                        <a href="/playlists/edit"> My Playlists:</a>
                     </label>
                     <br />
-                    This user has no playlists.
-                </p>
+                    {playlists && playlists.length > 0 ? (
+                        <div className="flex flex-col">
+                            {playlists.map((playlist) => (
+                                <a
+                                    className="hover:text-slate-400 text-slate-100 font-normal w-fit"
+                                    key={playlist.id}
+                                    href={playlist.url}
+                                    target="_blank"
+                                >
+                                    {playlist.name}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        "This user has no playlists."
+                    )}
+                </div>
             </div>
         </div>
     );
