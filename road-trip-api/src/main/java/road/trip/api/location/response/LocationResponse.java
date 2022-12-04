@@ -15,9 +15,11 @@ import road.trip.persistence.models.User;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static road.trip.util.UtilityFunctions.bestString;
 import static road.trip.util.UtilityFunctions.combineLists;
+
 
 @Data @Builder @AllArgsConstructor @Log4j2
 public class LocationResponse implements Comparable<LocationResponse> {
@@ -113,6 +115,7 @@ public class LocationResponse implements Comparable<LocationResponse> {
     private String address;
     private Double rating;
     private Double userRating;
+    private Double recommendationScore;
     private List<String> categories;
     private AdventureLevel adventureLevel;
 
@@ -127,14 +130,24 @@ public class LocationResponse implements Comparable<LocationResponse> {
 
     @Override
     public int compareTo(LocationResponse o) {
-        // TODO
-        if (otmId != null && o.otmId == null) {
+        if(recommendationScore < o.recommendationScore)
+            return -1;
+
+        if(recommendationScore > o.recommendationScore)
             return 1;
-        }
-        if (otmId == null && o.otmId != null) {
-            return 0;
-        }
+
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this)
+            return true;
+        if (!(o instanceof LocationResponse))
+            return false;
+        LocationResponse other = (LocationResponse) o;
+
+        return (this.id.equals(other.id) || this.osmId.equals(other.osmId) || this.otmId.equals(other.otmId) || this.geoapifyId.equals(other.geoapifyId) || this.wikidataId.equals(other.wikidataId));
     }
 
     public static LocationResponse combineRecommendations(LocationResponse a, LocationResponse b) {
@@ -164,5 +177,15 @@ public class LocationResponse implements Comparable<LocationResponse> {
             .osmId(a.getOsmId() != null ? a.getOsmId() : b.getOsmId())
             .geoapifyId(bestString(a.getGeoapifyId(), b.getGeoapifyId()))
             .build();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (osmId != null ? osmId.hashCode() : 0);
+        result = 31 * result + (otmId != null ? otmId.hashCode() : 0);
+        result = 31 * result + (geoapifyId != null ? geoapifyId.hashCode() : 0);
+        result = 31 * result + (wikidataId != null ? wikidataId.hashCode() : 0);
+        return result;
     }
 }

@@ -9,15 +9,14 @@ import road.trip.api.location.response.RecommendationResponse;
 import road.trip.api.user.UserService;
 import road.trip.clients.LocationRecommendationClient;
 import road.trip.clients.wikidata.WikidataClient;
+import road.trip.persistence.daos.LocationRatingRepository;
+import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.Trip;
 import road.trip.util.ThrottledThreadPoolExecutor;
 import road.trip.util.exceptions.ForbiddenException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,12 +30,18 @@ import static road.trip.util.UtilityFunctions.generateRefinedRoute;
 @Log4j2
 public class RecommendationService {
 
+    public final static int RATING_WEIGHT = 2;
+    public final static int ADVENTURE_WEIGHT = 2;
+    public final static int DATA_WEIGHT = 1;
+
     private final LocationRecommendationClient geoApifyClient;
     private final LocationRecommendationClient otmClient;
     private final WikidataClient wikidataClient;
     private final CategoryService categoryService;
     private final UserService userService;
     private final TripRepository tripRepository;
+    private final LocationRatingRepository locationRatingRepository;
+    private final LocationRepository locationRepository;
     private final ConcurrentHashMap<Long, ConcurrentHashMap<String, LocationResponse>> recommendationsByUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> isDoneByUser = new ConcurrentHashMap<>();
 
@@ -44,13 +49,15 @@ public class RecommendationService {
                                  @Qualifier("otm") LocationRecommendationClient otmClient,
                                  WikidataClient wikidataClient,
                                  UserService userService, CategoryService categoryService,
-                                 TripRepository tripRepository) {
+                                 TripRepository tripRepository, LocationRatingRepository locationRatingRepository, LocationRepository locationRepository) {
         this.geoApifyClient = geoApifyClient;
         this.otmClient = otmClient;
         this.wikidataClient = wikidataClient;
         this.userService = userService;
         this.categoryService = categoryService;
         this.tripRepository = tripRepository;
+        this.locationRatingRepository = locationRatingRepository;
+        this.locationRepository = locationRepository;
     }
 
     public void startRecommendationRequests(Long tripId, Double radius, Set<String> frontendCategories, List<List<Double>> route, Integer limit) {
@@ -94,9 +101,11 @@ public class RecommendationService {
                 List<LocationResponse> recommendations = getRecommendationCache(userId).values().stream().toList();
                 clearRecommendationCache(userId);
 
+                setRecommendationScore(recommendations, tripId);
+
                 // Get the recommendation details
                 recommendations.stream()
-                    .sorted()
+                    .sorted(Comparator.reverseOrder())
                     .limit(limit)
                     .forEach(recommendation -> {
                         addToRecommendationCache(userId, recommendation);
@@ -127,13 +136,15 @@ public class RecommendationService {
         }).start();
     }
 
-    public RecommendationResponse getRecommendedLocations(Integer limit) {
+    public RecommendationResponse getRecommendedLocations(Integer limit, long tripId) {
         Long userId = userService.getId();
         List<LocationResponse> locations = getRecommendationCache(userId).values().stream().toList();
 
+        setRecommendationScore(locations, tripId);
+
         return RecommendationResponse.builder()
             .locations(locations.stream()
-                .sorted()
+                .sorted(Comparator.reverseOrder())
                 .limit(limit)
                 .collect(Collectors.toList()))
             .isDone(getDone(userId))
@@ -141,6 +152,55 @@ public class RecommendationService {
     }
 
     /** HELPER FUNCTIONS */
+
+    private void setRecommendationScore(List<LocationResponse> locations, long tripId) {
+        int advLevel = tripRepository.findById(tripId).orElseThrow().getAdventureLevel().ordinal();
+
+        locations.stream().forEach((loc) -> {
+            long numRaings = locationRatingRepository.countAllByLocation(locationRepository.findById(loc.getId()).orElseThrow());
+
+            loc.setRecommendationScore(calculateRecommendedScore(getRatingScore(loc.getRating(), numRaings),
+                getAdventureScore(loc.getAdventureLevel().ordinal(), advLevel),
+                getDataScore(loc)));
+        });
+
+    }
+
+    private double calculateRecommendedScore(double ratingScore, double adventureScore, double dataScore) {
+        return (ratingScore * RATING_WEIGHT) + (adventureScore * ADVENTURE_WEIGHT) + (dataScore * DATA_WEIGHT);
+
+    }
+
+    private double getRatingScore(double rating, long numRatings) {
+        if(numRatings == 0) {
+            return .5;
+        }
+        return ( (Math.pow(rating, 2)/10.0) + (5.0 * (1.0 - Math.pow(Math.exp(1), -.5*numRatings)) ) ) / 7.5;
+    }
+
+    private double getAdventureScore(int locationAdventureLevel, int tripAdventureLevel) {
+        return (locationAdventureLevel + 1)/((double)(tripAdventureLevel + 1));
+    }
+
+    private double getDataScore(LocationResponse loc) {
+        double score = 0;
+
+        if (loc.getName() != null)
+            score += .3;
+        if(loc.getDescription() != null)
+            score += .2;
+        if(loc.getPhoneContact() != null)
+            score += .05;
+        if(loc.getWebsite() != null)
+            score += .15;
+        if(loc.getImage() != null)
+            score += .15;
+        if(loc.getAddress() != null)
+            score += .15;
+
+        return score;
+    }
+
     private void getWikidataAsync(Long userId, ThrottledThreadPoolExecutor executor,
                                   WikidataClient client, LocationResponse location) {
         executor.execute(() -> {
