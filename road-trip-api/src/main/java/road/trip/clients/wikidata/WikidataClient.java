@@ -50,7 +50,14 @@ public class WikidataClient {
             String jsonBody = doGet(client, imageNameUri);
             ImageClaimsResponse imageClaimsResponse = mapper.readValue(jsonBody, ImageClaimsResponse.class);
 
-            String imageName = imageClaimsResponse.getClaims().getP18().get(0).getMainsnak().getDatavalue().getValue();
+            String imageName;
+            try {
+                imageName = imageClaimsResponse.getClaims().getP18().get(0).getMainsnak().getDatavalue().getValue();
+            } catch (NullPointerException e) {
+                log.warn("Can't get image name from WikiData API, id=" + wikidataId);
+                log.debug(e.getStackTrace());
+                return null;
+            }
             log.debug("Image found for " + wikidataId + ": " + imageName);
 
             String uriOne = "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/" + imageName.replaceAll(" ", "_");
