@@ -159,6 +159,10 @@ public class LocationService {
     public AdventureLevel getAdventureLevel(Location location) {
         AdventureLevel advLevel = null;
 
+        if(location.getCategories() == null) {
+            return null;
+        }
+
         String[] categories = location.getCategories().split(",");
 
         for(int i = 0; i < categories.length; i++) {
