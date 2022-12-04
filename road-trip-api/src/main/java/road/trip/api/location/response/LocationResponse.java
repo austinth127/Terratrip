@@ -95,8 +95,8 @@ public class LocationResponse implements Comparable<LocationResponse> {
     private String image;
     private String address;
     private Double rating;
-    private List<String> categories;
     private Double userRating;
+    private List<String> categories;
     @JsonProperty("osm_id")
     private Long osmId;
     @JsonProperty("otm_id")

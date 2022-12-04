@@ -24,5 +24,5 @@ spotify:
   scope: playlist-read-private,playlist-modify-private,playlist-modify-public,user-read-private,user-read-email
 logging:
   level:
-    road.trip: INFO
+    road.trip: DEBUG
     org.hibernate: WARN

@@ -10,18 +10,18 @@ import road.trip.api.user.UserService;
 import road.trip.clients.LocationRecommendationClient;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.Trip;
-import road.trip.persistence.models.User;
+import road.trip.util.ThrottledThreadPoolExecutor;
 import road.trip.util.exceptions.ForbiddenException;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.lang.System.currentTimeMillis;
 import static road.trip.persistence.models.PlacesAPI.GEOAPIFY;
 import static road.trip.persistence.models.PlacesAPI.OPENTRIPMAP;
 import static road.trip.util.UtilityFunctions.generateRefinedRoute;
@@ -29,8 +29,6 @@ import static road.trip.util.UtilityFunctions.generateRefinedRoute;
 @Service
 @Log4j2
 public class RecommendationService {
-
-    private static final Integer THREAD_POOL_SIZE = 30;
 
     private final LocationRecommendationClient geoApifyClient;
     private final LocationRecommendationClient otmClient;
@@ -59,8 +57,10 @@ public class RecommendationService {
         Long userId = userService.getId();
         new Thread(() -> {
             try {
+                log.info("Getting recommendations..");
                 // Setup
-                ExecutorService esReduced = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+                ThrottledThreadPoolExecutor geoApifyExecutor = new ThrottledThreadPoolExecutor(5);
+                ThrottledThreadPoolExecutor otmExecutor = new ThrottledThreadPoolExecutor(4.8);
                 setDone(userId, false);
                 clearRecommendationCache(userId);
                 List<List<Double>> refinedRoute = generateRefinedRoute(route, radius);
@@ -78,14 +78,14 @@ public class RecommendationService {
                 Set<String> otmCategories = categoryService.getApiCategories(recommendedCategories, OPENTRIPMAP);
 
                 // Get recommendation info without details
-                //getReducedRecommendationsAsync(userId, esReduced, geoApifyClient, radius, geoApifyCategories, refinedRoute, limit);
-                getReducedRecommendationsAsync(userId, esReduced, otmClient, radius, otmCategories, refinedRoute, limit);
+                getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, limit);
+                getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, limit);
                 // Wait for threads to finish
-                esReduced.shutdown();
-                esReduced.awaitTermination(10, MINUTES);
+                otmExecutor.joinAll();
+                geoApifyExecutor.joinAll();
+                log.info("Got All Reduced Recommendations");
 
                 // Setup
-                ExecutorService esDetails = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
                 List<LocationResponse> recommendations = getRecommendationCache(userId).values().stream().toList();
                 clearRecommendationCache(userId);
 
@@ -97,15 +97,16 @@ public class RecommendationService {
                     .forEach(recommendation -> {
                         addToRecommendationCache(userId, recommendation);
                         if (recommendation.getGeoapifyId() != null)
-                            getDetailedRecommendationsAsync(userId, esDetails, geoApifyClient, recommendation);
+                            getDetailedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, recommendation);
                         if (recommendation.getOtmId() != null)
-                            getDetailedRecommendationsAsync(userId, esDetails, otmClient, recommendation);
+                            getDetailedRecommendationsAsync(userId, otmExecutor, otmClient, recommendation);
                     });
 
                 // Wait for threads to finish
-                esDetails.shutdown();
-                esDetails.awaitTermination(10, MINUTES);
+                otmExecutor.joinAll();
+                geoApifyExecutor.joinAll();
                 setDone(userId, true);
+                log.info("Got All Detailed Recommendations");
             } catch (InterruptedException e) {
                 log.error(e);
             }
@@ -127,21 +128,55 @@ public class RecommendationService {
 
     /** HELPER FUNCTIONS */
 
-    private void getDetailedRecommendationsAsync(Long userId, ExecutorService es,
+    private void getDetailedRecommendationsAsync(Long userId, ThrottledThreadPoolExecutor executor,
                                                  LocationRecommendationClient client,
                                                  LocationResponse recommendation) {
-        es.submit(() -> addToRecommendationCache(userId, client.getLocationDetails(recommendation)));
+        executor.execute(() -> addToRecommendationCache(userId, client.getLocationDetails(recommendation)));
     }
 
-    private void getReducedRecommendationsAsync(Long userId, ExecutorService es,
+    private void getReducedRecommendationsAsync(Long userId, ThrottledThreadPoolExecutor executor,
                                                 LocationRecommendationClient client, Double radius,
                                                 Set<String> apiCategories,
                                                 List<List<Double>> route, Integer limit) {
         for (List<Double> point : route) {
-            es.submit(() -> client.getRecommendedLocations(point.get(0), point.get(1), radius, apiCategories, limit)
+            executor.execute(() -> client.getRecommendedLocations(point.get(0), point.get(1), radius, apiCategories, limit)
                     .forEach(recommendation -> addToRecommendationCache(userId, recommendation))
             );
         }
+    }
+
+    private String bestString(String a, String b) {
+        return a != null && !a.isBlank() ? a : b;
+    }
+
+    private <T> List<T> combineLists(List<T> a, List<T> b) {
+        Set<T> combined = new HashSet<>();
+        if (a != null) combined.addAll(a);
+        if (b != null) combined.addAll(b);
+        return new ArrayList<>(combined);
+    }
+
+    private LocationResponse combineRecommendations(LocationResponse a, LocationResponse b) {
+        if (a.getCenter() != null && b.getCenter() != null) {
+            String aid = a.getGeoapifyId() != null ? a.getGeoapifyId() : a.getOtmId();
+            String bid = b.getGeoapifyId() != null ? b.getGeoapifyId() : b.getOtmId();
+            log.debug("Combining {} with {}", aid, bid);
+        }
+        return LocationResponse.builder()
+            .name(bestString(a.getName(), b.getName()))
+            .center(a.getCenter())
+            .description(bestString(a.getDescription(), b.getDescription()))
+            .phoneContact(bestString(a.getPhoneContact(), b.getPhoneContact()))
+            .website(bestString(a.getWebsite(), b.getWebsite()))
+            .image(bestString(a.getImage(), b.getImage()))
+            .address(bestString(a.getAddress(), b.getAddress()))
+            .rating(a.getRating() != null ? a.getRating() : b.getRating())
+            .userRating(a.getUserRating() != null ? a.getUserRating() : b.getUserRating())
+            .categories(combineLists(a.getCategories(), b.getCategories()))
+            .otmId(bestString(a.getOtmId(), b.getOtmId()))
+            .osmId(a.getOsmId() != null ? a.getOsmId() : b.getOsmId())
+            .geoapifyId(bestString(a.getGeoapifyId(), b.getGeoapifyId()))
+            .build();
     }
 
     private void setDone(Long userId, Boolean val) {
@@ -161,8 +196,17 @@ public class RecommendationService {
     }
 
     private void addToRecommendationCache(Long userId, LocationResponse recommendation) {
-        String id = recommendation.getGeoapifyId() == null ? recommendation.getOtmId() : recommendation.getGeoapifyId();
+        String id;
+        if (recommendation.getOsmId() != null)
+            id = recommendation.getOsmId().toString();
+        else if (recommendation.getOtmId() != null)
+            id = recommendation.getOtmId();
+        else
+            id = recommendation.getGeoapifyId();
+
         ConcurrentHashMap<String, LocationResponse> recommendations = getRecommendationCache(userId);
+        LocationResponse prevRecommendation = recommendations.getOrDefault(id, LocationResponse.builder().build());
+        recommendation = combineRecommendations(prevRecommendation, recommendation);
         recommendations.put(id, recommendation);
         setRecommendationCache(userId, recommendations);
     }

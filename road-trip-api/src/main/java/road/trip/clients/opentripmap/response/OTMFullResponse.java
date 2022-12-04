@@ -32,6 +32,7 @@ public class OTMFullResponse {
 
     @Data
     public static class Image {
+        @JsonProperty("source")
         String url;
         Integer height;
         Integer width;
@@ -48,16 +49,19 @@ public class OTMFullResponse {
         String county;
         String suburb;
         String country;
-        Integer postcode;
+        String postcode;
         @JsonProperty("country_code")
         String countryCode;
         @JsonProperty("house_number")
-        Integer houseNumber;
+        String houseNumber;
         String neighbourhood;
 
         @Override
         public String toString() {
-            return road + " " + city + ", " + countryCode + " " + postcode;
+            return
+                (road == null ? "" : road + " ") +
+                (city + ", " + countryCode.toUpperCase()) +
+                (postcode == null ? "" : " " + postcode);
         }
     }
 }

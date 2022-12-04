@@ -1,9 +1,11 @@
 package road.trip.util;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 import org.springframework.boot.SpringApplication;
 import road.trip.RoadTripApplication;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import road.trip.util.exceptions.TooManyRequestsException;
 import road.trip.util.exceptions.UnauthorizedException;
 
 import java.net.URI;
@@ -46,15 +48,18 @@ public class UtilityFunctions {
         return !tripTimeFrame.isEmpty();
     }
 
-    public static String doGet(HttpClient httpClient, URI uri) throws Exception {
+    public static String doGet(HttpClient httpClient, URI uri) throws IOException, InterruptedException {
         HttpRequest httpRequest = HttpRequest.newBuilder()
             .uri(uri)
             .GET()
             .build();
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        if(httpResponse.statusCode() == 401){
+        if (httpResponse.statusCode() == 401) {
             throw new UnauthorizedException();
+        }
+        if (httpResponse.statusCode() == 429) {
+            throw new TooManyRequestsException();
         }
 
         return httpResponse.body();
