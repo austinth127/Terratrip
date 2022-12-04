@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface LocationRatingRepository extends JpaRepository<LocationRating, Long>{
     Optional<LocationRating> findByUserAndLocation(User user, Location location);
     List<LocationRating> findAllByLocation(Location location);
+    Long countAllByLocation(Location location);
 }
