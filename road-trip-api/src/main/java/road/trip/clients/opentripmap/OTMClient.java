@@ -80,8 +80,7 @@ public class OTMClient implements LocationRecommendationClient {
             new BasicNameValuePair("radius", radius.toString()),
             new BasicNameValuePair("lat", lat.toString()),
             new BasicNameValuePair("lon", lon.toString()),
-//            new BasicNameValuePair("kinds", String.join(",", categories)),
-            new BasicNameValuePair("kinds", "gardens_and_parks"),
+            new BasicNameValuePair("kinds", String.join(",", categories)),
             new BasicNameValuePair("limit", limit.toString()),
             new BasicNameValuePair("format", "json")
         ));
@@ -123,7 +122,7 @@ public class OTMClient implements LocationRecommendationClient {
         OTMFullResponse r = getLocationDetails(location.getOtmId());
         Long osmId;
         try {
-            osmId = Long.parseLong(r.getOsm().split("/")[1]);
+            osmId = Math.abs(Long.parseLong(r.getOsm().split("/")[1]));
         } catch (NullPointerException | NumberFormatException e) {
             osmId = null;
         }

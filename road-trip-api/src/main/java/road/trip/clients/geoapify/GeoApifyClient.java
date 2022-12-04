@@ -11,20 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import road.trip.api.location.response.LocationResponse;
 import road.trip.clients.LocationRecommendationClient;
 import road.trip.clients.geoapify.response.Feature;
 import road.trip.clients.geoapify.response.FeatureCollection;
-import road.trip.persistence.models.Location;
-import road.trip.util.exceptions.UnauthorizedException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
@@ -118,14 +112,13 @@ public class GeoApifyClient implements LocationRecommendationClient {
         URI placesUri = buildUri("/v2/places", List.of(
             new BasicNameValuePair("categories", String.join(",", categories)),
             new BasicNameValuePair("filter", "circle:" + lon + "," + lat + "," + radius),
-            new BasicNameValuePair("limit", limit + ""),
+            new BasicNameValuePair("limit", limit.toString()),
             new BasicNameValuePair("apiKey", API_KEY)));
 
         log.debug(placesUri);
         FeatureCollection places;
         try {
             String jsonBody = doGet(client, placesUri);
-            log.debug(jsonBody);
             places = mapper.readValue(jsonBody, FeatureCollection.class);
         } catch (Exception e) {
             log.error(e);
