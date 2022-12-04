@@ -150,7 +150,7 @@ public class LocationResponse implements Comparable<LocationResponse> {
 
         return LocationResponse.builder()
             .name(bestString(a.getName(), b.getName()))
-            .center(a.getCenter())
+            .center(a.getCenter() != null ? a.getCenter() : b.getCenter())
             .description(bestString(a.getDescription(), b.getDescription()))
             .wikidataId(bestString(a.getWikidataId(), b.getWikidataId()))
             .phoneContact(bestString(a.getPhoneContact(), b.getPhoneContact()))
