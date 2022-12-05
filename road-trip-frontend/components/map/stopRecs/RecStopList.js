@@ -18,10 +18,7 @@ const RecStopList = () => {
     const [done, setDone] = useState(false);
 
     useEffect(() => {
-        getData();
-    }, [filters]);
-
-    const getData = async () => {
+        let isMounted = true;
         if (!trip.route) return;
         axios
             .post("/api/location/recommend", {
@@ -29,13 +26,13 @@ const RecStopList = () => {
                 range: 10000,
                 categories: filters,
                 route: trip.route.geometry.coordinates,
-                limit: 100,
+                limit: 50,
             })
             .then(async () => {
-                while (!done) {
+                while (!done && isMounted) {
                     console.log("here");
                     await delay(1000);
-                    axios.get("/api/location/recommend?limit=100").then(
+                    axios.get("/api/location/recommend?limit=50").then(
                         (res) => {
                             let newRec = res.data.locations.filter(
                                 (loc) =>
@@ -50,7 +47,8 @@ const RecStopList = () => {
                     );
                 }
             });
-    };
+        return () => (isMounted = false);
+    }, [filters]);
 
     return (
         <div className="h-3/4 w-full pr-2 pt-1 overflow-hidden">

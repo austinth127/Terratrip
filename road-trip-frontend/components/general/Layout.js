@@ -3,7 +3,7 @@ import Navbar from "../../components/navigation/Navbar";
 import Footer from "../../components/navigation/Footer";
 import NotificationOverlay from "../notifications/NotificationOverlay";
 import { useSetAtom } from "jotai";
-import { clearTripAtom } from "../../utils/atoms";
+import { clearTripAtom, recStopAtom } from "../../utils/atoms";
 
 import Userfront from "@userfront/core";
 Userfront.init("wbmrp64n");

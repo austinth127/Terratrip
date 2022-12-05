@@ -25,7 +25,7 @@ const Profile = () => {
             setUser(res.data);
             res = await axios.get("/api/trip");
             setTrips(res.data);
-            let playlists = await axios.get("/api/playlist");
+            let playlists = await axios.get("/api/playlist?active=true");
             setPlaylists(playlists.data);
         };
 

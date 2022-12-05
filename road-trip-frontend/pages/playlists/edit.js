@@ -13,7 +13,7 @@ const Edit = () => {
         const getData = async () => {
             let user = await axios.get("/api/user");
             setUser(user.data);
-            let playlists = await axios.get("/api/playlist");
+            let playlists = await axios.get("/api/playlist?active=true");
             setPlaylists(playlists.data);
         };
         getData();

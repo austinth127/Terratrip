@@ -27,6 +27,12 @@ const Popup = () => {
             >
                 <i className="fa fa-x fa-solid text-gray-500 fa-xs"></i>
             </button>
+            {stop.image && (
+                <img
+                    src={stop.image}
+                    className="bg-cover m-2 rounded-lg w-fit h-48"
+                ></img>
+            )}
             <p className="text-green-600 font-semibold  ">{stop.place_name}</p>
             {stop.categories ? (
                 <p className="text-slate-600 font-light">
