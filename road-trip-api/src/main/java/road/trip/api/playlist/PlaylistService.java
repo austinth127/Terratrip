@@ -45,6 +45,10 @@ public class PlaylistService {
         return spotifyService.getPlaylistDetails(id);
     }
 
+    public void deletePlaylistIfMineAndGenerated(String playlistId) {
+        spotifyService.deletePlaylistIfMineAndGenerated(playlistId);
+    }
+
     /**
      * Gets the playlist for the given trip
      */
