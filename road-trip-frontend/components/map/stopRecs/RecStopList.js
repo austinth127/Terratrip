@@ -15,10 +15,11 @@ const RecStopList = () => {
     const [sent, setSent] = useState(false);
     const [trip, setTrip] = useAtom(tripAtom);
     const [filters, setFilters] = useAtom(filtersAtom);
-    const [done, setDone] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
+        let done = false;
+
         if (!trip.route) return;
         axios
             .post("/api/location/recommend", {
@@ -36,12 +37,11 @@ const RecStopList = () => {
                         (res) => {
                             let newRec = res.data.locations.filter(
                                 (loc) =>
-                                    loc.place_name && loc.center && loc.address
+                                    loc.center &&
+                                    (loc.address || loc.place_name)
                             );
                             setRecStops([...newRec]);
                             done = res.data.isDone;
-                            console.log(res.data);
-                            setDone(done);
                         },
                         (err) => console.log(err)
                     );
@@ -65,7 +65,13 @@ const RecStopList = () => {
                     recStops.map((stop, index) => (
                         <RecStopDisplay
                             stop={stop}
-                            key={stop.address + stop.place_name + index}
+                            key={
+                                stop.geoapify_id ??
+                                stop.osm_id ??
+                                stop.otm_id ??
+                                stop.id ??
+                                stop.wikidata_id
+                            }
                         />
                     ))
                 ) : (

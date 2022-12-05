@@ -42,8 +42,10 @@ const TripStopItem = ({ stop, order, leg }) => {
 
     return (
         <>
-            <div className={`bg-slate-900 bg-opacity-80 rounded-lg p-2`}>
-                <div className="flex gap-4 flex-row items-center w-full">
+            <div
+                className={`bg-slate-900 bg-opacity-80 rounded-lg p-2 overflow-x-clip`}
+            >
+                <div className="flex gap-4 flex-row items-center min-w-full">
                     <div
                         className={`bg-green-600 text-white rounded-full font-bold font-lg h-10 w-10 text-center shrink-0 flex flex-col items-center justify-center ${
                             start || end ? "text-xs" : ""
@@ -51,7 +53,7 @@ const TripStopItem = ({ stop, order, leg }) => {
                     >
                         {start ? "Start" : end ? "End" : order}
                     </div>
-                    <div className="text-slate-100 text-xs font-light">
+                    <div className="text-slate-100 text-xs font-light w-full">
                         <p className="text-green-600 font-semibold text-sm">
                             {stop.place_name}
                         </p>

@@ -1,10 +1,9 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import React from "react";
 import { popupStopAtom, stopsAtom } from "../../../utils/atoms";
 
 const RecStopItem = ({ stop }) => {
-    const [stops, setStops] = useAtom(stopsAtom);
-    const [popupStop, setPopupStop] = useAtom(popupStopAtom);
+    const setPopupStop = useSetAtom(popupStopAtom);
 
     const handleAddStop = () => {
         setPopupStop(stop);
@@ -12,7 +11,7 @@ const RecStopItem = ({ stop }) => {
 
     return (
         <button
-            className="text-left p-1 w-full h-fit text-slate-800 text-xs hover:bg-slate-200 hover:cursor-pointer duration-200 rounded-lg my-1"
+            className="text-left p-1 w-full h-fit text-slate-800 text-xs hover:bg-slate-200 hover:cursor-pointer duration-200 relative rounded-lg my-1"
             onClick={handleAddStop}
         >
             <p className="text-green-600 font-semibold  ">{stop?.place_name}</p>
@@ -33,8 +32,30 @@ const RecStopItem = ({ stop }) => {
             )}
             <p className="">{stop?.address ?? ""}</p>
             <p className="text-slate-700 font-light">
-                {stop?.phone_contact ?? ""}
+                {stop?.phoneContact ?? ""}
             </p>
+            {stop?.website && (
+                <a
+                    className="text-blue-600 hover:underline font-light"
+                    href={stop.website}
+                    target="_blank"
+                >
+                    {stop.website}
+                </a>
+            )}
+
+            <div className="absolute top-2 right-2 text-gray-400 flex flex-row gap-2">
+                {stop?.image && (
+                    <span>
+                        <i className="fa fa-image"></i>
+                    </span>
+                )}
+                {stop?.description && (
+                    <span>
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </span>
+                )}
+            </div>
         </button>
     );
 };

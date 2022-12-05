@@ -1,17 +1,19 @@
 import { useAtom } from "jotai";
 import React, { useState } from "react";
-import { popupStopAtom, stopsAtom } from "../../../utils/atoms";
+import { popupStopAtom, startAtom, stopsAtom } from "../../../utils/atoms";
+import { addStopInOrder } from "../../../utils/map/geometryUtils";
 import { Button, SmallButton } from "../../general/Buttons";
 
 const Popup = () => {
     const [stop, setStop] = useAtom(popupStopAtom);
     const [stops, setStops] = useAtom(stopsAtom);
+    const [start, setStart] = useAtom(startAtom);
 
     const handleAddStop = () => {
         if (!stops) {
             stops = [];
         }
-        setStops([...stops, stop]);
+        addStopInOrder(start, stop, stops, setStops);
         setStop(null);
     };
 
@@ -20,7 +22,7 @@ const Popup = () => {
     }
 
     return (
-        <div className="text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute top-16 left-[27%] bg-white bg-opacity-90 max-w-[30rem]">
+        <div className="text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute flex flex-col gap-1 top-16 left-[27%] bg-white bg-opacity-90 max-w-[30rem] min-w-[16rem]">
             <button
                 className="absolute top-2 right-4 w-fit h-fit "
                 onClick={() => setStop(null)}
@@ -47,11 +49,33 @@ const Popup = () => {
             ) : (
                 <></>
             )}
-            <p className="">{stop.address ?? ""}</p>
-            <p className="text-slate-700 font-light mb-2">
-                {stop.phone_contact ?? ""}
-            </p>
-            <SmallButton onClick={handleAddStop}>Add to Trip</SmallButton>
+            {stop?.address && <p>{stop.address}</p>}
+            {stop?.address && (
+                <p className="text-slate-700 font-light">
+                    {stop.phone_contact}
+                </p>
+            )}
+            {stop?.description && (
+                <p className="text-green-600 font-extralight">
+                    {stop.description}
+                </p>
+            )}
+            {stop?.phoneContact && (
+                <p className="text-slate-700 font-light">{stop.phoneContact}</p>
+            )}
+            {stop?.website && (
+                <a
+                    className="text-blue-600 hover:underline font-light"
+                    href={stop.website}
+                    target="_blank"
+                >
+                    {stop.website}
+                </a>
+            )}
+
+            <div className="mt-2">
+                <SmallButton onClick={handleAddStop}>Add to Trip</SmallButton>
+            </div>
         </div>
     );
 };

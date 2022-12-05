@@ -76,7 +76,11 @@ const Navbar = ({ ...props }) => {
                             >
                                 <h2 className="uppercase">{tab.section}</h2>
                                 {tab.tabs.map((tab, index) => (
-                                    <NavItem key={index} href={tab.href}>
+                                    <NavItem
+                                        key={index}
+                                        href={tab.href}
+                                        active={router.asPath == tab.href}
+                                    >
                                         {tab.name}
                                     </NavItem>
                                 ))}
