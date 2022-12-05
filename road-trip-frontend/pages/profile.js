@@ -57,7 +57,7 @@ const Profile = () => {
                 {/** @TODO Add trips and playlist to response data */}
                 <div className="mt-12 text-left font-light text-base h-fit">
                     <label className="font-semibold grad-txt-rs-yllw text-green-600">
-                        <a href="/trips/list/user"> My Trips:</a>
+                        <a href="/trips/list/user"> My Trips</a>
                     </label>
                     <br />
                     {trips ? (
@@ -83,7 +83,7 @@ const Profile = () => {
                 </div>
                 <div className="mt-8 text-left font-light text-base">
                     <label className="font-semibold grad-txt-rs-yllw text-green-600">
-                        <a href="/playlists/edit"> My Playlists:</a>
+                        <a href="/playlists/edit"> My Playlists</a>
                     </label>
                     <br />
                     {playlists && playlists.length > 0 ? (

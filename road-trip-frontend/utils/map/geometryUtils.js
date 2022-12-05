@@ -118,21 +118,31 @@ export const secondsToTimeString = (seconds) => {
 
 export const addStopInOrder = (start, stop, stops, setStops) => {
     let distances = [];
-    stops.forEach((s, ndx) => {
-        let dist = distance(start, s);
-        distances.push([dist, ndx]);
-    });
+    if (stops?.length > 0) {
+        stops.forEach((s, ndx) => {
+            let dist = distance(start, s);
+            distances.push([dist, ndx]);
+        });
 
-    distances.sort((a, b) => a[0] < b[0]);
-    let thisDist = distance(start, stop);
-    console.log(thisDist, distances);
+        distances.sort((a, b) => a[0] < b[0]);
 
-    let i = 0;
-    while (thisDist > distances[i][0]) {
-        i++;
+        let thisDist = distance(start, stop);
+        console.log(thisDist, distances);
+
+        let i = 0;
+        while (distances.length > i && thisDist > distances[i][0]) {
+            i++;
+        }
+        console.log(i);
+        if (i < distances.length) {
+            stops.splice(distances[i][1], 0, stop);
+        } else {
+            stops.push(stop);
+        }
+        setStops([...stops]);
+    } else {
+        setStops([stop]);
     }
-    stops.splice(distances[i][1], 0, stop);
-    setStops([...stops]);
 };
 
 export const distance = (p1, p2) => {
