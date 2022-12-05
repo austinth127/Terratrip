@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "../components/general/Buttons";
+import {
+    Button,
+    DarkOutlineButton,
+    OutlineButton,
+} from "../components/general/Buttons";
 import TextInput from "../components/general/TextInput";
 import TextLogo from "../components/general/TextLogo";
 import Geocoder from "../components/map/Geocoder";
@@ -8,6 +12,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { endAtom, startAtom } from "../utils/atoms";
 import { useRouter } from "next/router";
 import Userfront from "@userfront/core";
+import ClientOnly from "../components/general/ClientOnly";
 
 /**
  * The home page for the website
@@ -42,27 +47,50 @@ export default function Home({ ...props }) {
                 {/* Trip start box */}
                 <div className="isolate mt-12 gap-8 p-2 pt-4 rounded-lg bg-gray-200 shadow-lg drop-shadow-lg text-slate-800 h-fit">
                     <h4 className="px-4 font-semibold">Begin your journey.</h4>
-                    <div className="flex sm:flex-row flex-col">
-                        <div className="py-4 px-2 sm:px-4">
-                            <label className="px-1 font-light">Start</label>
-                            <Geocoder
-                                callback={setStart}
-                                InputComponent={TextInput}
-                            />
-                        </div>
-                        <div className="py-4 px-2 sm:px-4">
-                            <label className="px-1 font-light">End</label>
-                            <Geocoder
-                                callback={setEnd}
-                                InputComponent={TextInput}
-                            />
-                        </div>
-                        <div className="p-4 flex items-end">
-                            <Button onClick={() => router.push("/trips")}>
-                                Submit
-                            </Button>
-                        </div>
-                    </div>
+                    <ClientOnly>
+                        {!Userfront.user?.userId ? (
+                            <div className="flex flex-col items-center w-full h-full justify-center gap-4 p-12">
+                                <Button
+                                    onClick={() => router.push("/auth/signin")}
+                                >
+                                    Log in
+                                </Button>
+                                <OutlineButton
+                                    onClick={() => router.push("/auth/signup")}
+                                >
+                                    Sign up
+                                </OutlineButton>
+                            </div>
+                        ) : (
+                            <div className="flex sm:flex-row flex-col">
+                                <div className="py-4 px-2 sm:px-4">
+                                    <label className="px-1 font-light">
+                                        Start
+                                    </label>
+                                    <Geocoder
+                                        callback={setStart}
+                                        InputComponent={TextInput}
+                                    />
+                                </div>
+                                <div className="py-4 px-2 sm:px-4">
+                                    <label className="px-1 font-light">
+                                        End
+                                    </label>
+                                    <Geocoder
+                                        callback={setEnd}
+                                        InputComponent={TextInput}
+                                    />
+                                </div>
+                                <div className="p-4 flex items-end">
+                                    <Button
+                                        onClick={() => router.push("/trips")}
+                                    >
+                                        Submit
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </ClientOnly>
                 </div>
             </div>
         </div>

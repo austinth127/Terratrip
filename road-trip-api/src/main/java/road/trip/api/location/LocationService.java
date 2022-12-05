@@ -87,9 +87,8 @@ public class LocationService {
     }
 
     public Double getRatingByLocationAndUser(Location location, User user) {
-        LocationRating ret = locationRatingRepository.findByUserAndLocation(user, location)
-            .orElseThrow();
-        return ret.getRating();
+        Optional<LocationRating> ret = locationRatingRepository.findByUserAndLocation(user, location);
+        return ret.map(LocationRating::getRating).orElse(null);
     }
 
     public Double getAverageRating(Location location) {

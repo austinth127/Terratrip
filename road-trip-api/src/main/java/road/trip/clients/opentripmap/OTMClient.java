@@ -108,7 +108,7 @@ public class OTMClient implements LocationRecommendationClient {
                 }
                 return LocationResponse.builder()
                         .categories(Arrays.asList(otmReducedResponse.getCategories().split(",")))
-                        .center(new Double[]{otmReducedResponse.getPoint().getLat(), otmReducedResponse.getPoint().getLon()})
+                        .center(new Double[]{otmReducedResponse.getPoint().getLon(), otmReducedResponse.getPoint().getLat()})
                         .otmId(otmReducedResponse.getOtmId())
                         .osmId(osmId)
                         .name(otmReducedResponse.getName())
@@ -132,7 +132,7 @@ public class OTMClient implements LocationRecommendationClient {
             .name(r.getName())
             .address(r.getAddress().toString())
             .categories(Arrays.asList(r.getCategories().split(",")))
-            .center(new Double[]{r.getPoint().getLat(), r.getPoint().getLon()})
+            .center(new Double[]{r.getPoint().getLon(), r.getPoint().getLat()})
             .image(r.getImage() != null ? r.getImage().toString() : null)
             .website(r.getWebsite())
             .description(r.getDescription() != null ? r.getDescription().toString() : null)
