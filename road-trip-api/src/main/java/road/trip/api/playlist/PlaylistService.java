@@ -13,7 +13,9 @@ import road.trip.util.exceptions.NotFoundException;
 import road.trip.util.exceptions.UnauthorizedException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -28,6 +30,18 @@ public class PlaylistService {
      */
     public List<PlaylistResponse> getMyPlaylists() {
         return spotifyService.getMyPlaylists();
+    }
+
+    /**
+     * Gets all playlists that are associated with a trip owned by the user
+     */
+    public List<PlaylistResponse> getMyActivePlaylists() {
+        List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
+        return trips.stream()
+            .map(Trip::getPlaylistId)
+            .filter(Objects::nonNull)
+            .map(spotifyService::getPlaylist)
+            .collect(Collectors.toList());
     }
 
     /**
