@@ -101,7 +101,6 @@ public class SpotifyService {
 
     public void deletePlaylistIfMineAndGenerated(String playlistId) {
         Optional<GeneratedPlaylist> playlist = playlistId == null ? Optional.empty() : gpRepository.findById(playlistId);
-
         if (playlist.isPresent() && playlist.get().getUser() == userService.user()) {
             try {
                 client().deletePlaylist(playlistId);

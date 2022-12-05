@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Userfront from "@userfront/core";
 import axios from "axios";
 import Link from "next/link";
-import { makeTripActive } from "../utils/trip";
 import { useSetAtom } from "jotai";
 import { tripAtom } from "../utils/atoms";
 import LoadingSpinner from "../components/general/LoadingSpinner";
@@ -37,7 +36,7 @@ const Profile = () => {
     }
 
     const handleViewTrip = (trip) => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips/map");
     };
 

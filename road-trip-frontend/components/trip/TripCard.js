@@ -8,7 +8,6 @@ import { tripAtom } from "../../utils/atoms";
 import { useRouter } from "next/router";
 import axios from "axios";
 import useHasMounted from "../../hooks/useHasMounted";
-import { makeTripActive } from "../../utils/trip";
 
 const TripCard = ({ trip, deleteCallback }) => {
     const [rating, setRating] = useState(trip.rating);
@@ -17,17 +16,17 @@ const TripCard = ({ trip, deleteCallback }) => {
     const hasMounted = useHasMounted();
 
     const handleViewTrip = () => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips/map");
     };
 
     const handleEditTrip = () => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips");
     };
 
     const handleRating = () => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips/rate");
     };
 

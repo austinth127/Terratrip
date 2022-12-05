@@ -62,9 +62,9 @@ const Navbar = ({ ...props }) => {
                         <NavItem href="/" key="home">
                             Home
                         </NavItem>
-                        <NavItem href="/about" key="about">
+                        {/* <NavItem href="/about" key="about">
                             About
-                        </NavItem>
+                        </NavItem> */}
                     </div>
                     <AuthRoutes />
 

@@ -83,7 +83,10 @@ const Create = () => {
                 delay(1000).then(() => {
                     setShowLoading(false);
                     setPlaylist(res.data);
-                    setActiveTrip({ ...activeTrip, playlistId: res.data });
+                    setActiveTrip({ ...activeTrip, playlistId: res.data.id });
+                    axios.get("/api/trip").then((res) => {
+                        setTrips(res.data);
+                    });
                 });
             },
             (error) => {
@@ -349,7 +352,11 @@ const Create = () => {
                 </div>
             )}
 
-            <div className="invisible h-32"></div>
+            <div className="py-16">
+                <Button onClick={() => router.push("/playlists/edit")}>
+                    Done
+                </Button>
+            </div>
         </div>
     );
 };
