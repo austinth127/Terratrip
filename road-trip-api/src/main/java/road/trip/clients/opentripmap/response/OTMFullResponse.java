@@ -60,7 +60,8 @@ public class OTMFullResponse {
         public String toString() {
             return
                 (road == null ? "" : road + " ") +
-                (city + ", " + countryCode.toUpperCase()) +
+                (city == null ? "" : city + ", ") +
+                (countryCode == null ? "" : countryCode.toUpperCase()) +
                 (postcode == null ? "" : " " + postcode);
         }
     }
