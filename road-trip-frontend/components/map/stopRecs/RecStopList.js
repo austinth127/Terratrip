@@ -30,7 +30,8 @@ const RecStopList = () => {
                 limit: 50,
             })
             .then(async () => {
-                while (!done && isMounted) {
+                let count = 0;
+                while (!done && isMounted && count < 30) {
                     console.log("here");
                     await delay(1000);
                     axios.get("/api/location/recommend?limit=50").then(
@@ -45,6 +46,7 @@ const RecStopList = () => {
                         },
                         (err) => console.log(err)
                     );
+                    count++;
                 }
             });
         return () => (isMounted = false);

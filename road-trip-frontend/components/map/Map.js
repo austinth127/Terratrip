@@ -153,7 +153,8 @@ const Map = ({ ...props }) => {
                         limit: 50,
                     })
                     .then(async () => {
-                        while (!done && map.current) {
+                        let count = 0;
+                        while (!done && map.current && count < 30) {
                             await delay(1000);
                             axios.get("/api/location/recommend?limit=50").then(
                                 (res) => {
@@ -170,6 +171,7 @@ const Map = ({ ...props }) => {
                                 },
                                 (err) => console.log(err)
                             );
+                            count++;
                         }
                     });
             });
