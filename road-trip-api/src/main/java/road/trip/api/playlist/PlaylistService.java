@@ -12,6 +12,7 @@ import road.trip.persistence.models.Trip;
 import road.trip.util.exceptions.NotFoundException;
 import road.trip.util.exceptions.UnauthorizedException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,12 +37,15 @@ public class PlaylistService {
      * Gets all playlists that are associated with a trip owned by the user
      */
     public List<PlaylistResponse> getMyActivePlaylists() {
+        List<PlaylistResponse> responses = new ArrayList<>();
         List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
-        return trips.stream()
-            .map(Trip::getPlaylistId)
-            .filter(Objects::nonNull)
-            .map(spotifyService::getPlaylist)
-            .collect(Collectors.toList());
+        for (Trip trip : trips) {
+            String playlistId = trip.getPlaylistId();
+            if (playlistId != null) {
+                responses.add(spotifyService.getPlaylist(playlistId).withTripId(trip.getId()));
+            }
+        }
+        return responses;
     }
 
     /**
