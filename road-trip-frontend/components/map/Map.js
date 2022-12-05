@@ -147,7 +147,7 @@ const Map = ({ ...props }) => {
                 axios
                     .post("/api/location/recommend", {
                         tripId: tripId,
-                        range: 10000,
+                        range: 50000,
                         categories: filters,
                         route: route.geometry.coordinates,
                         limit: 50,

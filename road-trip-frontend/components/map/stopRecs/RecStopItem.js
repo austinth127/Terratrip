@@ -36,7 +36,7 @@ const RecStopItem = ({ stop }) => {
             </p>
             {stop?.website && (
                 <a
-                    className="text-blue-600 hover:underline font-light"
+                    className="text-blue-600 hover:underline font-light text-ellipsis"
                     href={stop.website}
                     target="_blank"
                 >
@@ -52,7 +52,7 @@ const RecStopItem = ({ stop }) => {
                 )}
                 {stop?.description && (
                     <span>
-                        <i class="fa-solid fa-ellipsis"></i>
+                        <i className="fa-solid fa-ellipsis"></i>
                     </span>
                 )}
             </div>

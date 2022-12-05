@@ -56,7 +56,7 @@ const Popup = () => {
                 </p>
             )}
             {stop?.description && (
-                <p className="text-green-600 font-extralight">
+                <p className="text-green-600 font-extralight line-clamp-4 text-ellipsis">
                     {stop.description}
                 </p>
             )}
@@ -65,7 +65,7 @@ const Popup = () => {
             )}
             {stop?.website && (
                 <a
-                    className="text-blue-600 hover:underline font-light"
+                    className="text-blue-600 hover:underline font-light text-ellipsis"
                     href={stop.website}
                     target="_blank"
                 >

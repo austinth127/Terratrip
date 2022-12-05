@@ -81,6 +81,14 @@ public class UtilityFunctions {
         return new ArrayList<>(combined);
     }
 
+    public static List<List<Double>> reducedRoute(List<List<Double>> route, int numPoints) {
+        List<List<Double>> newRoute = new ArrayList<>();
+        for (int i = 0; i < route.size(); i += route.size() / numPoints) {
+            newRoute.add(route.get(i));
+        }
+        return newRoute;
+    }
+
     public static List<List<Double>> generateRefinedRoute(List<List<Double>> route, Double radius){
         final Double TARGET_DISTANCE_BETWEEN_POINTS = radius;
 
@@ -110,7 +118,6 @@ public class UtilityFunctions {
 
         // Add end to refined route
         refinedRoute.add(route.get(route.size() - 1));
-
         return refinedRoute;
     }
 

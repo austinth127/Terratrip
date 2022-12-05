@@ -24,7 +24,7 @@ const RecStopList = () => {
         axios
             .post("/api/location/recommend", {
                 tripId: trip.id,
-                range: 10000,
+                range: 50000,
                 categories: filters,
                 route: trip.route.geometry.coordinates,
                 limit: 50,
