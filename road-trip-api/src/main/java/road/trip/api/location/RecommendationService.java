@@ -14,6 +14,8 @@ import road.trip.persistence.models.Trip;
 import road.trip.util.ThrottledThreadPoolExecutor;
 import road.trip.util.exceptions.ForbiddenException;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -69,6 +71,7 @@ public class RecommendationService {
                 setDone(userId, false);
                 clearRecommendationCache(userId);
                 List<List<Double>> refinedRoute = generateRefinedRoute(route, radius);
+
 
                 // Recommend categories for the trip if needed
                 Set<String> recommendedCategories;
