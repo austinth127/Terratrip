@@ -14,7 +14,9 @@ public class NotificationResponse {
 
     public NotificationResponse(Notification n) {
         id = n.getId();
-        tripId = n.getTrip().getId();
+        if(n.getTrip() != null){
+            tripId = n.getTrip().getId();
+        }
         notifiedAt = n.getSendAt();
         type = n.getType();
 
