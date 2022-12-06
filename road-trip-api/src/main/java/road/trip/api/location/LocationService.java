@@ -115,7 +115,7 @@ public class LocationService {
         AdventureLevel advLevel = null;
 
         if (location.getCategories() == null) {
-            log.warn("No categories for location " + location.getGeoapifyId() + ", " + location.getOtmId());
+            log.warn("No categories for location " + location.getGeoapifyId() + ", " + location.getOtmId() + ", " + location.getId());
             return AdventureLevel.RELAXED;
         }
 

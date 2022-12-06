@@ -11,8 +11,6 @@ import road.trip.api.location.response.RecommendationResponse;
 import road.trip.api.user.UserService;
 import road.trip.clients.LocationRecommendationClient;
 import road.trip.clients.wikidata.WikidataClient;
-import road.trip.persistence.daos.LocationRatingRepository;
-import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Location;
@@ -23,9 +21,7 @@ import road.trip.util.exceptions.ForbiddenException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.lang.System.currentTimeMillis;
 import static road.trip.persistence.models.PlacesAPI.GEOAPIFY;
 import static road.trip.persistence.models.PlacesAPI.OPENTRIPMAP;
 import static road.trip.util.UtilityFunctions.generateRefinedRoute;
@@ -46,8 +42,6 @@ public class RecommendationService {
     private final CategoryService categoryService;
     private final UserService userService;
     private final TripRepository tripRepository;
-    private final LocationRatingRepository locationRatingRepository;
-    private final LocationRepository locationRepository;
     private final LocationService locationService;
     private final ConcurrentHashMap<Long, ConcurrentHashMap<String, LocationResponse>> recommendationsByUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> isDoneByUser = new ConcurrentHashMap<>();
@@ -60,15 +54,13 @@ public class RecommendationService {
                                  WikidataClient wikidataClient,
                                  UserService userService, CategoryService categoryService,
                                  LocationService locationService,
-                                 TripRepository tripRepository, LocationRatingRepository locationRatingRepository, LocationRepository locationRepository) {
+                                 TripRepository tripRepository) {
         this.geoApifyClient = geoApifyClient;
         this.otmClient = otmClient;
         this.wikidataClient = wikidataClient;
         this.userService = userService;
         this.categoryService = categoryService;
         this.tripRepository = tripRepository;
-        this.locationRatingRepository = locationRatingRepository;
-        this.locationRepository = locationRepository;
         this.locationService = locationService;
     }
 
@@ -99,8 +91,6 @@ public class RecommendationService {
                 clearRecommendationCache(userId);
                 List<List<Double>> refinedRoute = reducedRoute(route, limit / 2);
 
-                log.info(refinedRoute.size());
-
                 // Recommend categories for the trip if needed
                 Set<String> recommendedCategories;
                 if (frontendCategories.isEmpty()) {
@@ -115,11 +105,15 @@ public class RecommendationService {
 
                 // Get recommendation info without details
                 int numPoints = refinedRoute.size();
-                int numRecsPerSearch = Math.max(MIN_RECS_PER_SEARCH, numPoints == 0 ? 0 : limit / numPoints);
+                int numRecsPerSearch = Math.max(MIN_RECS_PER_SEARCH, numPoints == 0 ? 0 : limit / numPoints * 2);
+                log.info("there are " + numPoints + " points");
+                log.info("num recs per search: " + numRecsPerSearch);
                 if (geoApifyCategories.size() > 0) {
+                    log.info("Getting GEOAPIFY results");
                     getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, numRecsPerSearch);
                 }
                 if (otmCategories.size() > 0) {
+                    log.info("Getting OTM results");
                     getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, numRecsPerSearch);
                 }
                 // Wait for threads to finish
@@ -129,6 +123,7 @@ public class RecommendationService {
 
                 // Setup
                 List<LocationResponse> recommendations = getRecommendationCache(userId).values().stream().toList();
+                log.info("There are " + recommendations.size() + " reduced recs");
                 clearRecommendationCache(userId);
 
                 setRecommendationScore(recommendations, tripId);

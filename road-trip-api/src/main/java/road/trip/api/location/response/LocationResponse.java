@@ -135,7 +135,7 @@ public class LocationResponse implements Comparable<LocationResponse> {
             if (a.getCenter() != null && b.getCenter() != null) {
                 String aid = a.getGeoapifyId() != null ? a.getGeoapifyId() : a.getOtmId();
                 String bid = b.getGeoapifyId() != null ? b.getGeoapifyId() : b.getOtmId();
-                log.info("Combining " + aid + " with " + bid);
+                log.debug("Combining " + aid + " with " + bid);
             }
         } catch (Exception e) {
             log.error(e);

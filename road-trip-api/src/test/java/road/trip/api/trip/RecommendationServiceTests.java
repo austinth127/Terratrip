@@ -6,6 +6,8 @@ import eu.jacquet80.minigeo.MapWindow;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,8 +33,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -89,7 +93,7 @@ public class RecommendationServiceTests {
                 .build());
     }
 
-    void callStartRecommendationRequest(Long tripID) throws IOException{
+    void callStartRecommendationRequest(Long tripID, String routeFilename) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         Double radius = 4000.;
         Set<String> frontendCategories = Set.of();
@@ -97,7 +101,7 @@ public class RecommendationServiceTests {
         Integer limit = 50;
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("routes/routeLong.json").getFile());
+        File file = new File(classLoader.getResource("routes/" + routeFilename).getFile());
         route = mapper.readValue(file, new TypeReference<>() {});
 
         recommendationService.startRecommendationRequests(tripID, radius, frontendCategories, route, limit);
@@ -107,7 +111,7 @@ public class RecommendationServiceTests {
     @DisplayName("start recommendation requests test 200")
     void testStartRecommendationRequests_200() throws IOException {
         Trip t = callCreateTrip(userService.user());
-        callStartRecommendationRequest(t.getId());
+        callStartRecommendationRequest(t.getId(), "route1.json");
         //Implicit success
     }
 
@@ -120,40 +124,53 @@ public class RecommendationServiceTests {
                 .username("tester2")
                 .build());
         Trip t = callCreateTrip(otherUser);
-        assertThrows(ForbiddenException.class, () -> callStartRecommendationRequest(t.getId()));
+        assertThrows(ForbiddenException.class, () -> callStartRecommendationRequest(t.getId(), "route1.json"));
     }
 
     @Test
     @DisplayName("start recommendation requests test 404")
     void testStartRecommendationRequests_404() throws IOException{
         Long invalidID = -1L;
-        assertThrows(NoSuchElementException.class, () -> callStartRecommendationRequest(invalidID));
+        assertThrows(NoSuchElementException.class, () -> callStartRecommendationRequest(invalidID, "route1.json"));
     }
 
-    @Test
     @DisplayName("get recommended locations test 200")
     @Sql(scripts= "/sql/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void testGetRecommendedLocations() throws IOException, InterruptedException {
+    @ParameterizedTest
+    @ValueSource(strings = {"route1.json", "route2.json", "routeLong.json"}) // six numbers
+    void testGetRecommendedLocations(String routeFilename) throws IOException, InterruptedException {
         Trip t = callCreateTrip(userService.user());
-        callStartRecommendationRequest(t.getId());
+        callStartRecommendationRequest(t.getId(), routeFilename);
 
 
         long startTime = System.currentTimeMillis();
-        RecommendationResponse recommendationResponse;
-        Boolean hasStarted = false;
-        Boolean hasFirstResults = false;
+        RecommendationResponse recommendationResponse = RecommendationResponse.builder()
+            .locations(new ArrayList<>())
+            .isDone(true).build();
+        sleep(10);
+        boolean hasFirstResults = false;
+        long dt;
+        long timeout = 15 * 1000; // 15sec
+        long skip = 250; // ms
+        int i = 0;
+        int numLocations, prevNumLocations = 0;
         do {
-            recommendationResponse = recommendationService.getRecommendedLocations();
-            if (!recommendationResponse.getIsDone()) {
-                hasStarted = true;
+            dt = System.currentTimeMillis() - startTime;
+            if (dt < skip * i) {
+                continue;
             }
-            log.debug("Rec response: " + recommendationResponse);
-            sleep(100);
+            i++;
+            recommendationResponse = recommendationService.getRecommendedLocations();
+            numLocations = recommendationResponse.getLocations().size();
+            log.debug("Num locations: " + numLocations);
+            log.debug("Rec response #" + i + ": " + recommendationResponse);
+            assertTrue(numLocations >= prevNumLocations);
+            prevNumLocations = numLocations;
             if (!hasFirstResults && recommendationResponse.getLocations().size() > 0) {
-                log.info("First results time: " + (System.currentTimeMillis() - startTime));
+                log.info("First results time: " + dt);
                 hasFirstResults = true;
             }
-        } while (!recommendationResponse.getIsDone() || !hasStarted);
+        } while (dt < timeout);
         long endTime = System.currentTimeMillis();
 
         log.info("Time: " + (endTime - startTime));
