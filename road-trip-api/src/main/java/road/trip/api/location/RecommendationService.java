@@ -168,8 +168,15 @@ public class RecommendationService {
         Long userId = userService.getId();
         Long tripId = getTripId(userId);
         Integer limit = getLimit(userId);
-        List<LocationResponse> locations = getRecommendationCache(userId).values().stream().toList();
+        Boolean isDone = getDone(userId);
+        if (tripId == null || limit == null) {
+            return RecommendationResponse.builder()
+                .locations(new ArrayList<>())
+                .isDone(isDone)
+                .build();
+        }
 
+        List<LocationResponse> locations = getRecommendationCache(userId).values().stream().toList();
         setRecommendationScore(locations, tripId);
 
         return RecommendationResponse.builder()
@@ -179,7 +186,7 @@ public class RecommendationService {
                 .sorted(Comparator.reverseOrder())
                 .limit(limit)
                 .collect(Collectors.toList()))
-            .isDone(getDone(userId))
+            .isDone(isDone)
             .build();
     }
 

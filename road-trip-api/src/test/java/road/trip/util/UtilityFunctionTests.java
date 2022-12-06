@@ -3,17 +3,13 @@ package road.trip.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -50,7 +46,7 @@ public class UtilityFunctionTests {
         Double radius = 4000.;
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("route1.json").getFile());
+        File file = new File(classLoader.getResource("routes/route1.json").getFile());
         route = mapper.readValue(file, new TypeReference<>() {});
 
 

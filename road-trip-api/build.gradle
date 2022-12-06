@@ -21,6 +21,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6'
+    testImplementation files('lib/minigeo.jar')
 
     // H2
     testImplementation group: 'com.h2database', name: 'h2', version: '1.3.148'

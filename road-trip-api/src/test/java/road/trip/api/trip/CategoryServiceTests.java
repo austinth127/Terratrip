@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,6 +17,7 @@ import road.trip.api.category.response.CategoryResponse;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
 import road.trip.api.user.UserService;
+import road.trip.config.DataSourceConfig;
 import road.trip.persistence.daos.CategoryRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.daos.UserRepository;
@@ -26,6 +28,7 @@ import road.trip.util.exceptions.ForbiddenException;
 import road.trip.util.exceptions.NotFoundException;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,22 +74,20 @@ public class CategoryServiceTests {
     @AfterEach
     void cleanUp() {
         tripRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     @Test
     @DisplayName("Category Responses Test")
-    @Disabled
+    @Sql(scripts= "/sql/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getCategoryResponsesTest(){
         List<CategoryResponse> categories = categoryService.getCategoryResponses(3);
         assertTrue(categories.size()>0);
 
     }
-    @Value("${path.to.script}")
-    private String scriptPath;
-    @Disabled
-    @Sql(scripts= "/import_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     @DisplayName("Get Recommended Categories Test")
+    @Sql(scripts= "/sql/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getRecommendedCategoriesTest(){
         Trip trip = tripRepository.save(Trip.builder()
             .name("Test Trip")
@@ -97,12 +98,11 @@ public class CategoryServiceTests {
             .endDate(LocalDate.of(2023,1,10))
             .build());
         Set<String> categories = categoryService.getRecommendedCategories(trip);
-        System.err.println(categories);
-
-
+        log.info(categories);
     }
     @Test
     @DisplayName("Get API Categories Test")
+    @Sql(scripts= "/sql/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void getAPICategoriesTest(){
 
     }

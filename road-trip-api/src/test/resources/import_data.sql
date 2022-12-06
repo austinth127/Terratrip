@@ -1,6 +1,0 @@
-IMPORT INTO categories
-FROM CSV
-FILE 'category.csv'
-SEPARATOR ','
-QUOTECHAR '"'
-ESCAPECHAR '\'

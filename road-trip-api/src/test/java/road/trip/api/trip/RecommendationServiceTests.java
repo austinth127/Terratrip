@@ -2,7 +2,7 @@ package road.trip.api.trip;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
+import eu.jacquet80.minigeo.MapWindow;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import road.trip.api.location.RecommendationService;
 import road.trip.api.location.response.RecommendationResponse;
 import road.trip.api.user.UserService;
+import road.trip.persistence.daos.CategoryRepository;
 import road.trip.persistence.daos.TripRepository;
 import road.trip.persistence.daos.UserRepository;
 import road.trip.persistence.models.AdventureLevel;
@@ -54,6 +56,8 @@ public class RecommendationServiceTests {
     TripService tripService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
     @MockBean
     UserService userService;
 
@@ -71,6 +75,7 @@ public class RecommendationServiceTests {
     void cleanUp() {
         tripRepository.deleteAll();
         userRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     Trip callCreateTrip(User user){
@@ -92,7 +97,7 @@ public class RecommendationServiceTests {
         Integer limit = 50;
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("routeLong.json").getFile());
+        File file = new File(classLoader.getResource("routes/routeLong.json").getFile());
         route = mapper.readValue(file, new TypeReference<>() {});
 
         recommendationService.startRecommendationRequests(tripID, radius, frontendCategories, route, limit);
@@ -125,24 +130,33 @@ public class RecommendationServiceTests {
         assertThrows(NoSuchElementException.class, () -> callStartRecommendationRequest(invalidID));
     }
 
-    /*
     @Test
     @DisplayName("get recommended locations test 200")
+    @Sql(scripts= "/sql/categories.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void testGetRecommendedLocations() throws IOException, InterruptedException {
-        Integer limit = 50;
         Trip t = callCreateTrip(userService.user());
         callStartRecommendationRequest(t.getId());
 
-        sleep(5);
+
         long startTime = System.currentTimeMillis();
-        RecommendationResponse recommendationResponse = recommendationService.getRecommendedLocations();
-        while(!recommendationResponse.getIsDone()){
+        RecommendationResponse recommendationResponse;
+        Boolean hasStarted = false;
+        Boolean hasFirstResults = false;
+        do {
             recommendationResponse = recommendationService.getRecommendedLocations();
-        }
+            if (!recommendationResponse.getIsDone()) {
+                hasStarted = true;
+            }
+            log.debug("Rec response: " + recommendationResponse);
+            sleep(100);
+            if (!hasFirstResults && recommendationResponse.getLocations().size() > 0) {
+                log.info("First results time: " + (System.currentTimeMillis() - startTime));
+                hasFirstResults = true;
+            }
+        } while (!recommendationResponse.getIsDone() || !hasStarted);
         long endTime = System.currentTimeMillis();
 
         log.info("Time: " + (endTime - startTime));
         log.info("Size: " + recommendationResponse.getLocations().size());
     }
-     */
 }
