@@ -34,6 +34,7 @@ import ClientOnly from "../../components/general/ClientOnly";
 import axios from "axios";
 import { tripToTripRequest } from "../../utils/trip";
 import RadioSelector from "../../components/general/RadioSelector";
+import { LoadingSpinnerSmall } from "../../components/general/LoadingSpinner";
 
 const Create = () => {
     const [show, setShow] = useAtom(showAdvChangeAtom);
@@ -47,6 +48,7 @@ const Create = () => {
     const setTripId = useSetAtom(tripIdAtom);
     const trip = useAtomValue(tripAtom);
     const clearTrip = useSetAtom(clearTripAtom);
+    const [loading, setLoading] = useState();
 
     const editMode = useAtomValue(editModeAtom);
 
@@ -57,7 +59,7 @@ const Create = () => {
         event.preventDefault();
         setAlert();
         if (!(start && end)) {
-            setAlert("Start and end locations should be set below.");
+            setAlert("Start and end locations should be set.");
             return;
         }
         if (!startDate || !endDate) {
@@ -87,10 +89,11 @@ const Create = () => {
 
         if (trip.stops) {
             trip.stops.forEach((s) => {
+                console.log(s);
                 let stopAdvLevel = -1;
                 for (var i = 0; i < levelOptions.length; i++) {
                     if (
-                        s.adventureLevel.toLocaleLowerCase() ==
+                        s.adventureLevel?.toLocaleLowerCase() ==
                         levelOptions[i].toLocaleLowerCase()
                     ) {
                         stopAdvLevel = i;
@@ -120,31 +123,40 @@ const Create = () => {
                 } else if (exit) {
                     return;
                 } else if (editMode) {
+                    setLoading(true);
                     axios
                         .patch(`/api/trip/${trip.id}`, tripToTripRequest(trip))
                         .then(
                             (success) => {
                                 clearTrip();
+                                setLoading(false);
                                 router.push("/trips/list/user");
                             },
                             (fail) => {
+                                setLoading(false);
                                 setAlert("Trip failed to update");
                             }
                         );
                 } else {
-                    axios.post("/api/trip", tripToTripRequest(trip)).then(
-                        (success) => {
-                            setTripId(success.data);
-                            setRoute(null);
-                            router.push("/trips/map");
-                        },
-                        (fail) => {
-                            setAlert("Trip failed to save");
-                        }
-                    );
+                    if (!loading) {
+                        setLoading(true);
+                        axios.post("/api/trip", tripToTripRequest(trip)).then(
+                            (success) => {
+                                setLoading(false);
+                                setTripId(success.data);
+                                setRoute(null);
+                                router.push("/trips/map");
+                            },
+                            (fail) => {
+                                setLoading(false);
+                                setAlert("Trip failed to save");
+                            }
+                        );
+                    }
                 }
             },
             (error) => {
+                setLoading(false);
                 setAlert(
                     "Cannot find a driving route between these locations."
                 );
@@ -230,6 +242,7 @@ const Create = () => {
                                 active={activeLevel}
                                 setActive={setActiveLevel}
                                 options={levels}
+                                className={"max-w-[37rem]"}
                             />
                             {/* Start and End boxes */}
                             <div className="mt-12 flex sm:flex-row sm:gap-20 flex-col">
@@ -277,11 +290,25 @@ const Create = () => {
                                             >
                                                 Cancel
                                             </DarkOutlineButton>
+                                            {loading && (
+                                                <LoadingSpinnerSmall
+                                                    className={"mt-2"}
+                                                    text="Saving..."
+                                                ></LoadingSpinnerSmall>
+                                            )}
                                         </div>
                                     ) : (
-                                        <DarkOutlineButton type="submit">
-                                            Let's Go &nbsp;&nbsp;&rarr;
-                                        </DarkOutlineButton>
+                                        <div className="flex flex-row gap-4">
+                                            <DarkOutlineButton type="submit">
+                                                Let's Go &nbsp;&nbsp;&rarr;
+                                            </DarkOutlineButton>
+                                            {loading && (
+                                                <LoadingSpinnerSmall
+                                                    className={"mt-2"}
+                                                    text="Saving..."
+                                                ></LoadingSpinnerSmall>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </ClientOnly>
@@ -296,6 +323,7 @@ const Create = () => {
                     }`}
                 ></div>
             </div>
+
             <AdvChange />
         </div>
     );

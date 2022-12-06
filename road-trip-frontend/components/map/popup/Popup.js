@@ -1,27 +1,48 @@
 import { useAtom } from "jotai";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     popupIsTripStopAtom,
     popupStopAtom,
     startAtom,
     stopsAtom,
 } from "../../../utils/atoms";
-import { addStopInOrder } from "../../../utils/map/geometryUtils";
+import {
+    addStopInOrder,
+    getRouteWithStops,
+} from "../../../utils/map/geometryUtils";
+import Alert from "../../auth/Alert";
 import { Button, SmallButton } from "../../general/Buttons";
+import { LoadingSpinnerSmall } from "../../general/LoadingSpinner";
 
 const Popup = () => {
     const [stop, setStop] = useAtom(popupStopAtom);
     const [isTripStop, setIsTripStop] = useAtom(popupIsTripStopAtom);
     const [stops, setStops] = useAtom(stopsAtom);
     const [start, setStart] = useAtom(startAtom);
+    const [alert, setAlert] = useState();
+    const [loading, setLoading] = useState();
 
+    useEffect(() => {
+        setAlert();
+    }, [stop]);
     const handleAddStop = () => {
         if (!stops) {
             stops = [];
         }
-        addStopInOrder(start, stop, stops, setStops);
-        setStop(null);
-        setIsTripStop(null);
+        setAlert();
+        setLoading(true);
+        getRouteWithStops([...stops, stop]).then(
+            (success) => {
+                addStopInOrder(start, stop, stops, setStops);
+                setLoading(false);
+                setStop(null);
+                setIsTripStop(null);
+            },
+            (err) => {
+                setLoading(false);
+                setAlert("Cannot find a route through this stop.");
+            }
+        );
     };
 
     if (!stop) {
@@ -84,9 +105,22 @@ const Popup = () => {
                 </a>
             )}
 
-            <div className="mt-2">
-                <SmallButton onClick={handleAddStop}>Add to Trip</SmallButton>
-            </div>
+            <Alert message={alert} className={"text-xs text-red-400"}></Alert>
+
+            {!isTripStop ? (
+                <div className="mt-2 flex flex-row gap-2">
+                    <SmallButton onClick={handleAddStop}>
+                        Add to Trip
+                    </SmallButton>
+                    {loading && (
+                        <LoadingSpinnerSmall text="Calculating Route..."></LoadingSpinnerSmall>
+                    )}
+                </div>
+            ) : (
+                <div className="mt-2 italic font-light text-green-600">
+                    This stop is part of your trip!
+                </div>
+            )}
         </div>
     );
 };

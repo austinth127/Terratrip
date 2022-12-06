@@ -8,12 +8,14 @@ import { tripAtom } from "../../utils/atoms";
 import { useRouter } from "next/router";
 import axios from "axios";
 import useHasMounted from "../../hooks/useHasMounted";
+import { LoadingSpinnerSmall } from "../general/LoadingSpinner";
 
 const TripCard = ({ trip, deleteCallback }) => {
     const [rating, setRating] = useState(trip.rating);
     const [activeTrip, setActiveTrip] = useAtom(tripAtom);
     const router = useRouter();
     const hasMounted = useHasMounted();
+    const [loading, setLoading] = useState();
 
     const handleViewTrip = () => {
         setActiveTrip(trip);
@@ -54,11 +56,17 @@ const TripCard = ({ trip, deleteCallback }) => {
                     </a>
                 )}
                 <button
-                    onClick={deleteCallback}
+                    onClick={() => {
+                        setLoading(true);
+                        deleteCallback();
+                    }}
                     className="text-slate-400 hover:text-slate-500"
                 >
                     <i className="fa-solid fa-trash"></i>
                 </button>
+                {loading && (
+                    <LoadingSpinnerSmall text="Deleting..."></LoadingSpinnerSmall>
+                )}
             </div>
             <div
                 className={`absolute top-4 right-4 text-sm italic ${

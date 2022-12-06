@@ -209,7 +209,7 @@ const Create = () => {
                     <h2 className="text-gray-100 text-lg font-light mt-12 mb-4">
                         Select one of your Trips
                     </h2>
-                    <div className="h-96 overflow-y-scroll p-4 dark-scrollbar">
+                    <div className="max-h-[24rem] overflow-y-scroll p-4 dark-scrollbar">
                         {trips.map((trip) => (
                             <PlaylistTripItem
                                 trip={trip}
@@ -362,14 +362,16 @@ const Create = () => {
                 {/* TODO if active trip has playlist, notify */}
                 <div className="flex flex-row gap-8 w-fit items-center">
                     <Button onClick={handleSubmit}>Generate</Button>
-                    <DarkOutlineButton
-                        onClick={() => {
-                            clearTrip();
-                            router.push("/");
-                        }}
-                    >
-                        Cancel
-                    </DarkOutlineButton>
+                    {!playlist && (
+                        <DarkOutlineButton
+                            onClick={() => {
+                                clearTrip();
+                                router.push("/");
+                            }}
+                        >
+                            Cancel
+                        </DarkOutlineButton>
+                    )}
                     {showLoading && <LoadingSpinnerSmall />}
                 </div>
             </div>
@@ -390,9 +392,13 @@ const Create = () => {
             )}
 
             <div className="py-16">
-                <Button onClick={() => router.push("/playlists/edit")}>
-                    Done
-                </Button>
+                {playlist && (
+                    <DarkOutlineButton
+                        onClick={() => router.push("/playlists/edit")}
+                    >
+                        Done
+                    </DarkOutlineButton>
+                )}
             </div>
         </div>
     );
