@@ -27,7 +27,7 @@ public class TripResponse {
         end = t.getEnd() == null ? null : new LocationResponse(t.getEnd(), user, locationService);
         stops = t.getStops().stream()
             .map(Stop::getLocation)
-            .map(l -> new LocationResponse(t.getStart(), user, locationService))
+            .map(l -> new LocationResponse(l, user, locationService))
             .collect(Collectors.toList());
         rating = t.getRating();
         playlistId = t.getPlaylistId();
