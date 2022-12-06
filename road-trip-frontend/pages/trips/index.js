@@ -76,26 +76,34 @@ const Create = () => {
     let newAdvLevel = -1;
     let exit = false;
 
-    for (var i = 0; i < levelOptions.length; i++) {
-      if (activeLevel.toLocaleLowerCase() == levelOptions[i].toLocaleLowerCase()) {
-        newAdvLevel = i;
-      }
-    }
-
-    trip.stops.forEach((s) => {
-      let stopAdvLevel = -1;
+    if (editMode) {
       for (var i = 0; i < levelOptions.length; i++) {
-        if (s.adventureLevel.toLocaleLowerCase() == levelOptions[i].toLocaleLowerCase()) {
-          stopAdvLevel = i;
+        if (
+          activeLevel.toLocaleLowerCase() == levelOptions[i].toLocaleLowerCase()
+        ) {
+          newAdvLevel = i;
         }
       }
 
+      if (trip.stops != null) {
+        trip.stops.forEach((s) => {
+          let stopAdvLevel = -1;
+          for (var i = 0; i < levelOptions.length; i++) {
+            if (
+              s.adventureLevel.toLocaleLowerCase() ==
+              levelOptions[i].toLocaleLowerCase()
+            ) {
+              stopAdvLevel = i;
+            }
+          }
 
-      if (stopAdvLevel > newAdvLevel) {
-        exit = true;
-        setShow(true);
+          if (stopAdvLevel > newAdvLevel) {
+            exit = true;
+            setShow(true);
+          }
+        });
       }
-    });
+    }
 
     /** @todo Make sure trip is possible for given route duration */
     getRoute(start, end).then(
@@ -143,9 +151,7 @@ const Create = () => {
 
   return (
     <div>
-      <div
-        className={`${show ? `pointer-events-none` : ``} w-full h-full`}
-      >
+      <div className={`${show ? `pointer-events-none` : ``} w-full h-full`}>
         <div className="w-full h-full flex flex-row sm:ml-16 ml-8 pt-12">
           <form className="h-3/4 w-1/2 text-gray-50" onSubmit={handleSubmit}>
             <ClientOnly>
