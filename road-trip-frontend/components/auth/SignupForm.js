@@ -63,7 +63,7 @@ const SignUpForm = () => {
                             );
                             setupAxios();
                             setTimeout(() => {
-                                router.push("/");
+                                router.push("/auth/signin");
                             }, 500);
                         })
                         .catch(() => {

@@ -104,3 +104,4 @@ export const showNotifAtom = atom(false);
 
 export const filtersAtom = atom([]);
 export const rangeAtom = atom(50);
+export const redirectAfterSpotify = atomWithStorage("spotifyRedirect", null);
