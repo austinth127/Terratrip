@@ -2,6 +2,8 @@ package road.trip.util;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import road.trip.util.exceptions.BadRequestException;
 import road.trip.util.exceptions.TooManyRequestsException;
@@ -15,6 +17,7 @@ import java.time.Month;
 import java.util.*;
 import java.lang.Math;
 
+@Log4j2
 public class UtilityFunctions {
 
     final static Double METERS_IN_A_DEGREE = 111139.0;
@@ -55,6 +58,7 @@ public class UtilityFunctions {
 
         switch (httpResponse.statusCode()) {
             case 400:
+                log.error(httpRequest.uri());
                 throw new BadRequestException(httpResponse.body());
             case 401:
                 throw new UnauthorizedException();

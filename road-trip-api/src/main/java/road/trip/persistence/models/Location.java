@@ -23,8 +23,10 @@ public class Location {
     private Long id;
 
     private String name;
-    @Column(length = 500)
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private String phoneContact;
     private String website;
     private String address;

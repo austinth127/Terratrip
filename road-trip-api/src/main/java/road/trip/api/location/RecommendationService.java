@@ -116,8 +116,12 @@ public class RecommendationService {
                 // Get recommendation info without details
                 int numPoints = refinedRoute.size();
                 int numRecsPerSearch = Math.max(MIN_RECS_PER_SEARCH, numPoints == 0 ? 0 : limit / numPoints);
-                getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, numRecsPerSearch);
-                getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, numRecsPerSearch);
+                if (geoApifyCategories.size() > 0) {
+                    getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, numRecsPerSearch);
+                }
+                if (otmCategories.size() > 0) {
+                    getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, numRecsPerSearch);
+                }
                 // Wait for threads to finish
                 otmExecutor.joinAll();
                 geoApifyExecutor.joinAll();
