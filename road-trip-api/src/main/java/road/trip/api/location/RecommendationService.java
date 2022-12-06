@@ -78,6 +78,12 @@ public class RecommendationService {
         if (!trip.getCreator().equals(userService.user())) {
             throw new ForbiddenException("User does not own trip " + tripId); //403
         }
+
+        if(limit == null){
+            log.error("limit is null");
+            return;
+        }
+
         Long userId = userService.getId();
         new Thread(() -> {
             try {
@@ -118,11 +124,11 @@ public class RecommendationService {
                 List<LocationResponse> recommendations = getRecommendationCache(userId).values().stream().toList();
                 clearRecommendationCache(userId);
 
-                //setRecommendationScore(recommendations, tripId);
+                setRecommendationScore(recommendations, tripId);
 
                 // Get the recommendation details
                 recommendations.stream()
-                    //.sorted(Comparator.reverseOrder())
+                    .sorted(Comparator.reverseOrder())
                     .limit(limit)
                     .forEach(recommendation -> {
                         addToRecommendationCache(userId, recommendation);
@@ -163,7 +169,7 @@ public class RecommendationService {
 
         return RecommendationResponse.builder()
             .locations(locations.stream()
-                //.sorted(Comparator.reverseOrder())
+                .sorted(Comparator.reverseOrder())
                 .limit(limit)
                 .collect(Collectors.toList()))
             .isDone(getDone(userId))
@@ -177,14 +183,18 @@ public class RecommendationService {
 
         locations.forEach(locationResponse -> {
             Location location = locationService.findLocationByIds(locationResponse).orElse(null);
+            int numRatings = 0;
+            AdventureLevel locAdvLevel = AdventureLevel.RELAXED;
+            Double rating = null;
             if (location != null) {
-                int numRatings = locationService.getNumRatings(location);
-                AdventureLevel locAdvLevel = locationService.getAdventureLevel(location);
-                locationResponse.setRecommendationScore(
-                    calculateRecommendedScore(getRatingScore(location.getRating(), numRatings),
+                numRatings = locationService.getNumRatings(location);
+                locAdvLevel = locationService.getAdventureLevel(location);
+                rating = location.getRating();
+            }
+            locationResponse.setRecommendationScore(
+                calculateRecommendedScore(getRatingScore(rating, numRatings),
                     getAdventureScore(locAdvLevel != null ? locAdvLevel.ordinal() : 0, tripAdvLevel),
                     getDataScore(locationResponse)));
-            }
         });
 
     }
@@ -194,7 +204,7 @@ public class RecommendationService {
 
     }
 
-    private double getRatingScore(double rating, long numRatings) {
+    private double getRatingScore(Double rating, long numRatings) {
         if(numRatings == 0) {
             return .5;
         }
