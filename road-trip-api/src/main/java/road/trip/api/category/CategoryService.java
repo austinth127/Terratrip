@@ -46,6 +46,22 @@ public class CategoryService {
         return categories;
     }
 
+    public AdventureLevel getAdventureLevel(List<String> categories) {
+        AdventureLevel advLevel = AdventureLevel.EXTREME;
+        boolean noMatches = true;
+
+        for(int i = 0; i < categories.size(); i++) {
+            List<Category> c = categoryRepository.findAllByUiName(categories.get(i));
+            if(c.size() > 0) {
+                if(advLevel.ordinal() > c.get(0).getAdventureLevel().ordinal()) {
+                    advLevel = c.get(0).getAdventureLevel();
+                }
+                noMatches = false;
+            }
+        }
+        return noMatches ? AdventureLevel.RELAXED : advLevel;
+    }
+
     /**
      * Returns a list of frontend category names which the user might be interested in.
      */
@@ -82,4 +98,10 @@ public class CategoryService {
             .collect(Collectors.toSet());
     }
 
+    public Set<String> getUiCategories(List<String> apiCategories) {
+        return apiCategories.stream().map(categoryRepository::findAllByApiCategoriesContaining)
+            .flatMap(Collection::stream)
+            .map(Category::getUiName)
+            .collect(Collectors.toSet());
+    }
 }

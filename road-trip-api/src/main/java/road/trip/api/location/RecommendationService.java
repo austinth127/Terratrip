@@ -34,7 +34,7 @@ public class RecommendationService {
     public final static int RATING_WEIGHT = 2;
     public final static int ADVENTURE_WEIGHT = 2;
     public final static int DATA_WEIGHT = 1;
-    public final static int MIN_RECS_PER_SEARCH = 2;
+    public final static int MIN_RECS_PER_SEARCH = 4;
 
     private final LocationRecommendationClient geoApifyClient;
     private final LocationRecommendationClient otmClient;
@@ -311,6 +311,10 @@ public class RecommendationService {
             id = recommendation.getOtmId();
         else
             id = recommendation.getGeoapifyId();
+
+        // Prep recommendation for frontend
+        recommendation.setCategories(new ArrayList<>(categoryService.getUiCategories(recommendation.getCategories())));
+        recommendation.setAdventureLevel(categoryService.getAdventureLevel(recommendation.getCategories()));
 
         ConcurrentHashMap<String, LocationResponse> recommendations = getRecommendationCache(userId);
         LocationResponse prevRecommendation = recommendations.getOrDefault(id, LocationResponse.builder().build());

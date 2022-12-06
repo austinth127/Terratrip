@@ -155,7 +155,7 @@ public class LocationServiceTests {
     @Test
     void getAdventureLevelTest_200(){
         Category c = categoryRepository.save(Category.builder()
-            .adventureLevel(AdventureLevel.EXTREME)
+            .adventureLevel(AdventureLevel.HIGH)
             .uiName("test").build());
         LocationRequest request = LocationRequest.builder()
             .categories(Arrays.asList("test"))
@@ -165,7 +165,7 @@ public class LocationServiceTests {
             .name("test location name")
             .build();
         Location test = locationService.createLocation(request);
-        assertEquals(AdventureLevel.EXTREME,locationService.getAdventureLevel(test));
+        assertEquals(AdventureLevel.HIGH,locationService.getAdventureLevel(test));
     }
     @Test
     void createStopTest_200(){

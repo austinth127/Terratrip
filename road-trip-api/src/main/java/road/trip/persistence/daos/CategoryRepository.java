@@ -13,4 +13,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByUiName(String uiName);
     Optional<Category> findFirstByUiNameAndApi(String categoryName, PlacesAPI api);
     List<Category> findAllByUseByDefault(Boolean useByDefault);
+    List<Category> findAllByApiCategoriesContaining(String query);
 }
