@@ -37,6 +37,7 @@ public class RecommendationService {
     public final static int RATING_WEIGHT = 2;
     public final static int ADVENTURE_WEIGHT = 2;
     public final static int DATA_WEIGHT = 1;
+    public final static int MIN_RECS_PER_SEARCH = 2;
 
     private final LocationRecommendationClient geoApifyClient;
     private final LocationRecommendationClient otmClient;
@@ -103,8 +104,10 @@ public class RecommendationService {
                 Set<String> otmCategories = categoryService.getApiCategories(recommendedCategories, OPENTRIPMAP);
 
                 // Get recommendation info without details
-                getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, 2);
-                getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, 2);
+                int numPoints = refinedRoute.size();
+                int numRecsPerSearch = Math.max(MIN_RECS_PER_SEARCH, numPoints == 0 ? 0 : limit / numPoints);
+                getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, numRecsPerSearch);
+                getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, numRecsPerSearch);
                 // Wait for threads to finish
                 otmExecutor.joinAll();
                 geoApifyExecutor.joinAll();
@@ -182,11 +185,11 @@ public class RecommendationService {
                     getDataScore(locationResponse)));
             }
         });
+        log.info(locations.get(0).getRecommendationScore());
     }
 
     private double calculateRecommendedScore(double ratingScore, double adventureScore, double dataScore) {
         return (ratingScore * RATING_WEIGHT) + (adventureScore * ADVENTURE_WEIGHT) + (dataScore * DATA_WEIGHT);
-
     }
 
     private double getRatingScore(double rating, long numRatings) {
