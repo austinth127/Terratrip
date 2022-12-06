@@ -34,7 +34,6 @@ public class LocationService {
 
     public Stop createStop(Trip trip, Location location, int order) {
 
-
         Stop stop = Stop.builder()
                 .location(location)
                 .order(order)
