@@ -84,9 +84,17 @@ const Popup = () => {
                 </a>
             )}
 
-            <div className="mt-2">
-                <SmallButton onClick={handleAddStop}>Add to Trip</SmallButton>
-            </div>
+            {!isTripStop ? (
+                <div className="mt-2">
+                    <SmallButton onClick={handleAddStop}>
+                        Add to Trip
+                    </SmallButton>
+                </div>
+            ) : (
+                <div className="mt-2 italic font-light text-green-600">
+                    This stop is part of your trip!
+                </div>
+            )}
         </div>
     );
 };

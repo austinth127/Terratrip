@@ -87,10 +87,11 @@ const Create = () => {
 
         if (trip.stops) {
             trip.stops.forEach((s) => {
+                console.log(s);
                 let stopAdvLevel = -1;
                 for (var i = 0; i < levelOptions.length; i++) {
                     if (
-                        s.adventureLevel.toLocaleLowerCase() ==
+                        s.adventureLevel?.toLocaleLowerCase() ==
                         levelOptions[i].toLocaleLowerCase()
                     ) {
                         stopAdvLevel = i;
