@@ -181,7 +181,7 @@ public class LocationResponse implements Comparable<LocationResponse> {
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
+        int result = (id != null) ? id.hashCode() : 0;
         result = 31 * result + (osmId != null ? osmId.hashCode() : 0);
         result = 31 * result + (otmId != null ? otmId.hashCode() : 0);
         result = 31 * result + (geoapifyId != null ? geoapifyId.hashCode() : 0);

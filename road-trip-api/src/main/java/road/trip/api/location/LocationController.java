@@ -35,10 +35,9 @@ public class LocationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/recommend")
-    public ResponseEntity<RecommendationResponse> getRecommendedLocations(@PathVariable("id") long tripId,  Integer limit) {
-        System.out.println("HERE" +  limit);
-        return ResponseEntity.ok(recommendationService.getRecommendedLocations(limit, tripId));
+    @GetMapping("/recommend")
+    public ResponseEntity<RecommendationResponse> getRecommendedLocations() {
+        return ResponseEntity.ok(recommendationService.getRecommendedLocations());
     }
 
     @PostMapping("/{location_id}")

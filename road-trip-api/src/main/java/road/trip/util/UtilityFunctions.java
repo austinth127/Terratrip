@@ -78,7 +78,8 @@ public class UtilityFunctions {
 
     public static List<List<Double>> reducedRoute(List<List<Double>> route, int numPoints) {
         List<List<Double>> newRoute = new ArrayList<>();
-        for (int i = 0; i < route.size(); i += route.size() / numPoints) {
+        int skip = Math.max(1, route.size() / numPoints);
+        for (int i = 0; i < route.size(); i += skip) {
             newRoute.add(route.get(i));
         }
         return newRoute;
