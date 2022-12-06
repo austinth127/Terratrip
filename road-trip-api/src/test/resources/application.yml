@@ -23,8 +23,5 @@ spotify:
   scope: playlist-read-private,playlist-modify-private,playlist-modify-public,user-read-private,user-read-email
 logging:
   level:
-    road.trip: DEBUG
+    road.trip: INFO
     org.hibernate: WARN
-path:
-  to:
-    script: import_data.sql
