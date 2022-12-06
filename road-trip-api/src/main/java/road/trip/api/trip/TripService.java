@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import road.trip.api.location.LocationService;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.api.notification.NotificationService;
+import road.trip.api.playlist.PlaylistService;
 import road.trip.api.trip.request.TripCreateRequest;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
@@ -33,6 +34,7 @@ public class TripService {
     private final UserService userService;
     private final NotificationService notificationService;
     private final StopRepository stopRepository;
+    private final PlaylistService playlistService;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
@@ -91,7 +93,7 @@ public class TripService {
 
         if (optTrip.isEmpty()) {
             throw new NotFoundException("Trip not found.");
-        } else if (userService.user() == optTrip.get().getCreator()) {
+        } else if (userService.user().equals(optTrip.get().getCreator())) {
             Trip t = optTrip.get();
             if (request.getName() != null) {
                 t.setName(request.getName());
@@ -112,6 +114,8 @@ public class TripService {
                 t.setEndDate(request.getEndDate());
             }
             if (request.getPlaylistId() != null) {
+                String oldPlaylistId = optTrip.get().getPlaylistId();
+                playlistService.deletePlaylistIfMineAndGenerated(oldPlaylistId);
                 t.setPlaylistId(request.getPlaylistId());
             }
             if (request.getStart() != null) {
@@ -159,7 +163,7 @@ public class TripService {
         Optional<Trip> t = tripRepository.findById(id);
         if (t.isEmpty()) {
             throw new NotFoundException("Trip not found.");
-        } else if (userService.user() == t.get().getCreator()) {
+        } else if (userService.user().equals(t.get().getCreator())) {
             Trip trip = t.get();
             trip.setRating(rating);
             tripRepository.save(trip);
@@ -176,7 +180,7 @@ public class TripService {
         Optional<Trip> t = tripRepository.findById(id);
         if (t.isEmpty()) {
             throw new NotFoundException("Trip not found.");
-        } else if (userService.user() == t.get().getCreator()) {
+        } else if (userService.user().equals(t.get().getCreator())) {
             List<Stop> s = stopRepository.findByTrip_Id(id);
 
             for (int i = 0; i < s.size(); i++) {
@@ -195,7 +199,7 @@ public class TripService {
      * Gets all the trips created by the user making the request
      */
     public List<TripResponse> getTrips() {
-        List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
+        List<Trip> trips = tripRepository.findByCreator_Id(userService.user().getId());
         return trips.stream().map(t -> new TripResponse(t, t.getCreator(), locationService)).collect(Collectors.toList());
     }
 

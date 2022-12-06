@@ -1,6 +1,7 @@
 package road.trip.api.location.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import road.trip.persistence.models.Location;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@Builder
 public class LocationRequest {
 
     @NotNull @JsonProperty("place_name")

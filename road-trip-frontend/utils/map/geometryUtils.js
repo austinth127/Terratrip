@@ -115,3 +115,39 @@ export const secondsToTimeString = (seconds) => {
 
     return hours + " hr, " + Math.ceil(minutes) + " min";
 };
+
+export const addStopInOrder = (start, stop, stops, setStops) => {
+    let distances = [];
+    if (stops?.length > 0) {
+        stops.forEach((s, ndx) => {
+            let dist = distance(start, s);
+            distances.push([dist, ndx]);
+        });
+
+        distances.sort((a, b) => a[0] < b[0]);
+
+        let thisDist = distance(start, stop);
+        console.log(thisDist, distances);
+
+        let i = 0;
+        while (distances.length > i && thisDist > distances[i][0]) {
+            i++;
+        }
+        console.log(i);
+        if (i < distances.length) {
+            stops.splice(distances[i][1], 0, stop);
+        } else {
+            stops.push(stop);
+        }
+        setStops([...stops]);
+    } else {
+        setStops([stop]);
+    }
+};
+
+export const distance = (p1, p2) => {
+    return Math.sqrt(
+        Math.pow(p1.center[0] - p2.center[0], 2) +
+            Math.pow(p1.center[1] - p2.center[1], 2)
+    );
+};

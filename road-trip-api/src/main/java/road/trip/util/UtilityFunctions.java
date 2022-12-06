@@ -1,10 +1,7 @@
 package road.trip.util;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.net.http.HttpClient;
-import org.springframework.boot.SpringApplication;
-import road.trip.RoadTripApplication;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import road.trip.util.exceptions.BadRequestException;
 import road.trip.util.exceptions.TooManyRequestsException;
@@ -15,10 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.lang.Math;
 
 public class UtilityFunctions {
@@ -54,9 +48,9 @@ public class UtilityFunctions {
 
     public static String doGet(HttpClient httpClient, URI uri) throws IOException, InterruptedException {
         HttpRequest httpRequest = HttpRequest.newBuilder()
-            .uri(uri)
-            .GET()
-            .build();
+                .uri(uri)
+                .GET()
+                .build();
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
         switch (httpResponse.statusCode()) {
@@ -82,39 +76,70 @@ public class UtilityFunctions {
         return new ArrayList<>(combined);
     }
 
+    public static List<List<Double>> reducedRoute(List<List<Double>> route, int numPoints) {
+        List<List<Double>> newRoute = new ArrayList<>();
+        for (int i = 0; i < route.size(); i += route.size() / numPoints) {
+            newRoute.add(route.get(i));
+        }
+        return newRoute;
+    }
+
     public static List<List<Double>> generateRefinedRoute(List<List<Double>> route, Double radius){
-        Double distanceToNextRefinedPoint = radius;
+        final Double TARGET_DISTANCE_BETWEEN_POINTS = radius;
+
+        Double distanceToNextRefinedPoint = TARGET_DISTANCE_BETWEEN_POINTS;
+        Queue<List<Double>> points = new LinkedList<>(route);
         List<List<Double>> refinedRoute = new ArrayList<>();
-        //Add start and end to refined route
-        refinedRoute.add(route.get(0));
-        refinedRoute.add(route.get(route.size() - 1));
+        Double distanceBetweenPoints;
+        List<Double> cur, next;
 
-        Double x1, x2, y1, y2, distanceBetweenPoints;
+        // Add start to refined route
+        cur = route.get(0);
+        refinedRoute.add(cur);
 
-        //For each point except for the last one
-        for(int i = 0; i < route.size() - 1; i++){
-            //Get the current point and the next one
-            x1 = route.get(i).get(0);
-            y1 = route.get(i).get(1);
-            x2 = route.get(i+1).get(0);
-            y2 = route.get(i+1).get(1);
-            //Calculate the distance between the points
-            distanceBetweenPoints = calcDist(x1, y1, x2, y2);
-            while(distanceBetweenPoints >= distanceToNextRefinedPoint){
-                List<Double> newPoint = calcPointAlongLine(x1, y1, x2, y2, distanceToNextRefinedPoint);
-                refinedRoute.add(newPoint);
-                x1 = newPoint.get(0);
-                y1 = newPoint.get(1);
-                distanceBetweenPoints = calcDist(x1, y1, x2, y2);
+        while (!points.isEmpty()) {
+            next = points.peek();
+            distanceBetweenPoints = calcDistanceLatitudeLongitude(cur.get(0), cur.get(1), next.get(0), next.get(1));
+            if (distanceToNextRefinedPoint > distanceBetweenPoints) {
+                cur = next;
+                points.remove();
+                distanceToNextRefinedPoint -= distanceBetweenPoints;
+            } else {
+                cur = calcPointAlongLine(cur.get(0), cur.get(1), next.get(0), next.get(1), distanceToNextRefinedPoint);
+                distanceToNextRefinedPoint = TARGET_DISTANCE_BETWEEN_POINTS;
+                refinedRoute.add(cur);
             }
-            distanceToNextRefinedPoint-=distanceBetweenPoints;
         }
 
+        // Add end to refined route
+        refinedRoute.add(route.get(route.size() - 1));
         return refinedRoute;
     }
 
-    private static Double calcDist(Double x1, Double y1, Double x2, Double y2){
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)) * METERS_IN_A_DEGREE;
+    public static double calcDistanceLatitudeLongitude(double lon1, double lat1, double lon2, double lat2) {
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2),2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        double r = 6371;
+
+        // calculate the result
+        return(c * r) * 1000; // multiplied for km -> m
     }
 
     private static List<Double> calcPointAlongLine(Double x1, Double y1, Double x2, Double y2, Double distanceToNextRefinedPoint){
@@ -130,7 +155,7 @@ public class UtilityFunctions {
         v = v.scalarMultiply(distanceToNextRefinedPoint / METERS_IN_A_DEGREE);
         //System.out.println("Scaled V: " + v.getX() + " " + v.getY());
         v = v.add(p1);
-        System.out.println("Final V: " + v.getX() + " " + v.getY());
+        //System.out.println("Final V: " + v.getX() + " " + v.getY());
 
         return List.of(v.getX(), v.getY());
     }

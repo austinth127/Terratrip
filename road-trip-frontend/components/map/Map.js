@@ -19,6 +19,7 @@ import { colors } from "../../utils/colors";
 import { getStopOrderText } from "../../utils/stringUtils";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { delay } from "../../utils/delay";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -59,6 +60,7 @@ const Map = ({ ...props }) => {
     const [popupStop, setPopupStop] = useAtom(popupStopAtom);
     const tripId = useAtomValue(tripIdAtom);
     const filters = useAtomValue(filtersAtom);
+    const [done, setDone] = useState(false);
 
     const router = useRouter();
 
@@ -145,12 +147,32 @@ const Map = ({ ...props }) => {
                 axios
                     .post("/api/location/recommend", {
                         tripId: tripId,
-                        range: 5000,
+                        range: 50000,
                         categories: filters,
                         route: route.geometry.coordinates,
+                        limit: 50,
                     })
-                    .then((res) => {
-                        setRecStops(res.data);
+                    .then(async () => {
+                        let count = 0;
+                        while (!done && map.current && count < 30) {
+                            await delay(1000);
+                            axios.get("/api/location/recommend?limit=50").then(
+                                (res) => {
+                                    let newRec = res.data.locations.filter(
+                                        (loc) =>
+                                            loc.place_name &&
+                                            loc.center &&
+                                            loc.address
+                                    );
+                                    setRecStops([...newRec]);
+                                    done = res.data.isDone;
+                                    setDone(done);
+                                    console.log(res.data);
+                                },
+                                (err) => console.log(err)
+                            );
+                            count++;
+                        }
                     });
             });
         });
@@ -181,22 +203,24 @@ const Map = ({ ...props }) => {
             recStopMarkers.forEach((marker) => marker.remove());
             setRecStopMarkers([]);
 
-            recStops.forEach((stop, index) => {
-                // Add markers to the map.
-                const marker = new mapboxgl.Marker({
-                    color: colors.slate800,
-                    scale: ".65",
-                    style: { cursor: "pointer" },
-                })
-                    .setLngLat(stop.center)
-                    .addTo(map.current);
+            recStops
+                .filter((stop) => stop.center != null)
+                .forEach((stop, index) => {
+                    // Add markers to the map.
+                    const marker = new mapboxgl.Marker({
+                        color: colors.slate800,
+                        scale: ".65",
+                        style: { cursor: "pointer" },
+                    })
+                        .setLngLat(stop.center)
+                        .addTo(map.current);
 
-                marker.getElement().addEventListener("click", () => {
-                    setPopupStop(stop);
+                    marker.getElement().addEventListener("click", () => {
+                        setPopupStop(stop);
+                    });
+
+                    recStopMarkers.push(marker);
                 });
-
-                recStopMarkers.push(marker);
-            });
             setRecStopMarkers([...recStopMarkers]);
         }
         addMarkers();

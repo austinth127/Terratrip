@@ -12,8 +12,11 @@ import road.trip.persistence.models.Trip;
 import road.trip.util.exceptions.NotFoundException;
 import road.trip.util.exceptions.UnauthorizedException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -31,6 +34,21 @@ public class PlaylistService {
     }
 
     /**
+     * Gets all playlists that are associated with a trip owned by the user
+     */
+    public List<PlaylistResponse> getMyActivePlaylists() {
+        List<PlaylistResponse> responses = new ArrayList<>();
+        List<Trip> trips = tripRepository.findByCreator_Id(userService.getId());
+        for (Trip trip : trips) {
+            String playlistId = trip.getPlaylistId();
+            if (playlistId != null) {
+                responses.add(spotifyService.getPlaylist(playlistId).withTripId(trip.getId()));
+            }
+        }
+        return responses;
+    }
+
+    /**
      * Gets all genres the user can pick from, sorted by relevance
      */
     public List<String> getAvailableGenres() {
@@ -43,6 +61,10 @@ public class PlaylistService {
 
     public PlaylistDetailsResponse getPlaylistDetails(String id) {
         return spotifyService.getPlaylistDetails(id);
+    }
+
+    public void deletePlaylistIfMineAndGenerated(String playlistId) {
+        spotifyService.deletePlaylistIfMineAndGenerated(playlistId);
     }
 
     /**

@@ -49,6 +49,7 @@ public class TripResponse {
             .map(l -> new LocationResponse(l, user, locationService))
             .collect(Collectors.toList());
         rating = t.getRating();
+        playlistId = t.getPlaylistId();
     }
 
 

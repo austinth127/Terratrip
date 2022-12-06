@@ -60,7 +60,7 @@ public class NotificationService {
         if (optNotif.isEmpty()) {
             throw new NotFoundException();
         }
-        else if (userService.user() == optNotif.get().getUser()) {
+        else if (userService.user().equals(optNotif.get().getUser())) {
             notificationRepository.deleteById(id);
         }
         else {

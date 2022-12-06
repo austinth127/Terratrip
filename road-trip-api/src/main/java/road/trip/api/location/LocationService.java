@@ -34,7 +34,6 @@ public class LocationService {
 
     public Stop createStop(Trip trip, Location location, int order) {
 
-
         Stop stop = Stop.builder()
                 .location(location)
                 .order(order)
@@ -88,11 +87,7 @@ public class LocationService {
 
     public Double getRatingByLocationAndUser(Location location, User user) {
         Optional<LocationRating> ret = locationRatingRepository.findByUserAndLocation(user, location);
-        if(ret.isPresent())
-            return ret.get().getRating();
-
-        else
-            return 0.0;
+        return ret.map(LocationRating::getRating).orElse(null);
     }
 
     public Double getAverageRating(Location location) {

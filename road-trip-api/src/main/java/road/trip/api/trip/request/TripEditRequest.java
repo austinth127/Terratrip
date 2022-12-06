@@ -2,6 +2,7 @@ package road.trip.api.trip.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.persistence.models.AdventureLevel;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@Builder
 public class TripEditRequest {
 
     private String name;

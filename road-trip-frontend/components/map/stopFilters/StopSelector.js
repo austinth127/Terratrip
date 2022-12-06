@@ -4,11 +4,14 @@ import TextInput from "../../general/TextInput";
 import StopFilters from "../stopFilters/StopFilters";
 import RecStopList from "../stopRecs/RecStopList";
 import { useAtom } from "jotai";
-import { stopsAtom } from "../../../utils/atoms";
+import { popupStopAtom, stopsAtom } from "../../../utils/atoms";
+import { getRoute, getRouteWithStops } from "../../../utils/map/geometryUtils";
+import Alert from "../../auth/Alert";
 
 const StopSelector = () => {
     const [mapboxStop, setMapboxStop] = useState();
-    const [stop, setStop] = useState();
+    const [alert, setAlert] = useState();
+    const [popupStop, setPopupStop] = useAtom(popupStopAtom);
 
     const [stops, setStops] = useAtom(stopsAtom);
 
@@ -23,8 +26,15 @@ const StopSelector = () => {
         if (!stops) {
             stops = [];
         }
-        setStops([...stops, stop]);
-        setStop(null);
+        setAlert();
+        getRouteWithStops([...stops, stop]).then(
+            (success) => {
+                setPopupStop(stop);
+            },
+            (err) => {
+                setAlert("Cannot find a route through this stop.");
+            }
+        );
     }, [mapboxStop]);
 
     return (
@@ -36,6 +46,7 @@ const StopSelector = () => {
                 <h1 className="mb-2 font-semibold text-green-600 text-sm">
                     Add Stop
                 </h1>
+                <Alert message={alert} className="text-xs text-red-500"></Alert>
                 <Geocoder callback={setMapboxStop} InputComponent={TextInput} />
             </div>
             <RecStopList />

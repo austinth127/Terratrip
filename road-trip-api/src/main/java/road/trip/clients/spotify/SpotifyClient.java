@@ -21,6 +21,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.browse.GetRecommendationsRequest;
 import se.michaelthelin.spotify.requests.data.browse.miscellaneous.GetAvailableGenreSeedsRequest;
+import se.michaelthelin.spotify.requests.data.follow.UnfollowPlaylistRequest;
 import se.michaelthelin.spotify.requests.data.playlists.*;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
@@ -168,6 +169,11 @@ public class SpotifyClient {
         } while (page.getNext() != null);
     }
 
+    public void deletePlaylist(String playlistId) throws IOException, ParseException, SpotifyWebApiException {
+        UnfollowPlaylistRequest request = api.unfollowPlaylist(playlistId).build();
+        request.execute();
+    }
+
     public List<IPlaylistItem> getPlaylistItems(String playlistId) throws IOException, ParseException, SpotifyWebApiException {
         final int limit = 50;
         int offset = 0;
@@ -229,8 +235,8 @@ public class SpotifyClient {
         Range<Float> valence = a.getValence();
         Range<Float> tempo = a.getTempo();
 
-        log.info(energy.getMax());
-        log.info(energy.getMin());
+        log.debug("Max energy: " + energy.getMax());
+        log.debug("Min energy: " + energy.getMin());
 
         GetRecommendationsRequest request = api.getRecommendations()
             .seed_genres(String.join(",", genres))

@@ -3,6 +3,7 @@ package road.trip.api.notification.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import road.trip.persistence.models.Notification;
 import road.trip.persistence.models.NotificationType;
@@ -10,6 +11,7 @@ import road.trip.persistence.models.NotificationType;
 import java.time.LocalDateTime;
 
 @Setter
+@Getter
 public class NotificationResponse {
 
     public NotificationResponse(Notification n) {

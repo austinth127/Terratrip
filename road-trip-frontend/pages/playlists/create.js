@@ -5,13 +5,14 @@ import LoadingSpinner, {
 } from "../../components/general/LoadingSpinner";
 import PlaylistTripItem from "../../components/playlist/PlaylistTripItem";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { clearTripAtom, tripAtom } from "../../utils/atoms";
+import { clearTripAtom, playlistIdAtom, tripAtom } from "../../utils/atoms";
 import { Button, DarkOutlineButton } from "../../components/general/Buttons";
 import Alert from "../../components/auth/Alert";
 import { useRouter } from "next/router";
 import Accordion from "../../components/accordion/Accordion";
 import DualSlider from "../../components/general/CompundSlider";
 import SpotifyEmbed from "../../components/playlist/SpotifyEmbed";
+import { delay } from "../../utils/delay";
 
 const initSliders = [
     { name: "Energy", bounds: [0.0, 1.0], minMax: [0.0, 1.0], step: 0.1 },
@@ -52,37 +53,47 @@ const Create = () => {
         setAlert();
         if (!activeTrip.id) {
             setAlert("You must chose a trip to attatch the playlist to!");
+            return;
+        }
+        if (!selected || selected.length < 1) {
+            setAlert("Please choose at least 1 genre for your playlist!");
+            return;
         }
         setShowLoading(true);
 
-        axios
-            .post("/api/playlist/generate", {
-                tripId: activeTrip.id,
-                genres: selected.length > 0 ? selected : null,
-                energy: sliders[0].minMax,
-                danceability: sliders[1].minMax,
-                instrumentalness: sliders[2].minMax,
-                acousticness: sliders[3].minMax,
-                popularity: sliders[4].minMax,
-                happiness: sliders[5].minMax,
-                tempo: sliders[6].minMax,
-                target_duration: Math.floor(
-                    Math.random() *
-                        (sliders[7].minMax[1] - sliders[7].minMax[0]) +
-                        sliders[7].minMax[0]
-                ),
-            })
-            .then(
-                (res) => {
+        const req = {
+            tripId: activeTrip.id,
+            genres: selected.length > 0 ? selected : null,
+            energy: sliders[0].minMax,
+            danceability: sliders[1].minMax,
+            instrumentalness: sliders[2].minMax,
+            acousticness: sliders[3].minMax,
+            popularity: sliders[4].minMax,
+            happiness: sliders[5].minMax,
+            tempo: sliders[6].minMax,
+            target_duration: Math.floor(
+                Math.random() * (sliders[7].minMax[1] - sliders[7].minMax[0]) +
+                    sliders[7].minMax[0]
+            ),
+        };
+        console.log(req);
+        axios.post("/api/playlist/generate", req).then(
+            (res) => {
+                console.log(res);
+                delay(1000).then(() => {
                     setShowLoading(false);
-                    console.log(res);
                     setPlaylist(res.data);
-                },
-                (error) => {
-                    setShowLoading(false);
-                    setAlert("Failed to generate playlist.");
-                }
-            );
+                    setActiveTrip({ ...activeTrip, playlistId: res.data.id });
+                    axios.get("/api/trip").then((res) => {
+                        setTrips(res.data);
+                    });
+                });
+            },
+            (error) => {
+                setShowLoading(false);
+                setAlert("Failed to generate playlist.");
+            }
+        );
     };
 
     useEffect(() => {
@@ -96,10 +107,8 @@ const Create = () => {
             }
             setColors(colors);
 
-            if (!activeTrip.id) {
-                const tripRes = await axios.get("/api/trip");
-                setTrips(tripRes.data);
-            }
+            const tripRes = await axios.get("/api/trip");
+            setTrips(tripRes.data);
 
             let user = await axios.get("/api/user");
             setUser(user.data);
@@ -275,6 +284,10 @@ const Create = () => {
                                         {activeTrip.endDate ?? "not specified"}
                                     </p>
                                 </div>
+                                <div className="text-gray-400 font-base text-sm italic mt-2">
+                                    {activeTrip.playlistId &&
+                                        "This trip has a playlist. Generating a new one will overwrite the current one."}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -323,7 +336,7 @@ const Create = () => {
                     {showLoading && <LoadingSpinnerSmall />}
                 </div>
             </div>
-            {playlist && (
+            {playlist?.url && (
                 <div className="lg:w-3/4 pt-16">
                     <h4 className="font-semibold text-green-600 text-lg">
                         Here is your playlist!
@@ -339,7 +352,11 @@ const Create = () => {
                 </div>
             )}
 
-            <div className="invisible h-32"></div>
+            <div className="py-16">
+                <Button onClick={() => router.push("/playlists/edit")}>
+                    Done
+                </Button>
+            </div>
         </div>
     );
 };

@@ -1,10 +1,11 @@
 import React from "react";
 import { Button } from "../general/Buttons";
+import SpotifyEmbed, { SpotifyEmbedById } from "./SpotifyEmbed";
 
 const PlaylistTripItem = ({ trip, isSelected, callback }) => {
     return (
         <div
-            className={`w-full bg-slate-900 rounded-lg my-3 hover:cursor-pointer p-4 bg-opacity-80 ${
+            className={`w-full bg-slate-900 relative rounded-lg my-3 hover:cursor-pointer p-4 bg-opacity-80 ${
                 isSelected && `ring ring-green-600`
             }`}
             onClick={() => callback(trip)}
@@ -18,8 +19,26 @@ const PlaylistTripItem = ({ trip, isSelected, callback }) => {
                         <p>{trip.end?.place_name ?? ""}</p>
                     </div>
                 </h3>
-                <div className="font-light text-gray-300">
-                    {trip.playlistId ? "Has Playlist" : "No Playlist"}
+                <div
+                    className={
+                        trip.playlistId
+                            ? `font-semibold text-green-500`
+                            : `font-light text-gray-300`
+                    }
+                >
+                    {trip.playlistId ? (
+                        <div className="flex flex-row gap-2">
+                            <div>Has Playlist</div>
+                            <a
+                                href={`https://open.spotify.com/playlist/${trip.playlistId}`}
+                                target="_blank"
+                            >
+                                <i className="fa fa-brands fa-spotify"></i>
+                            </a>
+                        </div>
+                    ) : (
+                        "No Playlist"
+                    )}
                 </div>
             </div>
         </div>

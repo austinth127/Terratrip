@@ -12,10 +12,8 @@ import { colors } from "../../utils/colors";
 import axios from "axios";
 
 const Rate = () => {
-    const trip = useAtomValue(tripAtom);
     const clearTrip = useSetAtom(clearTripAtom);
-    const [stops, setStops] = useAtom(stopsAtom);
-    const [rating, setRating] = useState(trip.rating);
+    const stops = useAtomValue(stopsAtom);
 
     const router = useRouter();
     const [alert, setAlert] = useState();
@@ -23,6 +21,7 @@ const Rate = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert();
+        clearTrip();
         router.back();
     };
 
@@ -37,23 +36,6 @@ const Rate = () => {
                     message={alert}
                     className="text-left text-red-400 mt-4 -mb-5 w-full"
                 />
-
-                {/* <ClientOnly>
-                    <ReactStars
-                        count={5}
-                        size={24}
-                        color2={colors.green600}
-                        half
-                        value={rating}
-                        edit={true}
-                        onChange={(newVal) => {
-                            axios.post(`/api/trip/${trip.id}/rate`, {
-                                rating: newVal,
-                            });
-                            setRating(rating);
-                        }}
-                    />
-                </ClientOnly> */}
 
                 <ClientOnly>
                     <h4 className="mt-8 font-semibold text-xl mb-2">Stops:</h4>
@@ -74,18 +56,11 @@ const Rate = () => {
 
                 <ClientOnly>
                     <div className="mt-16 mb-20 flex flex-row gap-4">
-                        <DarkOutlineButton type="submit">Back</DarkOutlineButton>
-                        {/* <DarkOutlineButton
-                            onClick={() => {
-                                clearTrip();
-                                router.back();
-                            }}
-                        >
-                            Cancel
-                        </DarkOutlineButton> */}
+                        <DarkOutlineButton type="submit">
+                            Back
+                        </DarkOutlineButton>
                     </div>
                 </ClientOnly>
-                
             </form>
         </div>
     );
