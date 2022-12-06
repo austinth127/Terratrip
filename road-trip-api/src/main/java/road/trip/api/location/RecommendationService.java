@@ -2,6 +2,7 @@ package road.trip.api.location;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import road.trip.api.category.CategoryService;
@@ -52,6 +53,7 @@ public class RecommendationService {
     private final ConcurrentHashMap<Long, Integer> limitsByUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Long> tripIdsByUser = new ConcurrentHashMap<>();
 
+    @Autowired
     public RecommendationService(@Qualifier("geoapify") LocationRecommendationClient geoApifyClient,
                                  @Qualifier("otm") LocationRecommendationClient otmClient,
                                  WikidataClient wikidataClient,
@@ -70,9 +72,11 @@ public class RecommendationService {
     }
 
     public void startRecommendationRequests(Long tripId, Double radius, Set<String> frontendCategories, List<List<Double>> route, Integer limit) {
-        Trip trip = tripRepository.findById(tripId).orElseThrow();
-        if (trip.getCreator() != userService.user()) {
-            throw new ForbiddenException("User does not own trip " + tripId);
+        Trip trip = tripRepository.findById(tripId).orElseThrow(); //404
+        log.info(trip.getCreator());
+        log.info(userService.user());
+        if (!trip.getCreator().equals(userService.user())) {
+            throw new ForbiddenException("User does not own trip " + tripId); //403
         }
         Long userId = userService.getId();
         new Thread(() -> {
