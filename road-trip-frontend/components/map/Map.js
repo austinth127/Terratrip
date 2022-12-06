@@ -229,6 +229,7 @@ const Map = ({ ...props }) => {
 
                     marker.getElement().addEventListener("click", () => {
                         setPopupStop(stop);
+                        setIsTripPopup(null);
                     });
 
                     recStopMarkers.push(marker);
@@ -266,6 +267,7 @@ const Map = ({ ...props }) => {
             }
             setRecStopMarkers([]);
             setPopupStop(null);
+            setIsTripPopup(true);
             map.current.remove();
         };
 

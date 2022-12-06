@@ -16,7 +16,7 @@ const useGeocodeSuggestions = (initialValue) => {
     const handleChange = async (event) => {
         setValue(event.target.value);
         let length = event.target.value.length;
-        if (length >= 4 && Math.abs(length - prevInputLength) >= 3) {
+        if (length >= 2 && Math.abs(length - prevInputLength) >= 2) {
             try {
                 const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${event.target.value}.json?access_token=${accessToken}&autocomplete=true`;
                 const response = await axios.get(endpoint);

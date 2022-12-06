@@ -1,12 +1,18 @@
 import { useAtom, useSetAtom } from "jotai";
 import React from "react";
-import { popupStopAtom, stopsAtom } from "../../../utils/atoms";
+import {
+    popupIsTripStopAtom,
+    popupStopAtom,
+    stopsAtom,
+} from "../../../utils/atoms";
 
 const RecStopItem = ({ stop }) => {
     const setPopupStop = useSetAtom(popupStopAtom);
+    const setIsTripPopup = useSetAtom(popupIsTripStopAtom);
 
     const handleAddStop = () => {
         setPopupStop(stop);
+        setIsTripPopup(null);
     };
 
     return (

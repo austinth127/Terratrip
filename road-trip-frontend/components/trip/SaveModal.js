@@ -11,6 +11,7 @@ import axios from "axios";
 import { Button, OutlineButton } from "../general/Buttons";
 import { useRouter } from "next/router";
 import { tripToTripRequest } from "../../utils/trip";
+import { LoadingSpinnerSmall } from "../general/LoadingSpinner";
 
 const SaveModal = () => {
     const [show, setShow] = useAtom(showSaveModalAtom);
@@ -18,19 +19,22 @@ const SaveModal = () => {
     const [alert, setAlert] = useState("");
     const trip = useAtomValue(tripAtom);
     const clearTrip = useSetAtom(clearTripAtom);
+    const [loading, setLoading] = useState();
 
     const router = useRouter();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setAlert("");
-
+        setLoading(true);
         axios.patch(`/api/trip/${trip.id}`, tripToTripRequest(trip)).then(
             (success) => {
+                setLoading(false);
                 setShow(false);
             },
             (fail) => {
                 setAlert("Trip failed to save");
+                setLoading(false);
             }
         );
     };
@@ -86,6 +90,12 @@ const SaveModal = () => {
                     </div>
                 </div>
                 <div className="absolute bottom-4 right-4 gap-2 flex flex-row">
+                    {loading && (
+                        <LoadingSpinnerSmall
+                            className={"mt-2"}
+                            text="Saving..."
+                        ></LoadingSpinnerSmall>
+                    )}
                     <Button type="submit">Save</Button>
                     <OutlineButton onClick={() => setShow(false)}>
                         Cancel
