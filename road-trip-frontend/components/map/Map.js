@@ -156,16 +156,16 @@ const Map = ({ ...props }) => {
                 axios
                     .post("/api/location/recommend", {
                         tripId: tripId,
-                        range: range * 1000,
+                        range: Math.floor((range * 1000) / 1.60934),
                         categories: filters,
                         route: route.geometry.coordinates,
-                        limit: 50,
+                        limit: 30,
                     })
                     .then(async () => {
                         let count = 0;
                         while (!done && map.current && count < 30) {
                             await delay(1000);
-                            axios.get("/api/location/recommend?limit=50").then(
+                            axios.get("/api/location/recommend?limit=30").then(
                                 (res) => {
                                     let newRec = res.data.locations.filter(
                                         (loc) =>
