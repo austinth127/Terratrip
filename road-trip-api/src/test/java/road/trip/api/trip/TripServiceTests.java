@@ -39,7 +39,8 @@ public class TripServiceTests {
     @Autowired UserRepository userRepository;
     @Autowired TripService tripService;
 
-    @MockBean UserService userService;
+    @MockBean
+    UserService userService;
 
     @BeforeEach
     void init() {

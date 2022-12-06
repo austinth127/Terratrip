@@ -7,6 +7,7 @@ import {
     allLocationsAtom,
     endAtom,
     filtersAtom,
+    popupIsTripStopAtom,
     popupStopAtom,
     rangeAtom,
     recStopAtom,
@@ -51,6 +52,7 @@ const Map = ({ ...props }) => {
     const [route, setRoute] = useAtom(routeAtom);
     const [routeGeoJson, setRouteGeoJson] = useAtom(routeGeoJsonAtom);
     const [recStops, setRecStops] = useAtom(recStopAtom);
+    const [isTripPopup, setIsTripPopup] = useAtom(popupIsTripStopAtom);
 
     /** @type {React.MutableRefObject<mapboxgl.Layer>} */
     const routerLayer = useRef(null);
@@ -122,6 +124,11 @@ const Map = ({ ...props }) => {
             const marker = new mapboxgl.Marker(el)
                 .setLngLat(location.center)
                 .addTo(map.current);
+
+            marker.getElement().addEventListener("click", () => {
+                setPopupStop(location);
+                setIsTripPopup(true);
+            });
 
             markers.push(marker);
         });

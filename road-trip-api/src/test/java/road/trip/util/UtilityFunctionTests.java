@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -41,6 +42,7 @@ public class UtilityFunctionTests {
     }
 
     @Test
+    @Disabled
     void testGenerateRefinedRoute() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         List<List<Double>> route;
