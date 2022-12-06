@@ -1,6 +1,9 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import {
+    allLocationsAtom,
+    endAtom,
+    maxStopsAtom,
     popupIsTripStopAtom,
     popupStopAtom,
     startAtom,
@@ -8,6 +11,7 @@ import {
 } from "../../../utils/atoms";
 import {
     addStopInOrder,
+    getNewOrder,
     getRouteWithStops,
 } from "../../../utils/map/geometryUtils";
 import Alert from "../../auth/Alert";
@@ -21,6 +25,9 @@ const Popup = () => {
     const [start, setStart] = useAtom(startAtom);
     const [alert, setAlert] = useState();
     const [loading, setLoading] = useState();
+    const [end, setEnd] = useAtom(endAtom);
+    const locs = useAtomValue(allLocationsAtom);
+    const maxStops = useAtomValue(maxStopsAtom);
 
     useEffect(() => {
         setAlert();
@@ -30,8 +37,16 @@ const Popup = () => {
             stops = [];
         }
         setAlert();
+
+        if (stops.length + 1 > maxStops) {
+            setAlert(
+                "You have reached the max number of stops. Please remove some and try again."
+            );
+            return;
+        }
         setLoading(true);
-        getRouteWithStops([...stops, stop]).then(
+
+        getRouteWithStops([...locs, stop]).then(
             (success) => {
                 addStopInOrder(start, stop, stops, setStops);
                 setLoading(false);
@@ -105,7 +120,10 @@ const Popup = () => {
                 </a>
             )}
 
-            <Alert message={alert} className={"text-xs text-red-400"}></Alert>
+            <Alert
+                message={alert}
+                className={"text-xs text-red-400 leading-tight -mb-1"}
+            ></Alert>
 
             {!isTripStop ? (
                 <div className="mt-2 flex flex-row gap-2">

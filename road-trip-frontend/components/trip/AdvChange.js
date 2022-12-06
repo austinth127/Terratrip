@@ -68,21 +68,23 @@ const SaveModal = () => {
             }
         }
 
-        for (var si = 0; si < trip.stops.length; si++) {
-            let s = trip.stops[si];
+        if (trip.stops) {
+            for (var si = 0; si < trip.stops.length; si++) {
+                let s = trip.stops[si];
 
-            let stopAdvLevel = -1;
-            for (var i = 0; i < levelOptions.length; i++) {
-                if (
-                    s.adventureLevel.toLocaleLowerCase() ==
-                    levelOptions[i].toLocaleLowerCase()
-                ) {
-                    stopAdvLevel = i;
+                let stopAdvLevel = -1;
+                for (var i = 0; i < levelOptions.length; i++) {
+                    if (
+                        s.adventureLevel?.toLocaleLowerCase() ==
+                        levelOptions[i].toLocaleLowerCase()
+                    ) {
+                        stopAdvLevel = i;
+                    }
                 }
-            }
 
-            if (stopAdvLevel > newAdvLevel) {
-                delete trip.stops[si];
+                if (stopAdvLevel > newAdvLevel) {
+                    delete trip.stops[si];
+                }
             }
         }
 
@@ -101,7 +103,7 @@ const SaveModal = () => {
     return (
         <div
             className={`bg-gray-100 text-slate-800 text-sm p-4 w-1/2 h-fit ease-in-out duration-200 z-50 
-            absolute top-24 left-1/2 -ml-[25%] rounded-lg border border-gray-200 shadow-xl ${
+            absolute top-24 left-1/2 -ml-[25%] rounded-lg border border-gray-200 shadow-xl pb-16 ${
                 show ? `translate-y-0` : `-translate-y-[30rem] bg-opacity-10`
             }`}
         >

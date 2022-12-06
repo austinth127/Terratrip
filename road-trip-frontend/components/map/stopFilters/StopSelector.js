@@ -3,8 +3,10 @@ import Geocoder from "../Geocoder";
 import TextInput from "../../general/TextInput";
 import StopFilters from "../stopFilters/StopFilters";
 import RecStopList from "../stopRecs/RecStopList";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
+    allLocationsAtom,
+    maxStopsAtom,
     popupIsTripStopAtom,
     popupStopAtom,
     rangeAtom,
@@ -22,6 +24,8 @@ const StopSelector = () => {
     const [range, setRange] = useAtom(rangeAtom);
     const [stops, setStops] = useAtom(stopsAtom);
     const setIsTripPopup = useSetAtom(popupIsTripStopAtom);
+    const locs = useAtomValue(allLocationsAtom);
+    const maxStops = useAtomValue(maxStopsAtom);
 
     useEffect(() => {
         if (!mapboxStop) return;
@@ -35,7 +39,13 @@ const StopSelector = () => {
             stops = [];
         }
         setAlert();
-        getRouteWithStops([...stops, stop]).then(
+        if (stops.length + 1 > maxStops) {
+            setAlert(
+                "You have reached the max number of stops. Please remove some and try again."
+            );
+            return;
+        }
+        getRouteWithStops([...locs, stop]).then(
             (success) => {
                 setPopupStop(stop);
                 setIsTripPopup(null);

@@ -22,10 +22,12 @@ const RecStopList = () => {
     const [trip, setTrip] = useAtom(tripAtom);
     const [filters, setFilters] = useAtom(filtersAtom);
     const [range, setRange] = useAtom(rangeAtom);
+    const [doneState, setDoneState] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
         let done = false;
+        setDoneState(done);
 
         if (!trip.route) return;
         axios
@@ -50,6 +52,7 @@ const RecStopList = () => {
                             );
                             setRecStops([...newRec]);
                             done = res.data.isDone;
+                            setDoneState(res.data.isDone);
                         },
                         (err) => console.log(err)
                     );
@@ -83,10 +86,12 @@ const RecStopList = () => {
                             }
                         />
                     ))
-                ) : (
+                ) : doneState ? (
                     <h2 className="text-xs text-center p-4">
                         No Recommended Stops
                     </h2>
+                ) : (
+                    <LoadingSpinner />
                 )}
             </div>
         </div>

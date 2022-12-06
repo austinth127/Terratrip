@@ -65,7 +65,7 @@ export const playlistIdAtom = atomWithStorage("playlist", null);
 
 // Map
 export const showSaveModalAtom = atom(false);
-export const showAdvChangeAtom = atom(false)
+export const showAdvChangeAtom = atom(false);
 export const popupStopAtom = atom(null);
 export const popupIsTripStopAtom = atom(null);
 export const tripIdAtom = atomWithStorage("tripId", null);
@@ -80,7 +80,7 @@ export const allLocationsAtom = atom((get) => {
 });
 
 export const editModeAtom = atom((get) => get(tripIdAtom) != null);
-
+export const maxStopsAtom = atom(10);
 export const recStopAtom = atom(null);
 
 // Notifications
