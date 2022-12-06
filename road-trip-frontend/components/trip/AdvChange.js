@@ -68,21 +68,23 @@ const SaveModal = () => {
             }
         }
 
-        for (var si = 0; si < trip.stops.length; si++) {
-            let s = trip.stops[si];
+        if (trip.stops) {
+            for (var si = 0; si < trip.stops.length; si++) {
+                let s = trip.stops[si];
 
-            let stopAdvLevel = -1;
-            for (var i = 0; i < levelOptions.length; i++) {
-                if (
-                    s.adventureLevel.toLocaleLowerCase() ==
-                    levelOptions[i].toLocaleLowerCase()
-                ) {
-                    stopAdvLevel = i;
+                let stopAdvLevel = -1;
+                for (var i = 0; i < levelOptions.length; i++) {
+                    if (
+                        s.adventureLevel?.toLocaleLowerCase() ==
+                        levelOptions[i].toLocaleLowerCase()
+                    ) {
+                        stopAdvLevel = i;
+                    }
                 }
-            }
 
-            if (stopAdvLevel > newAdvLevel) {
-                delete trip.stops[si];
+                if (stopAdvLevel > newAdvLevel) {
+                    delete trip.stops[si];
+                }
             }
         }
 
