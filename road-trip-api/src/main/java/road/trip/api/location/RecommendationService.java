@@ -131,6 +131,8 @@ public class RecommendationService {
 
                 // Get the recommendation details
                 recommendations.stream()
+                    .filter(l -> l.getCenter() != null)
+                    .filter(l -> l.getName() != null && !l.getName().isBlank())
                     .sorted(Comparator.reverseOrder())
                     .limit(limit)
                     .forEach(recommendation -> {
@@ -172,6 +174,8 @@ public class RecommendationService {
 
         return RecommendationResponse.builder()
             .locations(locations.stream()
+                .filter(l -> l.getCenter() != null)
+                .filter(l -> l.getName() != null && !l.getName().isBlank())
                 .sorted(Comparator.reverseOrder())
                 .limit(limit)
                 .collect(Collectors.toList()))
@@ -219,18 +223,16 @@ public class RecommendationService {
     private double getDataScore(LocationResponse loc) {
         double score = 0;
 
-        if (loc.getName() != null)
-            score += .3;
         if(loc.getDescription() != null)
-            score += .2;
+            score += .3;
         if(loc.getPhoneContact() != null)
-            score += .05;
+            score += .10;
         if(loc.getWebsite() != null)
-            score += .15;
+            score += .2;
         if(loc.getImage() != null)
-            score += .15;
+            score += .2;
         if(loc.getAddress() != null)
-            score += .15;
+            score += .2;
 
         return score;
     }

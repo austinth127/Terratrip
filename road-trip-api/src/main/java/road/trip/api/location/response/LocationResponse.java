@@ -129,6 +129,10 @@ public class LocationResponse implements Comparable<LocationResponse> {
 
     @Override
     public int compareTo(LocationResponse o) {
+        if (o == null) {
+            return 1;
+        }
+
         if(recommendationScore < o.recommendationScore)
             return -1;
 
