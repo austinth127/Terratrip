@@ -1,15 +1,19 @@
 import { useAtom } from "jotai";
 import React, { useMemo, useState } from "react";
-import { advLevelAtom, filtersAtom } from "../../../utils/atoms";
+import { advLevelAtom, filtersAtom, rangeAtom } from "../../../utils/atoms";
 import { filters, levelOptions } from "../../../utils/stops/filters";
 import FilterItem from "./FilterItem";
 import { formatTitle } from "../../../utils/stringUtils";
 import Accordion from "../../accordion/Accordion";
 import { Button, SmallButton } from "../../general/Buttons";
+import { SingleSlider } from "../../general/CompundSlider";
+import { colors } from "../../../utils/colors";
 
 const StopFilterChecklist = () => {
     const [level] = useAtom(advLevelAtom);
     const [activeFilters, setActiveFilters] = useAtom(filtersAtom);
+    const [range, setRange] = useAtom(rangeAtom);
+
     const [options, setOptions] = useState(() => {
         let options = [];
         const levelNum = levelOptions.findIndex(
@@ -85,9 +89,8 @@ const StopFilterChecklist = () => {
                         </Accordion>
                     </div>
                 ))}
-                <div className="h-8 invisible"></div>
             </div>
-            <div className="absolute bottom-2 right-6">
+            <div className="absolute bottom-2 right-2">
                 <SmallButton
                     onClick={() => {
                         setActiveFilters([...selectedFilters]);

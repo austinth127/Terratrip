@@ -100,3 +100,4 @@ export const recStopAtom = atom(null);
 export const showNotifAtom = atom(false);
 
 export const filtersAtom = atom([]);
+export const rangeAtom = atom(50);

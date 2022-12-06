@@ -4,15 +4,17 @@ import TextInput from "../../general/TextInput";
 import StopFilters from "../stopFilters/StopFilters";
 import RecStopList from "../stopRecs/RecStopList";
 import { useAtom } from "jotai";
-import { popupStopAtom, stopsAtom } from "../../../utils/atoms";
+import { popupStopAtom, rangeAtom, stopsAtom } from "../../../utils/atoms";
 import { getRoute, getRouteWithStops } from "../../../utils/map/geometryUtils";
 import Alert from "../../auth/Alert";
+import { SingleSlider } from "../../general/CompundSlider";
+import { colors } from "../../../utils/colors";
 
 const StopSelector = () => {
     const [mapboxStop, setMapboxStop] = useState();
     const [alert, setAlert] = useState();
     const [popupStop, setPopupStop] = useAtom(popupStopAtom);
-
+    const [range, setRange] = useAtom(rangeAtom);
     const [stops, setStops] = useAtom(stopsAtom);
 
     useEffect(() => {
@@ -39,7 +41,7 @@ const StopSelector = () => {
 
     return (
         <div
-            className="bg-gray-50 border border-gray-100 rounded-lg sm:w-1/4 h-[85vh]
+            className="bg-gray-50 border border-gray-100 rounded-lg sm:w-1/4 h-[91vh]
                         fixed z-20 top-14 left-2 isolate flex flex-col gap-1 py-4"
         >
             <div className="border-b border-gray-300 pb-4 px-2 mx-2 text-slate-900">
@@ -51,6 +53,16 @@ const StopSelector = () => {
             </div>
             <RecStopList />
             <StopFilters />
+            <div className="h-fit relative my-2 isolate flex justify-center flex-col gap-2 mx-2 w-3/4">
+                <p className="text-xs text-gray-500 -mt-1">Range (mi):</p>
+                <SingleSlider
+                    min={10}
+                    max={200}
+                    val={range}
+                    color={colors.green600}
+                    onChange={(val) => setRange(val[0])}
+                ></SingleSlider>
+            </div>
         </div>
     );
 };

@@ -22,7 +22,7 @@ const Popup = () => {
     }
 
     return (
-        <div className="text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute flex flex-col gap-1 top-16 left-[27%] bg-white bg-opacity-90 max-w-[30rem] min-w-[16rem]">
+        <div className="text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute flex flex-col gap-1 top-16 left-[27%] bg-white bg-opacity-100 max-w-[30rem] min-w-[16rem]">
             <button
                 className="absolute top-2 right-4 w-fit h-fit "
                 onClick={() => setStop(null)}
@@ -56,7 +56,7 @@ const Popup = () => {
                 </p>
             )}
             {stop?.description && (
-                <p className="text-green-600 font-extralight line-clamp-4 text-ellipsis">
+                <p className="text-green-600 font-base line-clamp-4 text-ellipsis">
                     {stop.description}
                 </p>
             )}
