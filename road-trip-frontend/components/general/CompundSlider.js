@@ -134,4 +134,66 @@ const DualSlider = ({
     );
 };
 
+export const SingleSlider = ({
+    min,
+    max,
+    val,
+    step,
+    onChange,
+    color,
+    ...props
+}) => {
+    return (
+        <div className="relative flex items-center h-8">
+            <Slider
+                rootStyle={sliderStyle}
+                domain={[min ?? 0, max ?? 100]}
+                step={step ?? 1}
+                mode={2 /* keep from crossing */}
+                values={[val] /* 2 values = 2 handles */}
+                onChange={(val) => {
+                    onChange(val);
+                }}
+            >
+                <Rail>
+                    {({ getRailProps }) => (
+                        <div
+                            style={props.railStyle ?? railStyle}
+                            {...getRailProps()}
+                        />
+                    )}
+                </Rail>
+                <Handles>
+                    {({ handles, getHandleProps }) => (
+                        <div className="slider-handles">
+                            {handles.map((handle) => (
+                                <Handle
+                                    key={handle.id}
+                                    handle={handle}
+                                    getHandleProps={getHandleProps}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </Handles>
+                <Tracks left={true} right={false}>
+                    {({ tracks, getTrackProps }) => (
+                        <div className="slider-tracks">
+                            {tracks.map(({ id, source, target }) => (
+                                <Track
+                                    key={id}
+                                    source={source}
+                                    target={target}
+                                    color={color}
+                                    getTrackProps={getTrackProps}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </Tracks>
+            </Slider>
+        </div>
+    );
+};
+
 export default DualSlider;

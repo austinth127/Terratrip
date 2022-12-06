@@ -73,7 +73,7 @@ public class CategoryServiceTests {
     @Test
     @DisplayName("Category Responses Test")
     void getCategoryResponsesTest(){
-        List<CategoryResponse> categories = categoryService.getCategoryResponses();
+        List<CategoryResponse> categories = categoryService.getCategoryResponses(0);
         assertTrue(categories.size()>0);
 
     }
