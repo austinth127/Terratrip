@@ -43,6 +43,7 @@ export const clearTripAtom = atom(null, (get, set) => {
     set(filtersAtom, []);
     set(recStopAtom, null);
     set(popupStopAtom, null);
+    set(popupIsTripStopAtom, null);
     set(routeGeoJsonAtom, null);
     set(playlistIdAtom, null);
 });
@@ -64,7 +65,9 @@ export const playlistIdAtom = atomWithStorage("playlist", null);
 
 // Map
 export const showSaveModalAtom = atom(false);
+export const showAdvChangeAtom = atom(false)
 export const popupStopAtom = atom(null);
+export const popupIsTripStopAtom = atom(null);
 export const tripIdAtom = atomWithStorage("tripId", null);
 export const stopsAtom = atomWithStorage("stops", []);
 

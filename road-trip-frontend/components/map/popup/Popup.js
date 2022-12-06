@@ -1,11 +1,17 @@
 import { useAtom } from "jotai";
 import React, { useState } from "react";
-import { popupStopAtom, startAtom, stopsAtom } from "../../../utils/atoms";
+import {
+    popupIsTripStopAtom,
+    popupStopAtom,
+    startAtom,
+    stopsAtom,
+} from "../../../utils/atoms";
 import { addStopInOrder } from "../../../utils/map/geometryUtils";
 import { Button, SmallButton } from "../../general/Buttons";
 
 const Popup = () => {
     const [stop, setStop] = useAtom(popupStopAtom);
+    const [isTripStop, setIsTripStop] = useAtom(popupIsTripStopAtom);
     const [stops, setStops] = useAtom(stopsAtom);
     const [start, setStart] = useAtom(startAtom);
 
@@ -15,6 +21,7 @@ const Popup = () => {
         }
         addStopInOrder(start, stop, stops, setStops);
         setStop(null);
+        setIsTripStop(null);
     };
 
     if (!stop) {
@@ -22,7 +29,11 @@ const Popup = () => {
     }
 
     return (
-        <div className="text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute flex flex-col gap-1 top-16 left-[27%] bg-white bg-opacity-100 max-w-[30rem] min-w-[16rem]">
+        <div
+            className={`text-left p-4 h-fit text-slate-800 text-xs duration-200 rounded-lg my-1 z-10 absolute flex flex-col gap-1 top-16 left-[27%]   max-w-[30rem] min-w-[16rem] ${
+                isTripStop ? `bg-gray-100` : `bg-opacity-100 bg-white`
+            }`}
+        >
             <button
                 className="absolute top-2 right-4 w-fit h-fit "
                 onClick={() => setStop(null)}
@@ -35,7 +46,7 @@ const Popup = () => {
                     className="bg-cover m-2 rounded-lg w-fit h-48"
                 ></img>
             )}
-            <p className="text-green-600 font-semibold  ">{stop.place_name}</p>
+            <p className="text-green-600 font-semibold">{stop.place_name}</p>
             {stop.categories ? (
                 <p className="text-slate-600 font-light">
                     Types:{" "}

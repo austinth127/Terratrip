@@ -14,6 +14,9 @@ import {
   tripNameAtom,
   clearTripAtom,
 } from "../../utils/atoms";
+import {
+  levelOptions,
+} from "../../utils/stops/filters";
 import Alert from "../auth/Alert";
 import axios from "axios";
 import { Button, OutlineButton } from "../general/Buttons";
@@ -38,51 +41,62 @@ const SaveModal = () => {
   const [alert, setAlert] = useState();
 
   const handleSubmit = (event) => {
-    console.log("Handle submit");
-    console.log(activeLevel);
+    event.preventDefault();
 
-    getRoute(start, end).then(
+    axios.patch(`/api/trip/${trip.id}`, tripToTripRequest(trip)).then(
       (success) => {
-        setRoute(success[0]);
-        trip.route = success[0];
-
-
-        axios.patch(`/api/trip/${trip.id}`, tripToTripRequest(trip)).then(
-            (success) => {
-              clearTrip();
-              router.push("/trips/list/user");
-            },
-            (fail) => {
-              setAlert("Trip failed to update");
-            }
-          );
-
-        let drivingDays = Math.ceil(trip.route.duration / 86400.0);
-        let requestedTime =
-          new Date(endDate).getTime() - new Date(startDate).getTime();
-        let requestedDays = requestedTime / (1000 * 3600 * 24) + 1;
-
-        if (drivingDays > requestedDays) {
-          setAlert("Trip not completable within time frame.");
-        } else {
-          axios.patch(`/api/trip/${trip.id}`, tripToTripRequest(trip)).then(
-            (success) => {
-              clearTrip();
-              router.push("/trips/list/user");
-            },
-            (fail) => {
-              setAlert("Trip failed to update");
-            }
-          );
-        }
+        clearTrip();
+        router.push("/trips/list/user");
+        setShow(false);
       },
-      (error) => {
-        setAlert("Cannot find a driving route between these locations.");
+      (fail) => {
+        setAlert("Trip failed to update");
       }
     );
+   
   };
 
-  const handleRemove = (event) => {};
+  const handleRemove = (event) => {
+    event.preventDefault();
+
+    let newAdvLevel = -1;
+    let exit = false;
+
+    for (var i = 0; i < levelOptions.length; i++) {
+      if (activeLevel.toLocaleLowerCase() == levelOptions[i].toLocaleLowerCase()) {
+        newAdvLevel = i;
+      }
+    }
+
+    for (var si = 0; si < trip.stops.length; si++) {
+      let s = trip.stops[si];
+
+      let stopAdvLevel = -1;
+      for (var i = 0; i < levelOptions.length; i++) {
+        if (s.adventureLevel.toLocaleLowerCase() == levelOptions[i].toLocaleLowerCase()) {
+          stopAdvLevel = i;
+        }
+      }
+
+      if (stopAdvLevel > newAdvLevel) {
+        delete trip.stops[si];
+      }
+
+
+    }
+
+    axios.patch(`/api/trip/${trip.id}`, tripToTripRequest(trip)).then(
+      (success) => {
+        clearTrip();
+        router.push("/trips/list/user");
+        setShow(false);
+      },
+      (fail) => {
+        setAlert("Trip failed to update");
+      }
+    );
+
+  };
 
   return (
     <div

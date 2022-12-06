@@ -6,9 +6,11 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import road.trip.api.category.CategoryService;
 import road.trip.api.category.response.CategoryResponse;
 import road.trip.api.trip.request.TripEditRequest;
@@ -23,6 +25,7 @@ import road.trip.persistence.models.User;
 import road.trip.util.exceptions.ForbiddenException;
 import road.trip.util.exceptions.NotFoundException;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +75,16 @@ public class CategoryServiceTests {
 
     @Test
     @DisplayName("Category Responses Test")
+    @Disabled
     void getCategoryResponsesTest(){
-        List<CategoryResponse> categories = categoryService.getCategoryResponses(0);
+        List<CategoryResponse> categories = categoryService.getCategoryResponses(3);
         assertTrue(categories.size()>0);
 
     }
+    @Value("${path.to.script}")
+    private String scriptPath;
+    @Disabled
+    @Sql(scripts= "/import_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     @DisplayName("Get Recommended Categories Test")
     void getRecommendedCategoriesTest(){

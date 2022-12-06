@@ -129,6 +129,8 @@ public class TripService {
             if(request.getStops() != null){
                 List<LocationRequest> stops = request.getStops();
 
+                System.out.println(stops.size());
+
 //                 Remove Stops in trip
                 List<Stop> oldStops = stopRepository.findByTrip_Id(id);
                 for (int i = 0; i < oldStops.size(); i++) {
@@ -142,8 +144,10 @@ public class TripService {
                 if (oldStops.size() == 0) {
                     // Re-add stops
                     for (int i = 0; i < stops.size(); i++) {
-                        Location l = locationService.createLocation(stops.get(i));
-                        t.getStops().add(locationService.createStop(t, l, i));
+                        if(stops.get(i) != null) {
+                            Location l = locationService.createLocation(stops.get(i));
+                            t.getStops().add(locationService.createStop(t, l, i));
+                        }
                     }
                 }
             }

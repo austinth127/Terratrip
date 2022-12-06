@@ -2,6 +2,7 @@ package road.trip.api.location;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import road.trip.api.category.CategoryService;
@@ -53,6 +54,7 @@ public class RecommendationService {
     private final ConcurrentHashMap<Long, Integer> limitsByUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Long> tripIdsByUser = new ConcurrentHashMap<>();
 
+    @Autowired
     public RecommendationService(@Qualifier("geoapify") LocationRecommendationClient geoApifyClient,
                                  @Qualifier("otm") LocationRecommendationClient otmClient,
                                  WikidataClient wikidataClient,
@@ -71,10 +73,18 @@ public class RecommendationService {
     }
 
     public void startRecommendationRequests(Long tripId, Double radius, Set<String> frontendCategories, List<List<Double>> route, Integer limit) {
-        Trip trip = tripRepository.findById(tripId).orElseThrow();
-        if (trip.getCreator() != userService.user()) {
-            throw new ForbiddenException("User does not own trip " + tripId);
+        Trip trip = tripRepository.findById(tripId).orElseThrow(); //404
+        log.info(trip.getCreator());
+        log.info(userService.user());
+        if (!trip.getCreator().equals(userService.user())) {
+            throw new ForbiddenException("User does not own trip " + tripId); //403
         }
+
+        if(limit == null){
+            log.error("limit is null");
+            return;
+        }
+
         Long userId = userService.getId();
         new Thread(() -> {
             try {
@@ -176,23 +186,26 @@ public class RecommendationService {
 
         locations.forEach(locationResponse -> {
             Location location = locationService.findLocationByIds(locationResponse).orElse(null);
+            int numRatings = 0;
+            AdventureLevel locAdvLevel = AdventureLevel.RELAXED;
+            Double rating = null;
             if (location != null) {
-                int numRatings = locationService.getNumRatings(location);
-                AdventureLevel locAdvLevel = locationService.getAdventureLevel(location);
-                locationResponse.setRecommendationScore(
-                    calculateRecommendedScore(getRatingScore(location.getRating(), numRatings),
+                numRatings = locationService.getNumRatings(location);
+                locAdvLevel = locationService.getAdventureLevel(location);
+                rating = location.getRating();
+            }
+            locationResponse.setRecommendationScore(
+                calculateRecommendedScore(getRatingScore(rating, numRatings),
                     getAdventureScore(locAdvLevel != null ? locAdvLevel.ordinal() : 0, tripAdvLevel),
                     getDataScore(locationResponse)));
-            }
         });
-        log.info(locations.get(0).getRecommendationScore());
     }
 
     private double calculateRecommendedScore(double ratingScore, double adventureScore, double dataScore) {
         return (ratingScore * RATING_WEIGHT) + (adventureScore * ADVENTURE_WEIGHT) + (dataScore * DATA_WEIGHT);
     }
 
-    private double getRatingScore(double rating, long numRatings) {
+    private double getRatingScore(Double rating, long numRatings) {
         if(numRatings == 0) {
             return .5;
         }

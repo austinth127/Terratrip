@@ -1,6 +1,10 @@
 import { useAtom } from "jotai";
 import React from "react";
-import { stopsAtom } from "../../../utils/atoms";
+import {
+    popupIsTripStopAtom,
+    popupStopAtom,
+    stopsAtom,
+} from "../../../utils/atoms";
 import {
     metersToMileString,
     secondsToTimeString,
@@ -9,6 +13,8 @@ import Accordion from "../../accordion/Accordion";
 
 const TripStopItem = ({ stop, order, leg }) => {
     const [stops, setStops] = useAtom(stopsAtom);
+    const [popup, setPopup] = useAtom(popupStopAtom);
+    const [isTripStop, setIsTripStop] = useAtom(popupIsTripStopAtom);
 
     const handleMoveUp = () => {
         const thisIndex = order - 1;
@@ -54,9 +60,20 @@ const TripStopItem = ({ stop, order, leg }) => {
                         {start ? "Start" : end ? "End" : order}
                     </div>
                     <div className="text-slate-100 text-xs font-light w-full">
-                        <p className="text-green-600 font-semibold text-sm">
-                            {stop.place_name}
-                        </p>
+                        <div className="flex flex-row gap-3">
+                            <p className="text-green-600 font-semibold text-sm">
+                                {stop.place_name}
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setPopup(stop);
+                                    setIsTripStop(true);
+                                }}
+                            >
+                                <i className="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+
                         {stop.categories ? (
                             <p className="text-slate-300 font-light">
                                 Types:{" "}

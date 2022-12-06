@@ -118,7 +118,7 @@ public class SpotifyService {
             throw new NotFoundException("trip " + request.getTripId() + " not found");
         }
         Trip trip = optTrip.get();
-        if (trip.getCreator() != userService.user()) {
+        if (!userService.user().equals(trip.getCreator())) {
             throw new UnauthorizedException();
         }
 
