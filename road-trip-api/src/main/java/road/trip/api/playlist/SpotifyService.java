@@ -236,7 +236,8 @@ public class SpotifyService {
                 user.setSpotifyAccessToken(accessToken);
                 userService.update(user);
             } catch (Exception e) {
-                log.error("Token refresh failure", e);
+                log.error("Token refresh failure, resetting Spotify info to empty", e);
+                userService.setSpotifyInfo(user.getId(), null, null, null);
             }
         }
         log.info("Token refresh complete");
