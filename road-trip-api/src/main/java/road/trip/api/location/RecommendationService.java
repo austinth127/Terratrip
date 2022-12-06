@@ -124,7 +124,7 @@ public class RecommendationService {
                 // Setup
                 List<LocationResponse> recommendations = getRecommendationCache(userId).values().stream().toList();
                 log.info("There are " + recommendations.size() + " reduced recs");
-                clearRecommendationCache(userId);
+                ConcurrentHashMap<String, LocationResponse> cache = new ConcurrentHashMap<>(getRecommendationCache(userId));
 
                 setRecommendationScore(recommendations, tripId);
 
@@ -135,12 +135,13 @@ public class RecommendationService {
                     .sorted(Comparator.reverseOrder())
                     .limit(limit)
                     .forEach(recommendation -> {
-                        addToRecommendationCache(userId, recommendation);
+                        addToCache(cache, recommendation);
                         if (recommendation.getGeoapifyId() != null)
                             getDetailedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, recommendation);
                         if (recommendation.getOtmId() != null)
                             getDetailedRecommendationsAsync(userId, otmExecutor, otmClient, recommendation);
                     });
+                setRecommendationCache(userId, cache);
                 // Wait for threads to finish
                 otmExecutor.joinAll();
                 geoApifyExecutor.joinAll();
@@ -301,7 +302,7 @@ public class RecommendationService {
         recommendationsByUser.put(userId, recommendations);
     }
 
-    private void addToRecommendationCache(Long userId, LocationResponse recommendation) {
+    private void addToCache(ConcurrentHashMap<String, LocationResponse> cache, LocationResponse recommendation) {
         String id;
         if (recommendation.getOsmId() != null)
             id = recommendation.getOsmId().toString();
@@ -316,10 +317,14 @@ public class RecommendationService {
         recommendation.setCategories(new ArrayList<>(categoryService.getUiCategories(recommendation.getCategories())));
         recommendation.setAdventureLevel(categoryService.getAdventureLevel(recommendation.getCategories()));
 
-        ConcurrentHashMap<String, LocationResponse> recommendations = getRecommendationCache(userId);
-        LocationResponse prevRecommendation = recommendations.getOrDefault(id, LocationResponse.builder().build());
+        LocationResponse prevRecommendation = cache.getOrDefault(id, LocationResponse.builder().build());
         recommendation = LocationResponse.combineRecommendations(prevRecommendation, recommendation);
-        recommendations.put(id, recommendation);
+        cache.put(id, recommendation);
+    }
+
+    private void addToRecommendationCache(Long userId, LocationResponse recommendation) {
+        ConcurrentHashMap<String, LocationResponse> recommendations = getRecommendationCache(userId);
+        addToCache(recommendations, recommendation);
         setRecommendationCache(userId, recommendations);
     }
 

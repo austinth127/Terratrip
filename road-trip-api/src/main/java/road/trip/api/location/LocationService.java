@@ -112,9 +112,9 @@ public class LocationService {
     }
 
     public AdventureLevel getAdventureLevel(Location location) {
-        log.info("CATEGORIES: " + location.getCategories());
+        log.debug("CATEGORIES: " + location.getCategories());
         if (location.getCategories() == null) {
-            log.warn("No categories for location " + location.getGeoapifyId() + ", " + location.getOtmId() + ", " + location.getId());
+            log.debug("No categories for location " + location.getGeoapifyId() + ", " + location.getOtmId() + ", " + location.getId());
             return AdventureLevel.RELAXED;
         }
 
