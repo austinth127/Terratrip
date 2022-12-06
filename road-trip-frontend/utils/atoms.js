@@ -56,7 +56,7 @@ export const advLevelAtom = atomWithStorage("advLevel", "");
 export const startAtom = atomWithStorage("startLoc", null);
 export const endAtom = atomWithStorage("endLoc", null);
 
-export const routeAtom = atomWithStorage("route", null);
+export const routeAtom = atom(null);
 export const routeGeoJsonAtom = atomWithStorage("routeGeoJson", null);
 export const tripNameAtom = atomWithStorage("tripName", null);
 

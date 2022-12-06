@@ -90,7 +90,6 @@ public class LocationResponse implements Comparable<LocationResponse> {
         center = new Double[]{properties.getCoordX(), properties.getCoordY()};
         categories = properties.getCategories();
         phoneContact = properties.getContact() == null ? null : properties.getContact().getPhone();
-        website = properties.getWebsite();
         description = properties.getDescription();
         image = null;
         rating = null;

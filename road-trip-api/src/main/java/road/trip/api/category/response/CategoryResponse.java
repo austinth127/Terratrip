@@ -1,5 +1,6 @@
 package road.trip.api.category.response;
 
+import com.nimbusds.jose.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

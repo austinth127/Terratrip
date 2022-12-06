@@ -66,10 +66,10 @@ const Popup = () => {
             {stop?.website && (
                 <a
                     className="text-blue-600 hover:underline font-light text-ellipsis"
-                    href={stop.website}
+                    href={stop.website.split(";")[0]}
                     target="_blank"
                 >
-                    {stop.website}
+                    {stop.website.split(";")[0]}
                 </a>
             )}
 
