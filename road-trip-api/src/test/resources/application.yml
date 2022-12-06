@@ -25,3 +25,6 @@ logging:
   level:
     road.trip: DEBUG
     org.hibernate: WARN
+path:
+  to:
+    script: import_data.sql
