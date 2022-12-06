@@ -70,7 +70,9 @@ const TripStopItem = ({ stop, order, leg }) => {
                                     setIsTripStop(true);
                                 }}
                             >
-                                <i className="fa-solid fa-eye"></i>
+                                <span className="text-gray-500">
+                                    <i className="fa-solid fa-eye"></i>
+                                </span>
                             </button>
                         </div>
 

@@ -48,6 +48,7 @@ const Create = () => {
     const clearTrip = useSetAtom(clearTripAtom);
     const [playlist, setPlaylist] = useState();
     const router = useRouter();
+    const [uri, setUri] = useState();
 
     const handleSubmit = () => {
         setAlert();
@@ -98,26 +99,62 @@ const Create = () => {
 
     useEffect(() => {
         const getData = async () => {
-            const res = await axios.get("/api/playlist/genres");
-            setGenreOptions(res.data);
+            let userRes = await axios.get("/api/user");
+            setUser(userRes.data);
+            setUri(process.env.NEXT_PUBLIC_SPOTIFY_AUTH_URI);
 
-            colors = [];
-            for (let i = 0; i < res.data.length; i++) {
-                colors.push(randomColor(190, 10));
+            if (userRes.data.spotifyUserId) {
+                let res = await axios.get("/api/playlist/genres");
+                setGenreOptions(res.data);
+                colors = [];
+                for (let i = 0; i < res.data.length; i++) {
+                    colors.push(randomColor(190, 10));
+                }
+                setColors(colors);
+
+                const tripRes = await axios.get("/api/trip");
+                setTrips(tripRes.data);
             }
-            setColors(colors);
-
-            const tripRes = await axios.get("/api/trip");
-            setTrips(tripRes.data);
-
-            let user = await axios.get("/api/user");
-            setUser(user.data);
         };
         getData();
     }, []);
 
-    if (!genreOptions || !colors || !user)
+    if (!user) return <LoadingSpinner></LoadingSpinner>;
+
+    if (!user.spotifyUserId) {
+        return (
+            <div className="flex flex-row justify-center py-16">
+                {user.spotifyUserId ? (
+                    <div className="text-gray-300">
+                        You are connected to Spotify
+                        <i className="-mr-2 ml-1 fa-solid fa-check"></i>
+                    </div>
+                ) : (
+                    <a target="_blank" href={uri} rel="noopener noreferrer">
+                        <Button>
+                            Connect to Spotify{" "}
+                            <i className="-mr-2 ml-1 fa-brands fa-xl fa-spotify"></i>
+                        </Button>
+                    </a>
+                )}
+            </div>
+        );
+    }
+
+    if (!genreOptions || !colors || !trips) {
         return <LoadingSpinner></LoadingSpinner>;
+    }
+
+    if (trips && trips.length == 0) {
+        return (
+            <div className="h-fit p-4 py-16 flex flex-col gap-8 justify-center items-center w-full text-xl">
+                You currently have no trips made yet. Let's create one first!
+                <Button onClick={() => router.push("/trips")}>
+                    Create your first trip.
+                </Button>
+            </div>
+        );
+    }
 
     return (
         <div className="lg:ml-16 py-16 mx-8 lg:mr-4 lg:w-3/4">
@@ -167,12 +204,12 @@ const Create = () => {
                 </button>
             </div>
             {/* Handle: Trip has playlist, trip does not, no trips, etc. */}
-            {trips && (
+            {trips && trips.length > 0 && (
                 <div>
                     <h2 className="text-gray-100 text-lg font-light mt-12 mb-4">
                         Select one of your Trips
                     </h2>
-                    <div className="h-96 overflow-y-scroll p-4 dark-scrollbar">
+                    <div className="max-h-[24rem] overflow-y-scroll p-4 dark-scrollbar">
                         {trips.map((trip) => (
                             <PlaylistTripItem
                                 trip={trip}
@@ -325,14 +362,16 @@ const Create = () => {
                 {/* TODO if active trip has playlist, notify */}
                 <div className="flex flex-row gap-8 w-fit items-center">
                     <Button onClick={handleSubmit}>Generate</Button>
-                    <DarkOutlineButton
-                        onClick={() => {
-                            clearTrip();
-                            router.push("/");
-                        }}
-                    >
-                        Cancel
-                    </DarkOutlineButton>
+                    {!playlist && (
+                        <DarkOutlineButton
+                            onClick={() => {
+                                clearTrip();
+                                router.push("/");
+                            }}
+                        >
+                            Cancel
+                        </DarkOutlineButton>
+                    )}
                     {showLoading && <LoadingSpinnerSmall />}
                 </div>
             </div>
@@ -353,9 +392,13 @@ const Create = () => {
             )}
 
             <div className="py-16">
-                <Button onClick={() => router.push("/playlists/edit")}>
-                    Done
-                </Button>
+                {playlist && (
+                    <DarkOutlineButton
+                        onClick={() => router.push("/playlists/edit")}
+                    >
+                        Done
+                    </DarkOutlineButton>
+                )}
             </div>
         </div>
     );

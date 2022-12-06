@@ -3,8 +3,13 @@ import Geocoder from "../Geocoder";
 import TextInput from "../../general/TextInput";
 import StopFilters from "../stopFilters/StopFilters";
 import RecStopList from "../stopRecs/RecStopList";
-import { useAtom } from "jotai";
-import { popupStopAtom, rangeAtom, stopsAtom } from "../../../utils/atoms";
+import { useAtom, useSetAtom } from "jotai";
+import {
+    popupIsTripStopAtom,
+    popupStopAtom,
+    rangeAtom,
+    stopsAtom,
+} from "../../../utils/atoms";
 import { getRoute, getRouteWithStops } from "../../../utils/map/geometryUtils";
 import Alert from "../../auth/Alert";
 import { SingleSlider } from "../../general/CompundSlider";
@@ -16,6 +21,7 @@ const StopSelector = () => {
     const [popupStop, setPopupStop] = useAtom(popupStopAtom);
     const [range, setRange] = useAtom(rangeAtom);
     const [stops, setStops] = useAtom(stopsAtom);
+    const setIsTripPopup = useSetAtom(popupIsTripStopAtom);
 
     useEffect(() => {
         if (!mapboxStop) return;
@@ -32,6 +38,7 @@ const StopSelector = () => {
         getRouteWithStops([...stops, stop]).then(
             (success) => {
                 setPopupStop(stop);
+                setIsTripPopup(null);
             },
             (err) => {
                 setAlert("Cannot find a route through this stop.");
