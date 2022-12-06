@@ -1,10 +1,7 @@
 package road.trip.util;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.net.http.HttpClient;
-import org.springframework.boot.SpringApplication;
-import road.trip.RoadTripApplication;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import road.trip.util.exceptions.BadRequestException;
 import road.trip.util.exceptions.TooManyRequestsException;
@@ -13,8 +10,6 @@ import road.trip.util.exceptions.UnauthorizedException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
@@ -83,7 +78,8 @@ public class UtilityFunctions {
 
     public static List<List<Double>> reducedRoute(List<List<Double>> route, int numPoints) {
         List<List<Double>> newRoute = new ArrayList<>();
-        for (int i = 0; i < route.size(); i += route.size() / numPoints) {
+        int skip = Math.max(1, route.size() / numPoints);
+        for (int i = 0; i < route.size(); i += skip) {
             newRoute.add(route.get(i));
         }
         return newRoute;

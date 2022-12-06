@@ -10,7 +10,6 @@ import { Checkbox } from "../../general/Buttons";
  * @returns
  */
 const FilterItem = ({ filter, onCheck }) => {
-    const name = formatTitle(filter.name);
     const [isChecked, setIsChecked] = useState(false);
 
     return (
@@ -22,7 +21,7 @@ const FilterItem = ({ filter, onCheck }) => {
                     onCheck(e.target.checked);
                 }}
             />
-            {name}
+            {filter}
         </div>
     );
 };

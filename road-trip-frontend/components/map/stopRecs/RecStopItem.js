@@ -14,9 +14,11 @@ const RecStopItem = ({ stop }) => {
             className="text-left p-1 w-full h-fit text-slate-800 text-xs hover:bg-slate-200 hover:cursor-pointer duration-200 relative rounded-lg my-1"
             onClick={handleAddStop}
         >
-            <p className="text-green-600 font-semibold  ">{stop?.place_name}</p>
+            <p className="text-green-600 font-semibold mr-6">
+                {stop?.place_name}
+            </p>
             {stop.categories ? (
-                <p className="text-slate-600 font-light">
+                <p className="text-slate-600 font-light mr-6">
                     Types:{" "}
                     {stop?.categories &&
                         stop.categories.length > 0 &&
@@ -37,10 +39,10 @@ const RecStopItem = ({ stop }) => {
             {stop?.website && (
                 <a
                     className="text-blue-600 hover:underline font-light text-ellipsis"
-                    href={stop.website}
+                    href={stop.website.split(";")[0]}
                     target="_blank"
                 >
-                    {stop.website}
+                    {stop.website.split(";")[0]}
                 </a>
             )}
 

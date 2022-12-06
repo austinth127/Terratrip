@@ -1,6 +1,7 @@
 package road.trip.api.location;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import road.trip.api.category.CategoryService;
@@ -12,16 +13,12 @@ import road.trip.clients.wikidata.WikidataClient;
 import road.trip.persistence.daos.LocationRatingRepository;
 import road.trip.persistence.daos.LocationRepository;
 import road.trip.persistence.daos.TripRepository;
+import road.trip.persistence.models.AdventureLevel;
+import road.trip.persistence.models.Location;
 import road.trip.persistence.models.Trip;
 import road.trip.util.ThrottledThreadPoolExecutor;
 import road.trip.util.exceptions.ForbiddenException;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -49,13 +46,17 @@ public class RecommendationService {
     private final TripRepository tripRepository;
     private final LocationRatingRepository locationRatingRepository;
     private final LocationRepository locationRepository;
+    private final LocationService locationService;
     private final ConcurrentHashMap<Long, ConcurrentHashMap<String, LocationResponse>> recommendationsByUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> isDoneByUser = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Integer> limitsByUser = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Long> tripIdsByUser = new ConcurrentHashMap<>();
 
     public RecommendationService(@Qualifier("geoapify") LocationRecommendationClient geoApifyClient,
                                  @Qualifier("otm") LocationRecommendationClient otmClient,
                                  WikidataClient wikidataClient,
                                  UserService userService, CategoryService categoryService,
+                                 LocationService locationService,
                                  TripRepository tripRepository, LocationRatingRepository locationRatingRepository, LocationRepository locationRepository) {
         this.geoApifyClient = geoApifyClient;
         this.otmClient = otmClient;
@@ -65,6 +66,7 @@ public class RecommendationService {
         this.tripRepository = tripRepository;
         this.locationRatingRepository = locationRatingRepository;
         this.locationRepository = locationRepository;
+        this.locationService = locationService;
     }
 
     public void startRecommendationRequests(Long tripId, Double radius, Set<String> frontendCategories, List<List<Double>> route, Integer limit) {
@@ -81,6 +83,8 @@ public class RecommendationService {
                 ThrottledThreadPoolExecutor otmExecutor = new ThrottledThreadPoolExecutor(4.8);
                 ThrottledThreadPoolExecutor wikidataExecutor = new ThrottledThreadPoolExecutor(40);
                 setDone(userId, false);
+                setTripId(userId, tripId);
+                setLimit(userId, limit);
                 clearRecommendationCache(userId);
                 List<List<Double>> refinedRoute = reducedRoute(route, limit / 2);
 
@@ -140,13 +144,15 @@ public class RecommendationService {
 
                 setDone(userId, true);
             } catch (Exception e) {
-                log.error(e);
+                log.error(ExceptionUtils.getStackTrace(e));
             }
         }).start();
     }
 
-    public RecommendationResponse getRecommendedLocations(Integer limit, long tripId) {
+    public RecommendationResponse getRecommendedLocations() {
         Long userId = userService.getId();
+        Long tripId = getTripId(userId);
+        Integer limit = getLimit(userId);
         List<LocationResponse> locations = getRecommendationCache(userId).values().stream().toList();
 
         setRecommendationScore(locations, tripId);
@@ -163,14 +169,18 @@ public class RecommendationService {
     /** HELPER FUNCTIONS */
 
     private void setRecommendationScore(List<LocationResponse> locations, long tripId) {
-        int advLevel = tripRepository.findById(tripId).orElseThrow().getAdventureLevel().ordinal();
+        int tripAdvLevel = tripRepository.findById(tripId).orElseThrow().getAdventureLevel().ordinal();
 
-        locations.stream().forEach((loc) -> {
-            long numRaings = locationRatingRepository.countAllByLocation(locationRepository.findById(loc.getId()).orElseThrow());
-
-            loc.setRecommendationScore(calculateRecommendedScore(getRatingScore(loc.getRating(), numRaings),
-                getAdventureScore(loc.getAdventureLevel().ordinal(), advLevel),
-                getDataScore(loc)));
+        locations.forEach(locationResponse -> {
+            Location location = locationService.findLocationByIds(locationResponse).orElse(null);
+            if (location != null) {
+                int numRatings = locationService.getNumRatings(location);
+                AdventureLevel locAdvLevel = locationService.getAdventureLevel(location);
+                locationResponse.setRecommendationScore(
+                    calculateRecommendedScore(getRatingScore(location.getRating(), numRatings),
+                    getAdventureScore(locAdvLevel != null ? locAdvLevel.ordinal() : 0, tripAdvLevel),
+                    getDataScore(locationResponse)));
+            }
         });
 
     }
@@ -234,6 +244,22 @@ public class RecommendationService {
                 .forEach(recommendation -> addToRecommendationCache(userId, recommendation))
             );
         }
+    }
+
+    private void setLimit(Long userId, Integer limit) {
+        limitsByUser.put(userId, limit);
+    }
+
+    private Integer getLimit(Long userId) {
+        return limitsByUser.get(userId);
+    }
+
+    private void setTripId(Long userId, Long tripId) {
+        tripIdsByUser.put(userId, tripId);
+    }
+
+    private Long getTripId(Long userId) {
+        return tripIdsByUser.get(userId);
     }
 
     private void setDone(Long userId, Boolean val) {

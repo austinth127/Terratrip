@@ -8,6 +8,7 @@ import {
     endAtom,
     filtersAtom,
     popupStopAtom,
+    rangeAtom,
     recStopAtom,
     routeAtom,
     routeGeoJsonAtom,
@@ -61,6 +62,7 @@ const Map = ({ ...props }) => {
     const tripId = useAtomValue(tripIdAtom);
     const filters = useAtomValue(filtersAtom);
     const [done, setDone] = useState(false);
+    const [range, setRange] = useAtom(rangeAtom);
 
     const router = useRouter();
 
@@ -147,7 +149,7 @@ const Map = ({ ...props }) => {
                 axios
                     .post("/api/location/recommend", {
                         tripId: tripId,
-                        range: 50000,
+                        range: range * 1000,
                         categories: filters,
                         route: route.geometry.coordinates,
                         limit: 50,
@@ -208,8 +210,11 @@ const Map = ({ ...props }) => {
                 .forEach((stop, index) => {
                     // Add markers to the map.
                     const marker = new mapboxgl.Marker({
-                        color: colors.slate800,
-                        scale: ".65",
+                        color:
+                            popupStop == stop
+                                ? colors.green600
+                                : colors.slate800,
+                        scale: ".7",
                         style: { cursor: "pointer" },
                     })
                         .setLngLat(stop.center)
@@ -229,7 +234,7 @@ const Map = ({ ...props }) => {
             recStopMarkers.forEach((marker) => marker.remove());
             setRecStopMarkers([]);
         };
-    }, [recStops, stops]);
+    }, [recStops, stops, popupStop]);
 
     // onMove
     // Update longitude/lattitude/zoom as the user moves around

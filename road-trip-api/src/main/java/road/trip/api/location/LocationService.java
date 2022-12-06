@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import road.trip.api.category.CategoryService;
 import road.trip.api.location.request.LocationRequest;
+import road.trip.api.location.response.LocationResponse;
 import road.trip.api.user.UserService;
 import road.trip.clients.geoapify.GeoApifyClient;
 import road.trip.persistence.daos.*;
@@ -26,14 +27,12 @@ public class LocationService {
     private final CategoryService categoryService;
     private final TripRepository tripRepository;
 
-    private final GeoApifyClient geoApifyClient;
     private final LocationRatingRepository locationRatingRepository;
     private final UserService userService;
 
     private final CategoryRepository categoryRepository;
 
     public Stop createStop(Trip trip, Location location, int order) {
-
 
         Stop stop = Stop.builder()
                 .location(location)
@@ -69,6 +68,10 @@ public class LocationService {
         return null;
     }
 
+    public Optional<Location> findLocationByIds(LocationResponse loc) {
+        return locationRepository.findFirstByOtmIdOrOsmIdOrWikidataIdOrGeoapifyId(loc.getOtmId(), loc.getOsmId(), loc.getWikidataId(), loc.getGeoapifyId());
+    }
+
     public void addLocationRating(Long locationID, Double rating){
         //rating exists for that user.
         Location location = locationRepository.findById(locationID).orElseThrow();
@@ -88,25 +91,24 @@ public class LocationService {
 
     public Double getRatingByLocationAndUser(Location location, User user) {
         Optional<LocationRating> ret = locationRatingRepository.findByUserAndLocation(user, location);
-        if(ret.isPresent())
-            return ret.get().getRating();
-
-        else
-            return 0.0;
+        return ret.map(LocationRating::getRating).orElse(null);
     }
 
     public Double getAverageRating(Location location) {
         Double ratingsValue = 0.0;
-        int count = 0;
         List<LocationRating> ratings = locationRatingRepository.findAllByLocation(location);
-        for(int i = 0; i < ratings.size();i++){
-            ratingsValue+= ratings.get(i).getRating();
-            count++;
-        }
+        int count = ratings.size();
         if (count == 0) {
             return null;
         }
+        for (LocationRating rating : ratings) {
+            ratingsValue += rating.getRating();
+        }
         return ratingsValue/count;
+    }
+
+    public Integer getNumRatings(Location location) {
+        return locationRatingRepository.findAllByLocation(location).size();
     }
 
     public AdventureLevel getAdventureLevel(Location location) {

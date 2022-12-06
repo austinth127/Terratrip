@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import road.trip.api.category.request.CategoryRequest;
 import road.trip.api.category.response.CategoryResponse;
 import road.trip.persistence.daos.CategoryRepository;
+import road.trip.persistence.models.AdventureLevel;
 import road.trip.persistence.models.Category;
 import road.trip.persistence.models.PlacesAPI;
 import road.trip.persistence.models.Trip;
@@ -29,14 +30,16 @@ public class CategoryService {
         return categoryRepository.findAllByUseByDefault(true);
     }
 
-    public List<CategoryResponse> getCategoryResponses() {
+    public List<CategoryResponse> getCategoryResponses(Integer a) {
+        if (a < 0 || a > 3) return null;
         List<CategoryResponse> categories = new ArrayList<>();
-
         categoryRepository.findAll().stream()
+            .filter(c -> c.getAdventureLevel().ordinal() <= a)
             .map(c -> c.getUiName().split("\\."))
             .collect(groupingBy(c -> c[0]))
             .forEach((c, subs) -> categories.add(new CategoryResponse(c, subs.stream()
                 .map(sub -> sub[1])
+                .distinct()
                 .collect(Collectors.toList())))
             );
 
@@ -46,6 +49,7 @@ public class CategoryService {
     /**
      * Returns a list of frontend category names which the user might be interested in.
      */
+
     public Set<String> getRecommendedCategories(Trip trip) {
         return getDefaultCategories().stream()
             // Category is of appropriate adventure level

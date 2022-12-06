@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import road.trip.api.category.response.CategoryResponse;
+import road.trip.persistence.models.AdventureLevel;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class CategoryController {
 
     final CategoryService categoryService;
 
-    @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
-        return ResponseEntity.ok(categoryService.getCategoryResponses());
+    @GetMapping("/{advLevel}")
+    public ResponseEntity<List<CategoryResponse>> getCategories(@PathVariable("advLevel") Integer advLevel) {
+        return ResponseEntity.ok(categoryService.getCategoryResponses(advLevel));
     }
 
 }

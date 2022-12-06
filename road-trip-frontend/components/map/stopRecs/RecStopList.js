@@ -1,8 +1,14 @@
 import axios from "axios";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { filtersAtom, recStopAtom, tripAtom } from "../../../utils/atoms";
+import {
+    filtersAtom,
+    rangeAtom,
+    recStopAtom,
+    tripAtom,
+} from "../../../utils/atoms";
 import { delay } from "../../../utils/delay";
+import { SingleSlider } from "../../general/CompundSlider";
 import LoadingSpinner from "../../general/LoadingSpinner";
 import RecStopDisplay from "./RecStopItem";
 
@@ -15,6 +21,7 @@ const RecStopList = () => {
     const [sent, setSent] = useState(false);
     const [trip, setTrip] = useAtom(tripAtom);
     const [filters, setFilters] = useAtom(filtersAtom);
+    const [range, setRange] = useAtom(rangeAtom);
 
     useEffect(() => {
         let isMounted = true;
@@ -24,7 +31,7 @@ const RecStopList = () => {
         axios
             .post("/api/location/recommend", {
                 tripId: trip.id,
-                range: 50000,
+                range: range * 1000,
                 categories: filters,
                 route: trip.route.geometry.coordinates,
                 limit: 50,
