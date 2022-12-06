@@ -101,7 +101,7 @@ const SaveModal = () => {
     return (
         <div
             className={`bg-gray-100 text-slate-800 text-sm p-4 w-1/2 h-fit ease-in-out duration-200 z-50 
-            absolute top-24 left-1/2 -ml-[25%] rounded-lg border border-gray-200 shadow-xl ${
+            absolute top-24 left-1/2 -ml-[25%] rounded-lg border border-gray-200 shadow-xl pb-16 ${
                 show ? `translate-y-0` : `-translate-y-[30rem] bg-opacity-10`
             }`}
         >

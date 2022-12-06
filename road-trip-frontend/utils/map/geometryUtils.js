@@ -56,7 +56,7 @@ export const getRouteWithStops = async (stops) => {
                 fail = true;
                 return;
             }
-            return `${stop.center[0]},${stop.center[1]}`;
+            return `${stop.center[0].toFixed(5)},${stop.center[1].toFixed(5)}`;
         })
         .join(";");
 
@@ -142,6 +142,35 @@ export const addStopInOrder = (start, stop, stops, setStops) => {
         setStops([...stops]);
     } else {
         setStops([stop]);
+    }
+};
+
+export const getNewOrder = (start, stop, stops) => {
+    let distances = [];
+    if (stops?.length > 0) {
+        stops.forEach((s, ndx) => {
+            let dist = distance(start, s);
+            distances.push([dist, ndx]);
+        });
+
+        distances.sort((a, b) => a[0] < b[0]);
+
+        let thisDist = distance(start, stop);
+        console.log(thisDist, distances);
+
+        let i = 0;
+        while (distances.length > i && thisDist > distances[i][0]) {
+            i++;
+        }
+        console.log(i);
+        if (i < distances.length) {
+            stops.splice(distances[i][1], 0, stop);
+        } else {
+            stops.push(stop);
+        }
+        return [...stops];
+    } else {
+        return [stop];
     }
 };
 
