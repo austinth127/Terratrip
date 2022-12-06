@@ -16,7 +16,12 @@ public class PlaylistResponse {
     private String url;
     private String name;
     private String img;
+    private Long tripId;
 
+    public PlaylistResponse withTripId(Long tripId) {
+        this.tripId = tripId;
+        return this;
+    }
 
     public PlaylistResponse(Playlist p) {
         id = p.getId();

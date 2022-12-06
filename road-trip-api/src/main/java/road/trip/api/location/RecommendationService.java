@@ -16,6 +16,12 @@ import road.trip.persistence.models.Trip;
 import road.trip.util.ThrottledThreadPoolExecutor;
 import road.trip.util.exceptions.ForbiddenException;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -25,6 +31,7 @@ import static java.lang.System.currentTimeMillis;
 import static road.trip.persistence.models.PlacesAPI.GEOAPIFY;
 import static road.trip.persistence.models.PlacesAPI.OPENTRIPMAP;
 import static road.trip.util.UtilityFunctions.generateRefinedRoute;
+import static road.trip.util.UtilityFunctions.reducedRoute;
 
 @Service
 @Log4j2
@@ -75,7 +82,9 @@ public class RecommendationService {
                 ThrottledThreadPoolExecutor wikidataExecutor = new ThrottledThreadPoolExecutor(40);
                 setDone(userId, false);
                 clearRecommendationCache(userId);
-                List<List<Double>> refinedRoute = generateRefinedRoute(route, radius);
+                List<List<Double>> refinedRoute = reducedRoute(route, limit / 2);
+
+                log.info(refinedRoute.size());
 
                 // Recommend categories for the trip if needed
                 Set<String> recommendedCategories;
@@ -90,8 +99,8 @@ public class RecommendationService {
                 Set<String> otmCategories = categoryService.getApiCategories(recommendedCategories, OPENTRIPMAP);
 
                 // Get recommendation info without details
-                getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, limit);
-                getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, limit);
+                getReducedRecommendationsAsync(userId, geoApifyExecutor, geoApifyClient, radius, geoApifyCategories, refinedRoute, 2);
+                getReducedRecommendationsAsync(userId, otmExecutor, otmClient, radius, otmCategories, refinedRoute, 2);
                 // Wait for threads to finish
                 otmExecutor.joinAll();
                 geoApifyExecutor.joinAll();

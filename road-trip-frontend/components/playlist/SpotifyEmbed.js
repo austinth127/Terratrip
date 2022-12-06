@@ -25,6 +25,7 @@ const SpotifyEmbed = ({
                 ...style,
             }}
             {...props}
+            onError={() => console.log("failed to do thing")}
         />
     );
 };

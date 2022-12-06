@@ -21,9 +21,13 @@ public class PlaylistController {
     private static final Integer MAX_DURATION = 300; // 300 minutes (5 hours)
 
     @GetMapping
-    public ResponseEntity<List<PlaylistResponse>> getMyPlaylists(Long tripId) {
+    public ResponseEntity<List<PlaylistResponse>> getMyPlaylists(Long tripId, Boolean active) {
         if (tripId == null) {
-            return ResponseEntity.ok(playlistService.getMyPlaylists());
+            if (active == null || !active) {
+                return ResponseEntity.ok(playlistService.getMyPlaylists());
+            } else {
+                return ResponseEntity.ok(playlistService.getMyActivePlaylists());
+            }
         } else {
             return ResponseEntity.ok(List.of(playlistService.getTripPlaylist(tripId)));
         }

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Userfront from "@userfront/core";
 import axios from "axios";
 import Link from "next/link";
-import { makeTripActive } from "../utils/trip";
 import { useSetAtom } from "jotai";
 import { tripAtom } from "../utils/atoms";
 import LoadingSpinner from "../components/general/LoadingSpinner";
@@ -25,7 +24,7 @@ const Profile = () => {
             setUser(res.data);
             res = await axios.get("/api/trip");
             setTrips(res.data);
-            let playlists = await axios.get("/api/playlist");
+            let playlists = await axios.get("/api/playlist?active=true");
             setPlaylists(playlists.data);
         };
 
@@ -37,7 +36,7 @@ const Profile = () => {
     }
 
     const handleViewTrip = (trip) => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips/map");
     };
 
@@ -58,7 +57,7 @@ const Profile = () => {
                 {/** @TODO Add trips and playlist to response data */}
                 <div className="mt-12 text-left font-light text-base h-fit">
                     <label className="font-semibold grad-txt-rs-yllw text-green-600">
-                        <a href="/trips/list/user"> My Trips:</a>
+                        <a href="/trips/list/user"> My Trips</a>
                     </label>
                     <br />
                     {trips ? (
@@ -84,7 +83,7 @@ const Profile = () => {
                 </div>
                 <div className="mt-8 text-left font-light text-base">
                     <label className="font-semibold grad-txt-rs-yllw text-green-600">
-                        <a href="/playlists/edit"> My Playlists:</a>
+                        <a href="/playlists/edit"> My Playlists</a>
                     </label>
                     <br />
                     {playlists && playlists.length > 0 ? (

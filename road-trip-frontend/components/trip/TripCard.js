@@ -8,7 +8,6 @@ import { tripAtom } from "../../utils/atoms";
 import { useRouter } from "next/router";
 import axios from "axios";
 import useHasMounted from "../../hooks/useHasMounted";
-import { makeTripActive } from "../../utils/trip";
 
 const TripCard = ({ trip, deleteCallback }) => {
     const [rating, setRating] = useState(trip.rating);
@@ -17,17 +16,17 @@ const TripCard = ({ trip, deleteCallback }) => {
     const hasMounted = useHasMounted();
 
     const handleViewTrip = () => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips/map");
     };
 
     const handleEditTrip = () => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips");
     };
 
     const handleRating = () => {
-        makeTripActive(trip, setActiveTrip);
+        setActiveTrip(trip);
         router.push("/trips/rate");
     };
 
@@ -44,8 +43,16 @@ const TripCard = ({ trip, deleteCallback }) => {
 
     return (
         <div className="bg-slate-900 bg-opacity-70 p-4 h-48 text-gray-100 rounded-lg relative">
-            <div className="flex flex-row justify-start gap-4">
+            <div className="flex flex-row justify-start gap-4 items-center">
                 <h2 className="font-semibold text-lg">{trip.name}</h2>
+                {trip.playlistId && (
+                    <a
+                        href={`https://open.spotify.com/playlist/${trip.playlistId}`}
+                        target="_blank"
+                    >
+                        <i className="fa fa-brands fa-spotify"></i>
+                    </a>
+                )}
                 <button
                     onClick={deleteCallback}
                     className="text-slate-400 hover:text-slate-500"

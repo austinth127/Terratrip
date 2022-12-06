@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import road.trip.api.location.LocationService;
 import road.trip.api.location.request.LocationRequest;
 import road.trip.api.notification.NotificationService;
+import road.trip.api.playlist.PlaylistService;
 import road.trip.api.trip.request.TripCreateRequest;
 import road.trip.api.trip.request.TripEditRequest;
 import road.trip.api.trip.response.TripResponse;
@@ -33,6 +34,7 @@ public class TripService {
     private final UserService userService;
     private final NotificationService notificationService;
     private final StopRepository stopRepository;
+    private final PlaylistService playlistService;
 
     /**
      * Gets a trip by id. Should only return the trip if the current user
@@ -112,6 +114,8 @@ public class TripService {
                 t.setEndDate(request.getEndDate());
             }
             if (request.getPlaylistId() != null) {
+                String oldPlaylistId = optTrip.get().getPlaylistId();
+                playlistService.deletePlaylistIfMineAndGenerated(oldPlaylistId);
                 t.setPlaylistId(request.getPlaylistId());
             }
             if (request.getStart() != null) {

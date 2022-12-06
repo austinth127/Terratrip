@@ -7,14 +7,14 @@ import PlaylistDisplay from "../../components/playlist/PlaylistDisplay";
 const Edit = () => {
     const [uri, setUri] = useState();
     const [user, setUser] = useState();
-    const [playlists, setPlaylists] = useState();
+    const [trips, setTrips] = useState();
 
     useEffect(() => {
         const getData = async () => {
             let user = await axios.get("/api/user");
             setUser(user.data);
-            let playlists = await axios.get("/api/playlist");
-            setPlaylists(playlists.data);
+            let res = await axios.get("/api/trip");
+            setTrips(res.data);
         };
         getData();
         setUri(process.env.NEXT_PUBLIC_SPOTIFY_AUTH_URI);
@@ -27,13 +27,18 @@ const Edit = () => {
     return (
         <div className="pt-20">
             <div className="flex flex-col items-center">
-                {playlists &&
-                    playlists.map((playlist) => (
-                        <PlaylistDisplay
-                            key={playlist.id}
-                            playlist={playlist}
-                        ></PlaylistDisplay>
-                    ))}
+                {trips ? (
+                    trips
+                        .filter((trip) => trip.playlistId != null)
+                        .map((trip) => (
+                            <PlaylistDisplay
+                                key={trip.id}
+                                trip={trip}
+                            ></PlaylistDisplay>
+                        ))
+                ) : (
+                    <LoadingSpinner></LoadingSpinner>
+                )}
             </div>
 
             <div className="flex flex-row justify-center my-16">
