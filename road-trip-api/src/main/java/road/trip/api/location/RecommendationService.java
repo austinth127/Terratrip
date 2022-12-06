@@ -114,11 +114,11 @@ public class RecommendationService {
                 List<LocationResponse> recommendations = getRecommendationCache(userId).values().stream().toList();
                 clearRecommendationCache(userId);
 
-                setRecommendationScore(recommendations, tripId);
+                //setRecommendationScore(recommendations, tripId);
 
                 // Get the recommendation details
                 recommendations.stream()
-                    .sorted(Comparator.reverseOrder())
+                    //.sorted(Comparator.reverseOrder())
                     .limit(limit)
                     .forEach(recommendation -> {
                         addToRecommendationCache(userId, recommendation);
@@ -159,7 +159,7 @@ public class RecommendationService {
 
         return RecommendationResponse.builder()
             .locations(locations.stream()
-                .sorted(Comparator.reverseOrder())
+                //.sorted(Comparator.reverseOrder())
                 .limit(limit)
                 .collect(Collectors.toList()))
             .isDone(getDone(userId))
