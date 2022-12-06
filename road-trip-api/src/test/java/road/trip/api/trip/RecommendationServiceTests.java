@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -127,20 +128,21 @@ public class RecommendationServiceTests {
     /*
     @Test
     @DisplayName("get recommended locations test 200")
-    void testGetRecommendedLocations() throws IOException{
+    void testGetRecommendedLocations() throws IOException, InterruptedException {
         Integer limit = 50;
         Trip t = callCreateTrip(userService.user());
         callStartRecommendationRequest(t.getId());
 
+        sleep(5);
         long startTime = System.currentTimeMillis();
-        RecommendationResponse recommendationResponse = recommendationService.getRecommendedLocations(50);
+        RecommendationResponse recommendationResponse = recommendationService.getRecommendedLocations();
         while(!recommendationResponse.getIsDone()){
-            recommendationResponse = recommendationService.getRecommendedLocations(50);
+            recommendationResponse = recommendationService.getRecommendedLocations();
         }
         long endTime = System.currentTimeMillis();
 
         log.info("Time: " + (endTime - startTime));
         log.info("Size: " + recommendationResponse.getLocations().size());
     }
-    */
+     */
 }
