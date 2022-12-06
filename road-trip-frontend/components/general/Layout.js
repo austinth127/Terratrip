@@ -6,6 +6,7 @@ import { useSetAtom } from "jotai";
 import { clearTripAtom, recStopAtom } from "../../utils/atoms";
 
 import Userfront from "@userfront/core";
+import { setupAxios } from "../../utils/axiosSetup";
 Userfront.init("wbmrp64n");
 
 /**
@@ -20,6 +21,7 @@ const Layout = ({ children, ...props }) => {
     const clearTrip = useSetAtom(clearTripAtom);
 
     useEffect(() => {
+        setupAxios();
         clearTrip();
     });
 

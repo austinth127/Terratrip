@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../../components/general/Buttons";
 import LoadingSpinner from "../../components/general/LoadingSpinner";
 import PlaylistDisplay from "../../components/playlist/PlaylistDisplay";
+import { setupAxios } from "../../utils/axiosSetup";
 
 const Edit = () => {
     const [uri, setUri] = useState();
@@ -13,6 +14,7 @@ const Edit = () => {
 
     useEffect(() => {
         const getData = async () => {
+            setupAxios();
             let user = await axios.get("/api/user");
             setUser(user.data);
             let res = await axios.get("/api/trip");

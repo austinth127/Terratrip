@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { setupAxios } from "../../utils/axiosSetup";
 
 /**
  * This is a layout for all pages, included in _app.js. Nextjs will auto-route
@@ -9,6 +10,10 @@ import React from "react";
  * @returns {React.Component} The page surrounded by the layout
  */
 const ReducedLayout = ({ children, ...props }) => {
+    useEffect(() => {
+        setupAxios();
+    });
+
     return (
         <>
             {/* Background */}
