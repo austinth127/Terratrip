@@ -15,25 +15,6 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @Data
 public class TripResponse {
-    public TripResponse(Trip t) {
-        name = t.getName();
-        distance = t.getDistance();
-        duration = t.getDriveDuration();
-        advLevel = t.getAdventureLevel().toString();
-        startDate = t.getStartDate();
-        endDate = t.getEndDate();
-        id = t.getId();
-        start = t.getStart() == null ? null : new LocationResponse(t.getStart());
-        end = t.getEnd() == null ? null : new LocationResponse(t.getEnd());
-        stops = t.getStops().stream()
-            .map(Stop::getLocation)
-            .map(LocationResponse::new)
-            .collect(Collectors.toList());
-        rating = t.getRating();
-        playlistId = t.getPlaylistId();
-    }
-
-    // TODO this is slow
     public TripResponse(Trip t, User user, LocationService locationService) {
         name = t.getName();
         distance = t.getDistance();
@@ -46,12 +27,11 @@ public class TripResponse {
         end = t.getEnd() == null ? null : new LocationResponse(t.getEnd(), user, locationService);
         stops = t.getStops().stream()
             .map(Stop::getLocation)
-            .map(l -> new LocationResponse(l, user, locationService))
+            .map(l -> new LocationResponse(t.getStart(), user, locationService))
             .collect(Collectors.toList());
         rating = t.getRating();
         playlistId = t.getPlaylistId();
     }
-
 
     @NonNull
     private Long id;

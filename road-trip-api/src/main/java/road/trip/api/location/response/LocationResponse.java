@@ -23,29 +23,6 @@ import static road.trip.util.UtilityFunctions.combineLists;
 
 @Data @Builder @AllArgsConstructor @Log4j2
 public class LocationResponse implements Comparable<LocationResponse> {
-    public LocationResponse(Location location) {
-        id = location.getId();
-        name = location.getName();
-        center = new Double[]{location.getCoordX(), location.getCoordY()};
-        description = location.getDescription();
-        image = location.getImageUrl();
-        rating = location.getRating();
-        phoneContact = location.getPhoneContact();
-        website = location.getWebsite();
-        address = location.getAddress();
-        geoapifyId = location.getGeoapifyId();
-        osmId = location.getOsmId();
-        otmId = location.getOtmId();
-        wikidataId = location.getWikidataId();
-        userRating = null;
-
-        if (location.getCategories() != null) {
-            categories = Arrays.stream(location.getCategories().split(",")).toList();
-        }
-        else {
-            categories = null;
-        }
-    }
     public LocationResponse(Location location, User user, LocationService locationService){
         id = location.getId();
         name = location.getName();
@@ -179,6 +156,7 @@ public class LocationResponse implements Comparable<LocationResponse> {
             .otmId(bestString(a.getOtmId(), b.getOtmId()))
             .osmId(a.getOsmId() != null ? a.getOsmId() : b.getOsmId())
             .geoapifyId(bestString(a.getGeoapifyId(), b.getGeoapifyId()))
+            .adventureLevel(a.getAdventureLevel() != null ? a.getAdventureLevel() : b.getAdventureLevel())
             .build();
     }
 

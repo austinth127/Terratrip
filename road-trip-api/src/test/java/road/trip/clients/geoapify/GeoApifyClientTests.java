@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import road.trip.api.location.response.LocationResponse;
+import road.trip.clients.LocationRecommendationClient;
 
 import java.util.*;
 
@@ -17,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 @Log4j2
 public class GeoApifyClientTests {
-    @Autowired GeoApifyClient client;
+    @Autowired @Qualifier("geoapify")
+    LocationRecommendationClient client;
 
     @Test
     void testGetRecommendedLocations() {
